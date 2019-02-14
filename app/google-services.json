@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "584997153172",
+    "firebase_url": "https://iadecc-louvor.firebaseio.com",
+    "project_id": "iadecc-louvor",
+    "storage_bucket": "iadecc-louvor.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:584997153172:android:ace7f1d99bf96343",
+        "android_client_info": {
+          "package_name": "net.eletroseg.iadecclouvor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "584997153172-aek2n4d0vj2pou2ho4mprnqn75qp6mff.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "net.eletroseg.iadecclouvor",
+            "certificate_hash": "221732f66b357b165bf027a24a99335763b4f24b"
+          }
+        },
+        {
+          "client_id": "584997153172-daualsagsattoi6hi783m1b4g327835a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxPSq6AyhaKYtTzo1CLKhdP2IsGUXB7cA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "584997153172-daualsagsattoi6hi783m1b4g327835a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

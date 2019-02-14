@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_cadastro"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context="com.example.maycon.sistemaintegrado.activity.CadastroLoginActivity">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_layout_cadastro_login_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margen_12"
+        android:hint="Email">
+
+        <EditText
+            android:inputType="textEmailAddress"
+            android:id="@+id/edit_cadastro_login_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_layout_cadastro_login_senha"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margen_12"
+        android:hint="Senha">
+
+        <EditText
+            android:id="@+id/edit_cadastro_login_senha"
+            android:layout_width="match_parent"
+            android:inputType="textPassword"
+
+            android:layout_height="wrap_content" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_layout_cadastro_login_confirmar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margen_12"
+        android:hint="repita a senha">
+
+        <EditText
+            android:id="@+id/edit_cadastro_login_confirmar"
+            android:layout_width="match_parent"
+            android:inputType="textPassword"
+            android:layout_height="wrap_content" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_layout_cadastro_login_nome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margen_12"
+        android:hint="Nome de usuario">
+
+        <EditText
+            android:id="@+id/edit_cadastro_login_nome"
+            android:layout_width="match_parent"
+            android:inputType="text"
+            android:layout_height="wrap_content" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_layout_cadastro_login_telefone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margen_12"
+        android:hint="Telefone">
+
+        <EditText
+            android:id="@+id/edit_cadastro_login_telefone"
+            android:layout_width="match_parent"
+            android:inputType="phone"
+            android:layout_height="wrap_content" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+    </View>
+
+    <Button
+        android:id="@+id/btn_cadastro_login_salvar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/borda"
+        android:text="Salvar"/>
+</LinearLayout>
