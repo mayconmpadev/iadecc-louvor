@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -21,22 +20,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
-
 import net.eletroseg.iadecclouvor.R;
 import net.eletroseg.iadecclouvor.util.Base64Custom;
-import net.eletroseg.iadecclouvor.util.ConfiguracaoFiribase;
 import net.eletroseg.iadecclouvor.util.InstanciaFirebase;
 import net.eletroseg.iadecclouvor.util.Permissao;
 import net.eletroseg.iadecclouvor.util.SPM;
-
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     TextView usuario, empresa;
     ImageView foto;
@@ -194,7 +187,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onCancelled(DatabaseError error) {
-                System.err.println("Listener was cancelled");
             }
         });
     }
