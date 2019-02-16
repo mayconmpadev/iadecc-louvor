@@ -62,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
         cadastrar = findViewById(R.id.text_cadastrar);
         recuperarSenha = findViewById(R.id.text_recuperar_senha);
         layout = findViewById(R.id.layout_login);
+        layout.setVisibility(View.INVISIBLE);
         usuarioLogado();
         entrar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,7 +145,9 @@ public class LoginActivity extends AppCompatActivity {
 
                         SPM spm = new SPM(LoginActivity.this);
                         spm.setPreferencia("USUARIO_LOGADO", "USUARIO", Base64Custom.codificarBase64(firebaseAuth.getCurrentUser().getEmail()));
-                        salvarAdmin();
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
 
                     } else {
                         firebaseAuth.signOut();
@@ -274,10 +277,10 @@ public class LoginActivity extends AppCompatActivity {
     private void usuarioLogado() {
         firebaseAuth = ConfiguracaoFiribase.getFirebaseAutenticacao();
         if (firebaseAuth.getCurrentUser() == null || firebaseAuth.getCurrentUser().toString().equals("")) {
-
+            layout.setVisibility(View.VISIBLE);
 
         } else {
-            final DatabaseReference reference = InstanciaFirebase.getDatabase().getReference(spm.getPreferencia("USUARIO_LOGADO", "USUARIO", "erro")).child("vendedor");
+            final DatabaseReference reference = InstanciaFirebase.getDatabase().getReference("usuarios").child(spm.getPreferencia("USUARIO_LOGADO", "USUARIO", "erro"));
             reference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -289,6 +292,7 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this, "logoff", Toast.LENGTH_SHORT).show();
                         spm.setPreferencia("VENDEDOR_LOGADO", "VENDEDOR", "");
                         firebaseAuth.signOut();
+                        layout.setVisibility(View.VISIBLE);
                     }
                 }
 
@@ -313,7 +317,7 @@ public class LoginActivity extends AppCompatActivity {
 
         firebaseAuth = ConfiguracaoFiribase.getFirebaseAutenticacao();
 
-        final DatabaseReference reference = InstanciaFirebase.getDatabase().getReference(spm.getPreferencia("USUARIO_LOGADO", "USUARIO", "erro")).child("vendedor");
+        final DatabaseReference reference = InstanciaFirebase.getDatabase().getReference(spm.getPreferencia("USUARIO_LOGADO", "USUARIO", "erro")).child("usuario");
       //  final DatabaseReference reference1 = InstanciaFirebase.getDatabase().getReference(spm.getPreferencia("USUARIO_LOGADO", "USUARIO", "erro")).child("vendedor").child(vendedor.id);
         reference.keepSynced(true);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {

@@ -20,6 +20,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,6 +29,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import net.eletroseg.iadecclouvor.R;
 import net.eletroseg.iadecclouvor.util.Base64Custom;
+import net.eletroseg.iadecclouvor.util.ConfiguracaoFiribase;
 import net.eletroseg.iadecclouvor.util.InstanciaFirebase;
 import net.eletroseg.iadecclouvor.util.Permissao;
 import net.eletroseg.iadecclouvor.util.SPM;
@@ -86,7 +89,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
        // buscarPerfilWeb();
         usuario.setText(spm.getPreferencia("VENDEDOR_LOGADO", "VENDEDOR", ""));
         empresa.setText(Base64Custom.decodificarBase64(spm.getPreferencia("USUARIO_LOGADO", "USUARIO", "")));
-
+foto.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent(MainActivity.this, FotoActivity.class);
+        startActivity(intent);
+       // finish();
+    }
+});
         Permissao.validaPermissoes(1, this, permissoesNecessarias);
 
         if (!drawer.isDrawerOpen(GravityCompat.START)) {
@@ -121,7 +131,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_sair) {
-            spm.setPreferencia("VENDEDOR_LOGADO", "VENDEDOR", "");
+            FirebaseAuth firebaseAuth;
+            firebaseAuth = ConfiguracaoFiribase.getFirebaseAutenticacao();
+            firebaseAuth.signOut();
+            spm.setPreferencia("USUARIO_LOGADO", "USUARIO", "");
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();

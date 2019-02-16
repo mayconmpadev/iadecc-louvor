@@ -38,6 +38,7 @@ import net.eletroseg.iadecclouvor.R;
 import net.eletroseg.iadecclouvor.modelo.Usuario;
 import net.eletroseg.iadecclouvor.util.Base64Custom;
 import net.eletroseg.iadecclouvor.util.ConfiguracaoFiribase;
+import net.eletroseg.iadecclouvor.util.InstanciaFirebase;
 
 import java.util.ArrayList;
 
@@ -124,8 +125,8 @@ public class CadastroLoginActivity extends AppCompatActivity {
 
         firebaseAuth = ConfiguracaoFiribase.getFirebaseAutenticacao();
         firebaseAuth.createUserWithEmailAndPassword(
-                usuarios.getEmail(),
-                usuarios.getSenha()).addOnCompleteListener(CadastroLoginActivity.this, new OnCompleteListener<AuthResult>() {
+                usuarios.email,
+                usuarios.senha).addOnCompleteListener(CadastroLoginActivity.this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
@@ -134,8 +135,8 @@ public class CadastroLoginActivity extends AppCompatActivity {
 
                     dialog.dismiss();
 
-                    String identificadorDoUsuario = Base64Custom.codificarBase64(usuarios.getEmail());
-                    usuarios.setId(identificadorDoUsuario);
+                    String identificadorDoUsuario = Base64Custom.codificarBase64(usuarios.email);
+                    usuarios.id = identificadorDoUsuario ;
 
 
 
@@ -182,7 +183,7 @@ public class CadastroLoginActivity extends AppCompatActivity {
                             Toast.makeText(CadastroLoginActivity.this, "Um email de verificação foi enviado " +
                                     "para " + user.getEmail(), Toast.LENGTH_LONG).show();
                             if (firebaseAuth.getCurrentUser() != null) {
-                                usuarios.salvar();
+                               salvar();
                                 firebaseAuth.signOut();
                                 Intent intent = new Intent(CadastroLoginActivity.this, LoginActivity.class);
                                 startActivity(intent);
@@ -285,8 +286,7 @@ public class CadastroLoginActivity extends AppCompatActivity {
     }
 
     private void verificarNome() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference reference = database.getReference("usuarios");
+        DatabaseReference reference = InstanciaFirebase.getDatabase().getReference("usuarios");
         arrayListUsuarios.clear();
         b = true;
         ChildEventListener childEventListener = new ChildEventListener() {
@@ -327,7 +327,7 @@ public class CadastroLoginActivity extends AppCompatActivity {
 
                 for (int i = 0; i < arrayListUsuarios.size(); i++) {
 
-                    if (arrayListUsuarios.get(i).getNome().toLowerCase().equals(nome.getText().toString().toLowerCase())) {
+                    if (arrayListUsuarios.get(i).nome.toLowerCase().equals(nome.getText().toString().toLowerCase())) {
                         b = false;
                         break;
                     }
@@ -338,11 +338,11 @@ public class CadastroLoginActivity extends AppCompatActivity {
                 if (b) {
                     inputLayoutNome.setErrorEnabled(false);
                     usuarios = new Usuario();
-                    usuarios.setEmail(email.getText().toString());
-                    usuarios.setSenha(senha.getText().toString());
-                    usuarios.setNome(nome.getText().toString().toLowerCase());
-                    usuarios.setTelefone(telefone.getText().toString());
-                    usuarios.setModerador("nao");
+                    usuarios.email = email.getText().toString();
+                    usuarios.senha =  senha.getText().toString();
+                    usuarios.nome = nome.getText().toString().toLowerCase();
+                    usuarios.telefone =  telefone.getText().toString();
+                    usuarios.moderador = "nao" ;
 
                     if (validarCampos()) {
                         cadastrarUsuario();
@@ -361,6 +361,11 @@ public class CadastroLoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+    private void salvar(){
+
+        DatabaseReference reference = InstanciaFirebase.getDatabase().getReference("usuarios").child(usuarios.id);
+        reference.setValue(usuarios);
     }
 
 
