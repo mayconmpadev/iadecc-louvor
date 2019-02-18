@@ -4,6 +4,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".activity.FotoActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/foto_image_perfil"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:src="@drawable/icon_iadecc"
+            app:srcCompat="@mipmap/ic_launcher_round" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+       <Button
+           android:id="@+id/foto_btn_alterar"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="alterar"/>
+
+        <Button
+            android:id="@+id/foto_btn_excluir"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="excluir"/>
+
+    </LinearLayout>
+
+
 
 </LinearLayout>
