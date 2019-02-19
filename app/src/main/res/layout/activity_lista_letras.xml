@@ -1,9 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".activity.ListaLetrasActivity">
+    <LinearLayout
+        android:id="@+id/layout_produto_pesquisa"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/borda_pesquisa"
+        android:elevation="4dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
 
-</android.support.constraint.ConstraintLayout>
+        <ImageView
+            android:id="@+id/image_produto_voltar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_action_arrow_back_black_24dp" />
+
+        <EditText
+            android:id="@+id/edit_produto_pesquisa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:hint="pesquisar..."
+            android:inputType="text"
+            android:textCursorDrawable="@drawable/cursor"
+            android:theme="@style/MyEditTextTheme" />
+
+        <ImageView
+            android:id="@+id/image_produto_apagar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="0"
+            android:padding="10dp"
+            android:src="@drawable/ic_action_close_black_24dp" />
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/listview_produto_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+
+    </ListView>
+
+</LinearLayout>

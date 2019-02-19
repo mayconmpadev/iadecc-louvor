@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/item_menu_produto_editar"
+        android:title="editar"
+        android:icon="@drawable/ic_action_edit_branco"
+        android:orderInCategory="200"
+        app:showAsAction="ifRoom"
+        android:tooltipText="editar"
+
+        />
+
+    <item
+        android:id="@+id/item_menu_produto_salvar"
+        android:title="salvar"
+        android:icon="@drawable/ic_action_salvar_branco"
+        android:orderInCategory="200"
+        app:showAsAction="ifRoom"
+        android:tooltipText="salvar"
+
+        />
+
+
+
+
+</menu>
