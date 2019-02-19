@@ -51,14 +51,15 @@ public class FotoActivity extends AppCompatActivity {
     FirebaseStorage firebaseStorage;
     StorageReference storageReference;
     String fotoGaleria;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_foto);
 
-        foto =  findViewById(R.id.foto_image_perfil);
-        galeria =  findViewById(R.id.foto_btn_alterar);
-        excluir =  findViewById(R.id.foto_btn_excluir);
+        foto = findViewById(R.id.foto_image_perfil);
+        galeria = findViewById(R.id.foto_btn_alterar);
+        excluir = findViewById(R.id.foto_btn_excluir);
 
         galeria.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,7 +149,7 @@ public class FotoActivity extends AppCompatActivity {
     }
 
     private void salvarFoto() {
-       // exibeProgresso();
+        // exibeProgresso();
         if (uri != null) {
             firebaseStorage = FirebaseStorage.getInstance();
             firebaseStorage = FirebaseStorage.getInstance();
@@ -192,11 +193,11 @@ public class FotoActivity extends AppCompatActivity {
 
     private void salvar() {
 
-    Usuario usuario = new Usuario();
 
+        usuario.foto = fotoGaleria;
         firebaseAuth = ConfiguracaoFiribase.getFirebaseAutenticacao();
-        DatabaseReference reference = InstanciaFirebase.getDatabase().getReference("usuarios").child( spm.getPreferencia("USUARIO_LOGADO", "USUARIO", "erro"));
-        reference.setValue(usuario);
+        DatabaseReference reference = InstanciaFirebase.getDatabase().getReference("usuarios").child(spm.getPreferencia("USUARIO_LOGADO", "USUARIO", "erro")).child("foto");
+        reference.setValue(usuario.foto);
         reference.keepSynced(true);
         //dialog.dismiss();
         Toast.makeText(this, "Salvo com sucesso", Toast.LENGTH_SHORT).show();
@@ -206,52 +207,34 @@ public class FotoActivity extends AppCompatActivity {
     }
 
     private void buscarPerfilWeb() {
-
-        DatabaseReference reference = InstanciaFirebase.getDatabase().getReference("usuarios").child(spm.getPreferencia("USUARIO_LOGADO", "USUARIO", "erro"));
+        usuario = new Usuario();
+        DatabaseReference reference = InstanciaFirebase.getDatabase().getReference("usuarios").child(spm.getPreferencia("USUARIO_LOGADO", "USUARIO", "erro")).child("foto");
         reference.keepSynced(true);
-        reference.addChildEventListener(new ChildEventListener() {
+        reference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                usuario =(Usuario) dataSnapshot.getValue(Usuario.class);
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.exists() & dataSnapshot != null) {
+
+                    usuario.foto = dataSnapshot.getValue().toString();
+                }
 
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                dialog.dismiss();
-                Toast.makeText(FotoActivity.this, databaseError.getMessage().toString(), Toast.LENGTH_SHORT).show();
             }
         });
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (usuario == null) {
 
-                } else {
-
-
-                }
-                if (usuario != null) {
+                if (usuario.foto != null) {
 
                     Picasso.with(FotoActivity.this).load(usuario.foto).into(foto);
 
-                    galeria.setEnabled(false);
-
+                   // galeria.setEnabled(false);
 
 
                 } else {

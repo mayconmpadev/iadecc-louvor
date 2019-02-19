@@ -27,7 +27,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
+
 import net.eletroseg.iadecclouvor.R;
+import net.eletroseg.iadecclouvor.modelo.Usuario;
 import net.eletroseg.iadecclouvor.util.Base64Custom;
 import net.eletroseg.iadecclouvor.util.ConfiguracaoFiribase;
 import net.eletroseg.iadecclouvor.util.InstanciaFirebase;
@@ -86,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         usuario = (TextView) headerView.findViewById(R.id.text_nome_usuario_logado);
         empresa = (TextView) headerView.findViewById(R.id.text_nome_da_empresa);
         foto = (ImageView) headerView.findViewById(R.id.image_empresa);
-       // buscarPerfilWeb();
+        buscarPerfilWeb();
         usuario.setText(spm.getPreferencia("VENDEDOR_LOGADO", "VENDEDOR", ""));
         empresa.setText(Base64Custom.decodificarBase64(spm.getPreferencia("USUARIO_LOGADO", "USUARIO", "")));
 foto.setOnClickListener(new View.OnClickListener() {
@@ -204,52 +207,43 @@ foto.setOnClickListener(new View.OnClickListener() {
         });
     }
 
+
     private void buscarPerfilWeb() {
-
-        DatabaseReference reference = InstanciaFirebase.getDatabase().getReference(spm.getPreferencia("USUARIO_LOGADO", "USUARIO", "erro")).child("perfil");
+        final Usuario usuario = new Usuario();
+        DatabaseReference reference = InstanciaFirebase.getDatabase().getReference("usuarios").child(spm.getPreferencia("USUARIO_LOGADO", "USUARIO", "erro")).child("foto");
         reference.keepSynced(true);
-        reference.addChildEventListener(new ChildEventListener() {
+        reference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-               // perfil = dataSnapshot.getValue(Perfil.class);
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.exists() & dataSnapshot != null) {
+
+                    usuario.foto = dataSnapshot.getValue().toString();
+                }
 
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                dialog.dismiss();
-                Toast.makeText(MainActivity.this, databaseError.getMessage().toString(), Toast.LENGTH_SHORT).show();
             }
         });
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-              //  if (perfil != null) {
+
+                if (usuario.foto != null) {
+
+                    Picasso.with(MainActivity.this).load(usuario.foto).into(foto);
 
 
-                  //  Picasso.with(MainActivity.this).load(perfil.foto).into(foto);
 
 
+                } else {
 
+                }
 
-
-              //  }
-           }
+            }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

@@ -343,6 +343,7 @@ public class CadastroLoginActivity extends AppCompatActivity {
                     usuarios.nome = nome.getText().toString().toLowerCase();
                     usuarios.telefone =  telefone.getText().toString();
                     usuarios.moderador = "nao" ;
+                    usuarios.foto = "";
 
                     if (validarCampos()) {
                         cadastrarUsuario();
