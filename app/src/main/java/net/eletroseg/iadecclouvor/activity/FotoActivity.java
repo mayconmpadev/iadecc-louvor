@@ -41,7 +41,6 @@ import java.io.IOException;
 public class FotoActivity extends AppCompatActivity {
     ImageView foto;
     Button galeria, excluir;
-
     FirebaseAuth firebaseAuth;
     SPM spm = new SPM(FotoActivity.this);
     private static final int GALLERY_INTENT = 2;
@@ -56,11 +55,9 @@ public class FotoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_foto);
-
         foto = findViewById(R.id.foto_image_perfil);
         galeria = findViewById(R.id.foto_btn_alterar);
         excluir = findViewById(R.id.foto_btn_excluir);
-
         galeria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,50 +66,33 @@ public class FotoActivity extends AppCompatActivity {
                 startActivityForResult(intent, GALLERY_INTENT);
             }
         });
-
         excluir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 salvarFoto();
             }
         });
-
         buscarPerfilWeb();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == GALLERY_INTENT && resultCode == RESULT_OK) {
-
-
             uri = data.getData();
-
             try {
                 Bitmap imagem = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-
-
                 Bitmap rotatedBitmap = null;
-
                 rotatedBitmap = rotateBitmap1(this, uri, imagem);
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-
                 rotatedBitmap.compress(Bitmap.CompressFormat.PNG, 5, stream);
-
-
                 foto.setImageBitmap(rotatedBitmap);
                 uri = getImageUri(this, rotatedBitmap);
-
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-
         }
     }
-
 
     public static Bitmap rotateBitmap1(Context context, Uri photoUri, Bitmap bitmap) {
         int orientation = getOrientation(context, photoUri);
@@ -133,7 +113,6 @@ public class FotoActivity extends AppCompatActivity {
             cursor.close();
             return -1;
         }
-
         cursor.moveToFirst();
         int orientation = cursor.getInt(0);
         cursor.close();
@@ -165,9 +144,7 @@ public class FotoActivity extends AppCompatActivity {
                             Uri downloadUrl = uri;
                             String imagem;
                             imagem = downloadUrl.toString();
-
                             fotoGaleria = imagem;
-
                             salvar();
                         }
                     });
@@ -192,8 +169,6 @@ public class FotoActivity extends AppCompatActivity {
     }
 
     private void salvar() {
-
-
         usuario.foto = fotoGaleria;
         firebaseAuth = ConfiguracaoFiribase.getFirebaseAutenticacao();
         DatabaseReference reference = InstanciaFirebase.getDatabase().getReference("usuarios").child(spm.getPreferencia("USUARIO_LOGADO", "USUARIO", "erro")).child("foto");
@@ -215,10 +190,8 @@ public class FotoActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 if (dataSnapshot.exists() & dataSnapshot != null) {
-
                     usuario.foto = dataSnapshot.getValue().toString();
                 }
-
             }
 
             @Override
@@ -231,16 +204,8 @@ public class FotoActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 if (usuario.foto != null) {
-
                     Picasso.with(FotoActivity.this).load(usuario.foto).into(foto);
-
-                   // galeria.setEnabled(false);
-
-
-                } else {
-
                 }
-
             }
 
             @Override

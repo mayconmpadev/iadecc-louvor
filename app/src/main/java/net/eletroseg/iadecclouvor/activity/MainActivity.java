@@ -236,13 +236,7 @@ foto.setOnClickListener(new View.OnClickListener() {
 
                     Picasso.with(MainActivity.this).load(usuario.foto).into(foto);
 
-
-
-
-                } else {
-
                 }
-
             }
 
             @Override
