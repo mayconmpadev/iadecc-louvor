@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/item_menu_produto_editar"
+        android:id="@+id/item_menu_letra_editar"
         android:title="editar"
         android:icon="@drawable/ic_action_edit_branco"
         android:orderInCategory="200"
@@ -12,7 +12,7 @@
         />
 
     <item
-        android:id="@+id/item_menu_produto_salvar"
+        android:id="@+id/item_menu_letra_salvar"
         android:title="salvar"
         android:icon="@drawable/ic_action_salvar_branco"
         android:orderInCategory="200"

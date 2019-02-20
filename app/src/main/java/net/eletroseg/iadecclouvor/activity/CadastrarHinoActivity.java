@@ -11,16 +11,21 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.firebase.database.DatabaseReference;
 
 import net.eletroseg.iadecclouvor.R;
+import net.eletroseg.iadecclouvor.modelo.Letra;
 import net.eletroseg.iadecclouvor.modelo.Selecao;
+import net.eletroseg.iadecclouvor.util.InstanciaFirebase;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class CadastrarHinoActivity extends AppCompatActivity {
-EditText nome, cantor, tom, letra;
+EditText nome, cantor, tom, link, editLetra;
     MenuItem menuSalvar;
     MenuItem menuEditar;
 
@@ -38,9 +43,12 @@ EditText nome, cantor, tom, letra;
         nome = findViewById(R.id.cadastro_hino_edit_nome);
         cantor = findViewById(R.id.cadastro_hino_edit_cantor);
         tom = findViewById(R.id.cadastro_hino_edit_tom);
-        letra = findViewById(R.id.cadastro_hino_edit_letra);
+        link = findViewById(R.id.cadastro_hino_edit_link);
+        editLetra = findViewById(R.id.cadastro_hino_edit_letra);
 
-        letra.addTextChangedListener(new TextWatcher() {
+
+
+        editLetra.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -49,8 +57,8 @@ EditText nome, cantor, tom, letra;
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (abilitar) {
-                    posicao = letra.getSelectionStart();
-                    contrV(letra.getText().toString());
+                    posicao = editLetra.getSelectionStart();
+                    contrV(editLetra.getText().toString());
 
 
                 }
@@ -93,7 +101,7 @@ EditText nome, cantor, tom, letra;
         runOnUiThread(new Runnable() {
 
             public void run() {
-                final SpannableString text = new SpannableString(letra.getText().toString());
+                final SpannableString text = new SpannableString(editLetra.getText().toString());
                 for (int i = 0; i < negrito.size(); i++) {
 
                      text.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), negrito.get(i).comeco, negrito.get(i).fim - 1, 0);
@@ -106,17 +114,58 @@ EditText nome, cantor, tom, letra;
                 }
                 abilitar = false;
                 negrito.clear();
-                letra.setText(text, EditText.BufferType.SPANNABLE);
+                editLetra.setText(text, EditText.BufferType.SPANNABLE);
                 a = 0;
                 b = 0;
 
-                letra.setSelection(posicao);
+                editLetra.setSelection(posicao);
 
 
             }
         });
 
     }
+    private boolean validar(){
+        boolean  a = true;
+
+        if (editLetra.getText().toString().isEmpty()){
+            a = false;
+        }else if (nome.getText().toString().isEmpty()){
+            a = false;
+        }
+
+
+        return a;
+    }
+
+    private void salvar(){
+        Letra letra = new Letra();
+        if (validar()){
+
+            DatabaseReference reference = InstanciaFirebase.getDatabase().getReference("letras").push();
+            letra.id = reference.getKey();
+
+            letra.nome = nome.getText().toString();
+            letra.cantor = cantor.getText().toString();
+            letra.tom = tom.getText().toString();
+            letra.link = link.getText().toString();
+            letra.letra = editLetra.getText().toString();
+            letra.data = data();
+            reference.setValue(letra);
+
+        }else {
+            Toast.makeText(this, "Campos nao podem ser vazios", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private String data() {
+        long date = System.currentTimeMillis();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        String dateString = sdf.format(date);
+        return dateString;
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -124,8 +173,8 @@ EditText nome, cantor, tom, letra;
 
         getMenuInflater().inflate(R.menu.salvar, menu);
 
-        menuSalvar = menu.findItem(R.id.item_menu_produto_salvar);
-        menuEditar = menu.findItem(R.id.item_menu_produto_editar);
+        menuSalvar = menu.findItem(R.id.item_menu_letra_salvar);
+        menuEditar = menu.findItem(R.id.item_menu_letra_editar);
 
 
         return true;
@@ -138,14 +187,11 @@ EditText nome, cantor, tom, letra;
         int id = item.getItemId();
 
 //
-        if (id == R.id.item_menu_novo_hino) {
+        if (id == R.id.item_menu_letra_salvar) {
 
-            Intent intent = new Intent(CadastrarHinoActivity.this, CadastrarHinoActivity.class);
-            intent.putExtra("modo", false);
-            startActivity(intent);
-            finish();
-        } else if (id == R.id.item_menu_pesquisa_hino) {
-            getSupportActionBar().hide();
+          salvar();
+        } else if (id == R.id.item_menu_letra_editar) {
+
         } else if (id == android.R.id.home) {
 
             Intent intent = new Intent(CadastrarHinoActivity.this, MainActivity.class);

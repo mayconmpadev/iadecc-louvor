@@ -16,7 +16,7 @@
         android:title="novo"
         android:orderInCategory="200"
         app:showAsAction="ifRoom"
-        android:tooltipText="novo"
+        android:icon="@drawable/ic_action_add_branco"
 
         />
 
