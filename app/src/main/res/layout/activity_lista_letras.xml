@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".activity.ListaLetrasActivity">
     <LinearLayout
-        android:id="@+id/layout_produto_pesquisa"
+        android:id="@+id/lista_layout_letra_pesquisa"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@drawable/borda_pesquisa"
@@ -16,7 +16,7 @@
         android:visibility="gone">
 
         <ImageView
-            android:id="@+id/image_produto_voltar"
+            android:id="@+id/lista_image_letra_voltar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -25,7 +25,7 @@
             android:src="@drawable/ic_action_arrow_back_black_24dp" />
 
         <EditText
-            android:id="@+id/edit_produto_pesquisa"
+            android:id="@+id/lista_edit_letra_pesquisa"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -37,7 +37,7 @@
             android:theme="@style/MyEditTextTheme" />
 
         <ImageView
-            android:id="@+id/image_produto_apagar"
+            android:id="@+id/lista_image_letra_apagar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -50,7 +50,7 @@
     </LinearLayout>
 
     <ListView
-        android:id="@+id/listview_produto_2"
+        android:id="@+id/lista_listview_letra"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1">

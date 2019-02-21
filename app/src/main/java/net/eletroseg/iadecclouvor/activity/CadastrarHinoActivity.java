@@ -150,6 +150,7 @@ EditText nome, cantor, tom, link, editLetra;
             letra.tom = tom.getText().toString();
             letra.link = link.getText().toString();
             letra.letra = editLetra.getText().toString();
+            letra.repeticao = "0";
             letra.data = data();
             reference.setValue(letra);
 

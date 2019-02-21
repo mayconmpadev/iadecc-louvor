@@ -15,7 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.CadastrarHinoActivity"></activity>
+        <activity android:name=".activity.ExibirLetraActivity"></activity>
+        <activity android:name=".activity.CadastrarHinoActivity" />
         <activity android:name=".activity.FotoActivity" />
         <activity android:name=".activity.ListaAvisosActivity" />
         <activity android:name=".activity.ConfiguracaoActivity" />

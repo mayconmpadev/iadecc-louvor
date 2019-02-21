@@ -60,7 +60,7 @@ public class LetraAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.letra.setText(ArrayList.get(position).letra);
+        holder.letra.setText(ArrayList.get(position).nome);
         holder.cantor.setText(ArrayList.get(position).cantor);
         holder.data.setText(ArrayList.get(position).data);
         holder.avaliacao.setText(ArrayList.get(position).avaliacao);

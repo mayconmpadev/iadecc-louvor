@@ -2,22 +2,26 @@ package net.eletroseg.iadecclouvor.activity;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import net.eletroseg.iadecclouvor.R;
+import net.eletroseg.iadecclouvor.adapter.LetraAdapter;
 import net.eletroseg.iadecclouvor.modelo.Letra;
 import net.eletroseg.iadecclouvor.util.InstanciaFirebase;
 import net.eletroseg.iadecclouvor.util.SPM;
@@ -26,19 +30,39 @@ import java.util.ArrayList;
 
 public class ListaLetrasActivity extends AppCompatActivity {
 
-    private ArrayList<Letra> arrayListLetra = new ArrayList<Letra>();
 
-    private EditText editProduto;
+
+    private EditText editLetra;
     private LinearLayout linearLayout;
     private ImageView voltar, apagar;
-    private ListView lvProduto;
+    private ListView lvLetra;
     private MenuItem menuNovo;
+    private Letra letra;
+
+    private ArrayList<Letra> arrayListLetra = new ArrayList<Letra>();
     private SPM spm = new SPM(ListaLetrasActivity.this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_letras);
+
+        editLetra = findViewById(R.id.lista_edit_letra_pesquisa);
+        linearLayout = findViewById(R.id.lista_layout_letra_pesquisa);
+        voltar = findViewById(R.id.lista_image_letra_voltar);
+        apagar = findViewById(R.id.lista_image_letra_apagar);
+        lvLetra = findViewById(R.id.lista_listview_letra);
+        buscarLetras();
+
+        lvLetra.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+           letra = (Letra) lvLetra.getItemAtPosition(position);
+
+           Intent intent = new Intent(ListaLetrasActivity.this, ExibirLetraActivity.class);
+                intent.putExtra("letra", letra.letra);
+            startActivity(intent);}
+        });
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -68,7 +92,7 @@ public class ListaLetrasActivity extends AppCompatActivity {
         } else if (id == R.id.item_menu_pesquisa_hino) {
             linearLayout.setVisibility(View.VISIBLE);
             getSupportActionBar().hide();
-            editProduto.requestFocus();
+            editLetra.requestFocus();
            // aparecerTeclado(editProduto);
 
 
@@ -81,15 +105,30 @@ public class ListaLetrasActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    private void buscarLetras(){
+    private void buscarLetras() {
         arrayListLetra.clear();
 
         DatabaseReference reference = InstanciaFirebase.getDatabase().getReference("letras");
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+        reference.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Letra letra =  dataSnapshot.getValue(Letra.class);
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Letra letra = dataSnapshot.getValue(Letra.class);
                 arrayListLetra.add(letra);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
             }
 
             @Override
@@ -97,5 +136,18 @@ public class ListaLetrasActivity extends AppCompatActivity {
 
             }
         });
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                lvLetra.setAdapter(new LetraAdapter(ListaLetrasActivity.this, arrayListLetra));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+
+            }
+        });
+
     }
 }
