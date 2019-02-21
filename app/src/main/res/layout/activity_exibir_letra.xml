@@ -19,6 +19,7 @@
                 android:layout_height="match_parent"
                 android:textSize="15dp"
                 android:textColor="@color/preto"
+
                 android:layout_weight="1"/>
 
         </LinearLayout>
