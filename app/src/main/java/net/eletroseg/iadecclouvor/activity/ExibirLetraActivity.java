@@ -7,9 +7,17 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import net.eletroseg.iadecclouvor.R;
 import net.eletroseg.iadecclouvor.modelo.Selecao;
@@ -17,34 +25,79 @@ import net.eletroseg.iadecclouvor.modelo.Selecao;
 import java.util.ArrayList;
 
 public class ExibirLetraActivity extends AppCompatActivity {
-    TextView letraDoHino;
+    TextView letraDoHino, valorVelocidade;
+    ScrollView scrollView;
+    LinearLayout linearLayout;
+    SeekBar seekBar;
     String hino;
+    boolean c = true;
+    boolean d = true;
     int a = 0;
     int b = 0;
-    int posicao = 0;
+    boolean ativar = true;
     boolean abilitar = true;
+    int numero = 0;
+    MinhaThread thread = new MinhaThread();
     ArrayList<Selecao> negrito = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exibir_letra);
         letraDoHino = findViewById(R.id.exibir_letra_text_letra);
+        scrollView = findViewById(R.id.letra_sv);
+        linearLayout = findViewById(R.id.exibir_letra_layout_velocidade);
+        valorVelocidade = findViewById(R.id.exibir_letra_text_velocidade);
+        seekBar = findViewById(R.id.exibir_letra_seekbar);
+
         getSupportActionBar().hide();
+        Intent intent = getIntent();
+        hino = intent.getStringExtra("letra");
 
-       Intent intent =  getIntent();
-       hino = intent.getStringExtra("letra");
+        letraDoHino.setText(hino);
 
-       letraDoHino.setText(hino);
         contrV(letraDoHino.getText().toString());
 
-       letraDoHino.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
-               contrV(letraDoHino.getText().toString());
-           }
-       });
-    }
+        letraDoHino.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (d){
+                    thread.start();
+                    d = false;
+                }
 
+                if (c){
+
+                    ativar = true;
+                    Toast.makeText(ExibirLetraActivity.this, "inicio", Toast.LENGTH_SHORT).show();
+                  //  numero = scrollView.getScrollX();
+                    Toast.makeText(ExibirLetraActivity.this, String.valueOf(scrollView.getScrollX()), Toast.LENGTH_SHORT).show();
+                    c = false;
+                }else {
+                    ativar = false;
+                    Toast.makeText(ExibirLetraActivity.this, "parar", Toast.LENGTH_SHORT).show();
+                    c = true;
+                }
+            }
+        });
+
+        letraDoHino.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+              if (c){
+                  linearLayout.setVisibility(View.VISIBLE);
+                  c = false;
+              }else {
+                  linearLayout.setVisibility(View.GONE);
+                  c = true;
+              }
+
+                return true;
+            }
+        });
+
+
+    }
 
     private void contrV(String texto) {
         abilitar = false;
@@ -96,4 +149,35 @@ public class ExibirLetraActivity extends AppCompatActivity {
         });
 
     }
+
+    class MinhaThread extends Thread {
+        @Override
+        public void run() {
+
+            if (ativar ) {
+                for (int i = 0; i < scrollView.getScrollX(); i++) {
+                    numero = i;
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            if (ativar){
+                                scrollView.scrollTo(0, numero);
+                            }
+
+
+
+                        }
+                    });
+                }
+
+
+            }
+
+        }
+    }
+
 }
