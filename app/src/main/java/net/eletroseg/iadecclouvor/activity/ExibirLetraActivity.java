@@ -37,6 +37,7 @@ public class ExibirLetraActivity extends AppCompatActivity {
     boolean ativar = true;
     boolean abilitar = true;
     int numero = 0;
+    int velocidade = 1;
     MinhaThread thread = new MinhaThread();
     ArrayList<Selecao> negrito = new ArrayList<>();
 
@@ -70,7 +71,6 @@ public class ExibirLetraActivity extends AppCompatActivity {
 
                     ativar = true;
                     Toast.makeText(ExibirLetraActivity.this, "inicio", Toast.LENGTH_SHORT).show();
-                  //  numero = scrollView.getScrollX();
                     Toast.makeText(ExibirLetraActivity.this, String.valueOf(scrollView.getScrollX()), Toast.LENGTH_SHORT).show();
                     c = false;
                 }else {
@@ -93,6 +93,23 @@ public class ExibirLetraActivity extends AppCompatActivity {
               }
 
                 return true;
+            }
+        });
+seekBar.setProgress(3);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                valorVelocidade.setText(String.valueOf(seekBar.getProgress()));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
             }
         });
 
@@ -154,25 +171,28 @@ public class ExibirLetraActivity extends AppCompatActivity {
         @Override
         public void run() {
 
-            if (ativar ) {
-                for (int i = 0; i < scrollView.getScrollX(); i++) {
+
+                for (int i = 0; i < scrollView.getBottom(); i++) {
+                    if (!ativar ) {
+                        i --;
+                    }
                     numero = i;
                     try {
-                        Thread.sleep(100);
+                        Thread.sleep(10);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                     runOnUiThread(new Runnable() {
                         public void run() {
                             if (ativar){
-                                scrollView.scrollTo(0, numero);
+                                scrollView.scrollTo(0, scrollView.getScrollX() + numero);
                             }
 
 
 
                         }
                     });
-                }
+
 
 
             }

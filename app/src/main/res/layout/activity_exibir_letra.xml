@@ -37,7 +37,6 @@
         android:id="@+id/exibir_letra_layout_velocidade"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:background="@color/black_overlay"
         android:orientation="vertical">
 
@@ -49,16 +48,34 @@
             android:textColor="@color/preto"
             android:textStyle="bold"
             android:textSize="23sp"
-            android:text="8"/>
+            android:text="0"/>
 
 
 
-            <SeekBar
-                android:id="@+id/exibir_letra_seekbar"
-                android:layout_width="300dp"
-                android:layout_height="30dp"
-                android:max="10"
-                android:layout_gravity="center" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/ic_action_play_preto"/>
+                <SeekBar
+                    android:id="@+id/exibir_letra_seekbar"
+                    android:layout_width="300dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:max="20"
+                    android:min="2"
+                    android:layout_gravity="center" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/ic_action_pause_preto"/>
+            </LinearLayout>
 
 
 
