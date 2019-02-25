@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
@@ -30,6 +31,7 @@ public class ExibirLetraActivity extends AppCompatActivity {
     LinearLayout linearLayout;
     SeekBar seekBar;
     String hino;
+    ImageView inicio, fechar;
     boolean c = true;
     boolean d = true;
     int a = 0;
@@ -50,6 +52,38 @@ public class ExibirLetraActivity extends AppCompatActivity {
         linearLayout = findViewById(R.id.exibir_letra_layout_velocidade);
         valorVelocidade = findViewById(R.id.exibir_letra_text_velocidade);
         seekBar = findViewById(R.id.exibir_letra_seekbar);
+        inicio = findViewById(R.id.exibir_letra_image_inicio);
+        fechar = findViewById(R.id.exibir_letra_image_fechar);
+
+        fechar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                linearLayout.setVisibility(View.GONE);
+            }
+        });
+
+        inicio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (d) {
+                    thread.start();
+                    d = false;
+                }
+
+                if (c) {
+
+                    ativar = true;
+                    inicio.setImageResource(R.drawable.ic_action_play_preto);
+                    Toast.makeText(ExibirLetraActivity.this, String.valueOf(scrollView.getBottom()), Toast.LENGTH_SHORT).show();
+                    c = false;
+                } else {
+                    inicio.setImageResource(R.drawable.ic_action_pause_preto);
+                    ativar = false;
+
+                    c = true;
+                }
+            }
+        });
 
         getSupportActionBar().hide();
         Intent intent = getIntent();
@@ -62,44 +96,31 @@ public class ExibirLetraActivity extends AppCompatActivity {
         letraDoHino.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (d){
-                    thread.start();
-                    d = false;
-                }
-
-                if (c){
-
-                    ativar = true;
-                    Toast.makeText(ExibirLetraActivity.this, "inicio", Toast.LENGTH_SHORT).show();
-                    Toast.makeText(ExibirLetraActivity.this, String.valueOf(scrollView.getScrollX()), Toast.LENGTH_SHORT).show();
-                    c = false;
-                }else {
-                    ativar = false;
-                    Toast.makeText(ExibirLetraActivity.this, "parar", Toast.LENGTH_SHORT).show();
-                    c = true;
-                }
+               linearLayout.setVisibility(View.VISIBLE);
             }
         });
 
         letraDoHino.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-              if (c){
-                  linearLayout.setVisibility(View.VISIBLE);
-                  c = false;
-              }else {
-                  linearLayout.setVisibility(View.GONE);
-                  c = true;
-              }
+                if (c) {
+                    linearLayout.setVisibility(View.VISIBLE);
+                    c = false;
+                } else {
+                    linearLayout.setVisibility(View.GONE);
+                    c = true;
+                }
 
                 return true;
             }
         });
-seekBar.setProgress(3);
+        seekBar.setProgress(3);
+        valorVelocidade.setText(String.valueOf(seekBar.getProgress()));
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 valorVelocidade.setText(String.valueOf(seekBar.getProgress()));
+                velocidade = seekBar.getProgress();
             }
 
             @Override
@@ -172,26 +193,21 @@ seekBar.setProgress(3);
         public void run() {
 
 
-                for (int i = 0; i < scrollView.getBottom(); i++) {
-                    if (!ativar ) {
-                        i --;
-                    }
-                    numero = i;
+            while (true) {
+                if (ativar) {
                     try {
-                        Thread.sleep(10);
+                        Thread.sleep(10 * velocidade);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                     runOnUiThread(new Runnable() {
                         public void run() {
-                            if (ativar){
-                                scrollView.scrollTo(0, scrollView.getScrollX() + numero);
-                            }
 
-
+                            scrollView.scrollTo(0, scrollView.getScrollY() + 1);
 
                         }
                     });
+                }
 
 
 
