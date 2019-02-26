@@ -26,7 +26,7 @@ import net.eletroseg.iadecclouvor.modelo.Selecao;
 import java.util.ArrayList;
 
 public class ExibirLetraActivity extends AppCompatActivity {
-    TextView letraDoHino, valorVelocidade;
+    TextView letraDoHino, valorVelocidade, fonte1, fonte2, fonte3;
     ScrollView scrollView;
     LinearLayout linearLayout;
     SeekBar seekBar;
@@ -54,6 +54,39 @@ public class ExibirLetraActivity extends AppCompatActivity {
         seekBar = findViewById(R.id.exibir_letra_seekbar);
         inicio = findViewById(R.id.exibir_letra_image_inicio);
         fechar = findViewById(R.id.exibir_letra_image_fechar);
+        fonte1 = findViewById(R.id.exibir_letra_tamanho_1);
+        fonte2 = findViewById(R.id.exibir_letra_tamanho_2);
+        fonte3 = findViewById(R.id.exibir_letra_tamanho_3);
+        fonte1.setTextColor(getResources().getColor(R.color.vermelho));
+        fonte1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                letraDoHino.setTextSize(15f);
+                fonte1.setTextColor(getResources().getColor(R.color.vermelho));
+                fonte2.setTextColor(getResources().getColor(R.color.preto));
+                fonte3.setTextColor(getResources().getColor(R.color.preto));
+            }
+        });
+
+        fonte2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                letraDoHino.setTextSize(18f);
+                fonte1.setTextColor(getResources().getColor(R.color.preto));
+                fonte2.setTextColor(getResources().getColor(R.color.vermelho));
+                fonte3.setTextColor(getResources().getColor(R.color.preto));
+            }
+        });
+
+        fonte3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                letraDoHino.setTextSize(20f);
+                fonte1.setTextColor(getResources().getColor(R.color.preto));
+                fonte2.setTextColor(getResources().getColor(R.color.preto));
+                fonte3.setTextColor(getResources().getColor(R.color.vermelho));
+            }
+        });
 
         fechar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,12 +107,10 @@ public class ExibirLetraActivity extends AppCompatActivity {
 
                     ativar = true;
                     inicio.setImageResource(R.drawable.ic_action_play_preto);
-                    Toast.makeText(ExibirLetraActivity.this, String.valueOf(scrollView.getBottom()), Toast.LENGTH_SHORT).show();
                     c = false;
                 } else {
                     inicio.setImageResource(R.drawable.ic_action_pause_preto);
                     ativar = false;
-
                     c = true;
                 }
             }
@@ -120,7 +151,11 @@ public class ExibirLetraActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 valorVelocidade.setText(String.valueOf(seekBar.getProgress()));
-                velocidade = seekBar.getProgress();
+                if (seekBar.getProgress() != 0){
+                    velocidade = seekBar.getProgress();
+                }
+
+
             }
 
             @Override
