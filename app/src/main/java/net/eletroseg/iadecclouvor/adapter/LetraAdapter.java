@@ -1,15 +1,19 @@
 package net.eletroseg.iadecclouvor.adapter;
 
+
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-
+import android.widget.Filter;
 import net.eletroseg.iadecclouvor.R;
 import net.eletroseg.iadecclouvor.modelo.Letra;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by maycon on 28/02/2018.
@@ -17,64 +21,127 @@ import java.util.ArrayList;
 
 public class LetraAdapter extends BaseAdapter {
 
-    private static ArrayList<Letra> ArrayList;
+    String pesquisa = "";
+    //Itens de exibição / filtrados
+    private List<Letra> itens_exibicao;
+    //Essa lista contem todos os itens.
+    private List<Letra> itens;
+    //Utilizado no getView para carregar e construir um item.
+    private LayoutInflater layoutInflater;
 
-    private LayoutInflater mInflater;
-    Context context;
-    private ViewHolder viewHolder;
-
-    public LetraAdapter(Context context, ArrayList<Letra> dicaModelos) {
-        this.context = context;
-        ArrayList = dicaModelos;
-
-        mInflater = LayoutInflater.from(context);
+    public LetraAdapter(Context context, List<Letra> itens) {
+        this.itens = itens;
+        this.itens_exibicao = itens;
+        layoutInflater = LayoutInflater.from(context);
     }
 
+    @Override
     public int getCount() {
-        return ArrayList.size();
+        return itens_exibicao.size();
     }
 
-    public Object getItem(int position) {
-        return ArrayList.get(position);
+    @Override
+    public Object getItem(int arg0) {
+        return itens_exibicao.get(arg0);
     }
 
-    public long getItemId(int position) {
-        return position;
+    @Override
+    public long getItemId(int arg0) {
+        return arg0;
     }
 
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-        if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.item_lista_letra, null);
+    @Override
+    public View getView(int arg0, View arg1, ViewGroup arg2) {
+        ItemHelper itemHelper = new ItemHelper();
+        Letra objeto = itens_exibicao.get(arg0);
 
-            holder = new ViewHolder();
-            holder.letra      = (TextView) convertView.findViewById(R.id.text_item_lista_letra_nome);
-            holder.cantor          = (TextView) convertView.findViewById(R.id.text_item_lista_letra_cantor);
-            holder.data             = (TextView) convertView.findViewById(R.id.text_item_lista_letra_data);
-            holder.avaliacao    = (TextView) convertView.findViewById(R.id.text_item_lista_letra_avaliacao);
+        if (arg1 == null) {
+            arg1 = layoutInflater.inflate(R.layout.item_lista_letra, null);
 
-
-
-            convertView.setTag(holder);
+            itemHelper.nome = (TextView) arg1.findViewById(R.id.text_item_lista_letra_nome);
+            itemHelper.cantor = (TextView) arg1.findViewById(R.id.text_item_lista_letra_cantor);
+            itemHelper.data = (TextView) arg1.findViewById(R.id.text_item_lista_letra_data);
+            arg1.setTag(itemHelper);
         } else {
-            holder = (ViewHolder) convertView.getTag();
+            itemHelper = (ItemHelper) arg1.getTag();
         }
 
-        holder.letra.setText(ArrayList.get(position).nome);
-        holder.cantor.setText(ArrayList.get(position).cantor);
-        holder.data.setText(ArrayList.get(position).data);
-        holder.avaliacao.setText(ArrayList.get(position).avaliacao);
+        // itemHelper.nome.setText(objeto.nome);
+        itemHelper.nome.setText(Html.fromHtml(objeto.nome));
+        itemHelper.cantor.setText(objeto.cantor);
+        itemHelper.data.setText(objeto.data);
 
-        return convertView;
+        return arg1;
     }
 
-    static class ViewHolder {
-        TextView letra, cantor, avaliacao, data;
+    private class ItemHelper {
 
-
-
+        TextView nome, cantor, data;
     }
+
+    /**
+     * Método responsável pelo filtro. Utilizaremos em um EditText
+     *
+     * @return
+     */
+    public Filter getFilter() {
+        Filter filter = new Filter() {
+
+            @Override
+            protected FilterResults performFiltering(CharSequence filtro) {
+
+                FilterResults results = new FilterResults();
+                //se não foi realizado nenhum filtro insere todos os itens.
+                if (filtro == null || filtro.length() == 0) {
+                    results.count = itens.size();
+                    results.values = itens;
+                } else {
+                    //cria um array para armazenar os objetos filtrados.
+                    List<Letra> itens_filtrados = new ArrayList<Letra>();
+
+                    //percorre toda lista verificando se contem a palavra do filtro na descricao do objeto.
+                    for (int i = 0; i < itens.size(); i++) {
+                        Letra data = itens.get(i);
+
+                        filtro = filtro.toString().toLowerCase();
+                        String condicao = data.nome.toLowerCase();
+                        String condicao2 = data.cantor.toLowerCase();
+
+                        if (condicao.contains(filtro)) {
+                            //se conter adiciona na lista de itens filtrados.
+                            itens_filtrados.add(data);
+                            pesquisa = (String) filtro;
+                        }
+                        if (condicao2.contains(filtro)) {
+                            //se conter adiciona na lista de itens filtrados.
+                            itens_filtrados.add(data);
+                            // pesquisa = (String) filtro;
+                        }
+                    }
+                    // Define o resultado do filtro na variavel FilterResults
+                    results.count = itens_filtrados.size();
+                    results.values = itens_filtrados;
+                }
+                return results;
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            protected void publishResults(CharSequence constraint, Filter.FilterResults results) {
+                itens_exibicao = (List<Letra>) results.values; // Valores filtrados.
+                notifyDataSetChanged();  // Notifica a lista de alteração
+            }
+
+        };
+        return filter;
+    }
+
 }
+
+
+
+
+
 
 
 

@@ -153,6 +153,9 @@ EditText nome, cantor, tom, link, editLetra;
             letra.repeticao = "0";
             letra.data = data();
             reference.setValue(letra);
+            Intent intent =  new Intent(CadastrarHinoActivity.this, ListaLetrasActivity.class);
+            startActivity(intent);
+            finish();
 
         }else {
             Toast.makeText(this, "Campos nao podem ser vazios", Toast.LENGTH_SHORT).show();

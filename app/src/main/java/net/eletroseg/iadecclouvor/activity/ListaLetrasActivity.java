@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,19 +15,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-
 import net.eletroseg.iadecclouvor.R;
 import net.eletroseg.iadecclouvor.adapter.LetraAdapter;
 import net.eletroseg.iadecclouvor.modelo.Letra;
 import net.eletroseg.iadecclouvor.util.InstanciaFirebase;
 import net.eletroseg.iadecclouvor.util.SPM;
-
 import java.util.ArrayList;
 
 public class ListaLetrasActivity extends AppCompatActivity {
@@ -41,6 +40,7 @@ public class ListaLetrasActivity extends AppCompatActivity {
 
     private ArrayList<Letra> arrayListLetra = new ArrayList<Letra>();
     private SPM spm = new SPM(ListaLetrasActivity.this);
+    private LetraAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +52,48 @@ public class ListaLetrasActivity extends AppCompatActivity {
         voltar = findViewById(R.id.lista_image_letra_voltar);
         apagar = findViewById(R.id.lista_image_letra_apagar);
         lvLetra = findViewById(R.id.lista_listview_letra);
+        adapter = new LetraAdapter(ListaLetrasActivity.this, arrayListLetra);
+        lvLetra.setAdapter(adapter);
         buscarLetras();
+
+
+        voltar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                linearLayout.setVisibility(View.GONE);
+                getSupportActionBar().show();
+               // esconderTeclado(ListaCliente2Activity.this);
+
+
+            }
+        });
+
+        apagar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editLetra.setText("");
+            }
+        });
+
+        editLetra.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                adapter.getFilter().filter(s.toString());
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         lvLetra.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -114,11 +155,24 @@ public class ListaLetrasActivity extends AppCompatActivity {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Letra letra = dataSnapshot.getValue(Letra.class);
                 arrayListLetra.add(letra);
+
+                // constroi o adapter passando os itens.
+                adapter = new LetraAdapter(ListaLetrasActivity.this, arrayListLetra);
+                lvLetra.setAdapter(adapter);
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
+                Letra letra = dataSnapshot.getValue(Letra.class);
+                for (int i = 0; i < arrayListLetra.size(); i++) {
+                    if (arrayListLetra.get(i).id.equals(letra.id)) {
+                        arrayListLetra.remove(i);
+                    }
+                }
+                arrayListLetra.add(letra);
+                // constroi o adapter passando os itens.
+                adapter = new LetraAdapter(ListaLetrasActivity.this, arrayListLetra);
+                lvLetra.setAdapter(adapter);
             }
 
             @Override
@@ -139,7 +193,7 @@ public class ListaLetrasActivity extends AppCompatActivity {
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                lvLetra.setAdapter(new LetraAdapter(ListaLetrasActivity.this, arrayListLetra));
+
             }
 
             @Override
