@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:id="@+id/layout_linear_letra"
@@ -13,18 +13,26 @@
 <ImageView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_marginRight="16dp"
     android:src="@drawable/letra_48"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textColor="@color/preto"
-        android:text="letra"/>
+        android:text="visualizar letra"/>
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/preto">
+
+    </View>
+
     <LinearLayout
-        android:id="@+id/layout_linear_cifra"
+        android:id="@+id/layout_linear_letra_editar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="4dp"
@@ -32,16 +40,22 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/cifra_48"/>
+            android:layout_marginRight="16dp"
+            android:src="@drawable/edit_48"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textColor="@color/preto"
-            android:text="letra"/>
+            android:text="editar letra"/>
 
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/preto">
 
+    </View>
     <LinearLayout
         android:id="@+id/layout_linear_video"
         android:layout_width="match_parent"
@@ -51,13 +65,14 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
             android:src="@drawable/video_48"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textColor="@color/preto"
-            android:text="letra"/>
+            android:text="abrir video"/>
 
     </LinearLayout>
 

@@ -1,6 +1,8 @@
 package net.eletroseg.iadecclouvor.activity;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -15,20 +17,22 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+
 import net.eletroseg.iadecclouvor.R;
 import net.eletroseg.iadecclouvor.adapter.LetraAdapter;
 import net.eletroseg.iadecclouvor.modelo.Letra;
 import net.eletroseg.iadecclouvor.util.InstanciaFirebase;
 import net.eletroseg.iadecclouvor.util.SPM;
+
 import java.util.ArrayList;
 
 public class ListaLetrasActivity extends AppCompatActivity {
-
 
 
     private EditText editLetra;
@@ -41,6 +45,7 @@ public class ListaLetrasActivity extends AppCompatActivity {
     private ArrayList<Letra> arrayListLetra = new ArrayList<Letra>();
     private SPM spm = new SPM(ListaLetrasActivity.this);
     private LetraAdapter adapter;
+    Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +67,7 @@ public class ListaLetrasActivity extends AppCompatActivity {
             public void onClick(View v) {
                 linearLayout.setVisibility(View.GONE);
                 getSupportActionBar().show();
-               // esconderTeclado(ListaCliente2Activity.this);
+                // esconderTeclado(ListaCliente2Activity.this);
 
 
             }
@@ -98,13 +103,13 @@ public class ListaLetrasActivity extends AppCompatActivity {
         lvLetra.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-           letra = (Letra) lvLetra.getItemAtPosition(position);
+                letra = (Letra) lvLetra.getItemAtPosition(position);
 
-           Intent intent = new Intent(ListaLetrasActivity.this, ExibirLetraActivity.class);
-                intent.putExtra("letra", letra.letra);
-            startActivity(intent);}
+                exibirDialog(letra);
+            }
         });
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -126,7 +131,7 @@ public class ListaLetrasActivity extends AppCompatActivity {
 //
         if (id == R.id.item_menu_novo_hino) {
 
-            Intent intent = new Intent(ListaLetrasActivity.this, CadastrarHinoActivity.class);
+            Intent intent = new Intent(ListaLetrasActivity.this, CadastrarLetraActivity.class);
             intent.putExtra("modo", false);
             startActivity(intent);
             finish();
@@ -134,7 +139,7 @@ public class ListaLetrasActivity extends AppCompatActivity {
             linearLayout.setVisibility(View.VISIBLE);
             getSupportActionBar().hide();
             editLetra.requestFocus();
-           // aparecerTeclado(editProduto);
+            // aparecerTeclado(editProduto);
 
 
         } else if (id == android.R.id.home) {
@@ -146,6 +151,7 @@ public class ListaLetrasActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
     private void buscarLetras() {
         arrayListLetra.clear();
 
@@ -163,16 +169,16 @@ public class ListaLetrasActivity extends AppCompatActivity {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Letra letra = dataSnapshot.getValue(Letra.class);
-                for (int i = 0; i < arrayListLetra.size(); i++) {
-                    if (arrayListLetra.get(i).id.equals(letra.id)) {
-                        arrayListLetra.remove(i);
-                    }
-                }
-                arrayListLetra.add(letra);
+              //  Letra letra = dataSnapshot.getValue(Letra.class);
+              //  for (int i = 0; i < arrayListLetra.size(); i++) {
+              //      if (arrayListLetra.get(i).id.equals(letra.id)) {
+               //         arrayListLetra.remove(i);
+               //     }
+               // }
+              //  arrayListLetra.add(letra);
                 // constroi o adapter passando os itens.
-                adapter = new LetraAdapter(ListaLetrasActivity.this, arrayListLetra);
-                lvLetra.setAdapter(adapter);
+              //  adapter = new LetraAdapter(ListaLetrasActivity.this, arrayListLetra);
+              //  lvLetra.setAdapter(adapter);
             }
 
             @Override
@@ -202,6 +208,59 @@ public class ListaLetrasActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    private void exibirDialog(final Letra letraMusical) {
+        dialog = new Dialog(this);
+        dialog.setContentView(R.layout.layout_opcoes);
+        LinearLayout visualizar = dialog.findViewById(R.id.layout_linear_letra);
+        LinearLayout editar = dialog.findViewById(R.id.layout_linear_letra_editar);
+        LinearLayout video = dialog.findViewById(R.id.layout_linear_video);
+
+        visualizar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ListaLetrasActivity.this, ExibirLetraActivity.class);
+                intent.putExtra("letra", letraMusical.letra);
+                startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+
+        editar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ListaLetrasActivity.this, EditaLetraActivity.class);
+                intent.putExtra("id", letraMusical.id);
+                intent.putExtra("nome", letraMusical.nome);
+                intent.putExtra("tom", letraMusical.tom);
+                intent.putExtra("cantor", letraMusical.cantor);
+                intent.putExtra("link", letraMusical.link);
+                intent.putExtra("letra", letraMusical.letra);
+                intent.putExtra("data", letraMusical.data);
+                startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+
+        video.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               abrirLink(letraMusical.link);
+            }
+        });
+        dialog.show();
+    }
+
+    public void abrirLink(String url) {
+
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
+            url = "http://" + url;
+        }
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);
 
     }
 }

@@ -24,10 +24,12 @@ import net.eletroseg.iadecclouvor.util.InstanciaFirebase;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class CadastrarHinoActivity extends AppCompatActivity {
-EditText nome, cantor, tom, link, editLetra;
+public class EditaLetraActivity extends AppCompatActivity {
+
+    EditText nome, cantor, tom, link, editLetra;
     MenuItem menuSalvar;
     MenuItem menuEditar;
+    String sId, sNome, sCantor, sTom, sLink, sEditarLetra, sData;
 
     int a = 0;
     int b = 0;
@@ -38,13 +40,29 @@ EditText nome, cantor, tom, link, editLetra;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cadastrar_hino);
+        setContentView(R.layout.activity_edita_letra);
 
-        nome = findViewById(R.id.cadastro_hino_edit_nome);
-        cantor = findViewById(R.id.cadastro_hino_edit_cantor);
-        tom = findViewById(R.id.cadastro_hino_edit_tom);
-        link = findViewById(R.id.cadastro_hino_edit_link);
-        editLetra = findViewById(R.id.cadastro_hino_edit_letra);
+        nome = findViewById(R.id.editar_letra_edit_nome);
+        cantor = findViewById(R.id.editar_letra_edit_cantor);
+        tom = findViewById(R.id.editar_letra_edit_tom);
+        link = findViewById(R.id.editar_letra_edit_link);
+        editLetra = findViewById(R.id.editar_letra_edit_letra);
+
+Intent intent = getIntent();
+
+sId = intent.getStringExtra("id");
+sNome = intent.getStringExtra("nome");
+sCantor = intent.getStringExtra("cantor");
+sTom = intent.getStringExtra("tom");
+sLink = intent.getStringExtra("link");
+sEditarLetra = intent.getStringExtra("letra");
+sData = intent.getStringExtra("data");
+
+nome.setText(sNome);
+cantor.setText(sCantor);
+tom.setText(sTom);
+link.setText(sLink);
+editLetra.setText(sEditarLetra);
 
 
 
@@ -104,8 +122,8 @@ EditText nome, cantor, tom, link, editLetra;
                 final SpannableString text = new SpannableString(editLetra.getText().toString());
                 for (int i = 0; i < negrito.size(); i++) {
 
-                     text.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), negrito.get(i).comeco, negrito.get(i).fim - 1, 0);
-                   // text.setSpan(new ForegroundColorSpan(Color.RED), negrito.get(i).comeco, negrito.get(i).fim - 1, 0);
+                    text.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), negrito.get(i).comeco, negrito.get(i).fim - 1, 0);
+                    // text.setSpan(new ForegroundColorSpan(Color.RED), negrito.get(i).comeco, negrito.get(i).fim - 1, 0);
                     text.setSpan(new ForegroundColorSpan(Color.GRAY), negrito.get(i).comeco - 1, negrito.get(i).comeco, 0);
                     text.setSpan(new ForegroundColorSpan(Color.GRAY), negrito.get(i).fim - 1, negrito.get(i).fim, 0);
                     // text.setSpan(new ForegroundColorSpan(Color.RED), 5, 9, 0);
@@ -142,18 +160,16 @@ EditText nome, cantor, tom, link, editLetra;
         Letra letra = new Letra();
         if (validar()){
 
-            DatabaseReference reference = InstanciaFirebase.getDatabase().getReference("letras").push();
-            letra.id = reference.getKey();
+            DatabaseReference reference = InstanciaFirebase.getDatabase().getReference("letras").child(sId);
 
             letra.nome = nome.getText().toString();
             letra.cantor = cantor.getText().toString();
             letra.tom = tom.getText().toString();
             letra.link = link.getText().toString();
             letra.letra = editLetra.getText().toString();
-            letra.repeticao = "0";
-            letra.data = data();
+            letra.data = sData;
             reference.setValue(letra);
-            Intent intent =  new Intent(CadastrarHinoActivity.this, ListaLetrasActivity.class);
+            Intent intent =  new Intent(EditaLetraActivity.this, ListaLetrasActivity.class);
             startActivity(intent);
             finish();
 
@@ -193,12 +209,12 @@ EditText nome, cantor, tom, link, editLetra;
 //
         if (id == R.id.item_menu_letra_salvar) {
 
-          salvar();
+            salvar();
         } else if (id == R.id.item_menu_letra_editar) {
 
         } else if (id == android.R.id.home) {
 
-            Intent intent = new Intent(CadastrarHinoActivity.this, MainActivity.class);
+            Intent intent = new Intent(EditaLetraActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
         }
