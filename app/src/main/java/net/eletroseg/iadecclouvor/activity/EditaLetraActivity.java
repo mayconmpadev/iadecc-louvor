@@ -37,6 +37,7 @@ public class EditaLetraActivity extends AppCompatActivity {
     boolean abilitar = true;
     boolean ativar = false;
     ArrayList<Selecao> negrito = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,22 +49,22 @@ public class EditaLetraActivity extends AppCompatActivity {
         link = findViewById(R.id.editar_letra_edit_link);
         editLetra = findViewById(R.id.editar_letra_edit_letra);
 
-Intent intent = getIntent();
+        Intent intent = getIntent();
 
-sId = intent.getStringExtra("id");
-sNome = intent.getStringExtra("nome");
-sCantor = intent.getStringExtra("cantor");
-sTom = intent.getStringExtra("tom");
-sLink = intent.getStringExtra("link");
-sEditarLetra = intent.getStringExtra("letra");
-sData = intent.getStringExtra("data");
+        sId = intent.getStringExtra("id");
+        sNome = intent.getStringExtra("nome");
+        sCantor = intent.getStringExtra("cantor");
+        sTom = intent.getStringExtra("tom");
+        sLink = intent.getStringExtra("link");
+        sEditarLetra = intent.getStringExtra("letra");
+        sData = intent.getStringExtra("data");
 
-nome.setText(sNome);
-cantor.setText(sCantor);
-tom.setText(sTom);
-link.setText(sLink);
-editLetra.setText(sEditarLetra);
-
+        nome.setText(sNome);
+        cantor.setText(sCantor);
+        tom.setText(sTom);
+        link.setText(sLink);
+        editLetra.setText(sEditarLetra);
+        contrV(editLetra.getText().toString());
 
 
         editLetra.addTextChangedListener(new TextWatcher() {
@@ -143,12 +144,13 @@ editLetra.setText(sEditarLetra);
         });
 
     }
-    private boolean validar(){
-        boolean  a = true;
 
-        if (editLetra.getText().toString().isEmpty()){
+    private boolean validar() {
+        boolean a = true;
+
+        if (editLetra.getText().toString().isEmpty()) {
             a = false;
-        }else if (nome.getText().toString().isEmpty()){
+        } else if (nome.getText().toString().isEmpty()) {
             a = false;
         }
 
@@ -156,9 +158,9 @@ editLetra.setText(sEditarLetra);
         return a;
     }
 
-    private void salvar(){
+    private void salvar() {
         Letra letra = new Letra();
-        if (validar()){
+        if (validar()) {
 
             DatabaseReference reference = InstanciaFirebase.getDatabase().getReference("letras").child(sId);
 
@@ -169,11 +171,11 @@ editLetra.setText(sEditarLetra);
             letra.letra = editLetra.getText().toString();
             letra.data = sData;
             reference.setValue(letra);
-            Intent intent =  new Intent(EditaLetraActivity.this, ListaLetrasActivity.class);
+            Intent intent = new Intent(EditaLetraActivity.this, ListaLetrasActivity.class);
             startActivity(intent);
             finish();
 
-        }else {
+        } else {
             Toast.makeText(this, "Campos nao podem ser vazios", Toast.LENGTH_SHORT).show();
         }
     }
@@ -184,7 +186,6 @@ editLetra.setText(sEditarLetra);
         String dateString = sdf.format(date);
         return dateString;
     }
-
 
 
     @Override

@@ -34,8 +34,10 @@ public class ExibirLetraActivity extends AppCompatActivity {
     ImageView inicio, fechar;
     boolean c = true;
     boolean d = true;
+    boolean e = true;
     int a = 0;
     int b = 0;
+    int f = 0;
     boolean ativar = true;
     boolean abilitar = true;
     int numero = 0;
@@ -91,6 +93,7 @@ public class ExibirLetraActivity extends AppCompatActivity {
         fechar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                c = true;
                 linearLayout.setVisibility(View.GONE);
             }
         });
@@ -103,15 +106,15 @@ public class ExibirLetraActivity extends AppCompatActivity {
                     d = false;
                 }
 
-                if (c) {
+                if (e) {
 
                     ativar = true;
                     inicio.setImageResource(R.drawable.ic_action_play_preto);
-                    c = false;
+                    e = false;
                 } else {
                     inicio.setImageResource(R.drawable.ic_action_pause_preto);
                     ativar = false;
-                    c = true;
+                    e = true;
                 }
             }
         });
@@ -127,13 +130,6 @@ public class ExibirLetraActivity extends AppCompatActivity {
         letraDoHino.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               linearLayout.setVisibility(View.VISIBLE);
-            }
-        });
-
-        letraDoHino.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
                 if (c) {
                     linearLayout.setVisibility(View.VISIBLE);
                     c = false;
@@ -141,19 +137,28 @@ public class ExibirLetraActivity extends AppCompatActivity {
                     linearLayout.setVisibility(View.GONE);
                     c = true;
                 }
+            }
+        });
+
+        letraDoHino.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
 
                 return true;
             }
         });
-        seekBar.setProgress(3);
+        seekBar.setProgress(2);
         valorVelocidade.setText(String.valueOf(seekBar.getProgress()));
+        velocidade = seekBar.getProgress();
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                valorVelocidade.setText(String.valueOf(seekBar.getProgress()));
-                if (seekBar.getProgress() != 0){
-                    velocidade = seekBar.getProgress();
-                }
+
+
+                    valorVelocidade.setText(String.valueOf(seekBar.getProgress() + 1));
+                    velocidade = seekBar.getProgress() + 1;
+
 
 
             }
@@ -177,11 +182,13 @@ public class ExibirLetraActivity extends AppCompatActivity {
         for (int i = 0; i < texto.length(); i++) {
             if (texto.substring(i, i + 1).equals("*")) {
                 if (a == 0) {
-                    a = i + 1;
 
+                    a = i - f;
+                    f++;
                 } else {
 
-                    b = i + 1;
+                    b = i + 1 - f;
+f++;
                     Selecao selecao = new Selecao();
                     selecao.comeco = a;
                     selecao.fim = b;
@@ -202,13 +209,13 @@ public class ExibirLetraActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
 
             public void run() {
-                final SpannableString text = new SpannableString(letraDoHino.getText().toString());
+                final SpannableString text = new SpannableString(letraDoHino.getText().toString().replace("*", ""));
                 for (int i = 0; i < negrito.size(); i++) {
 
                     text.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), negrito.get(i).comeco, negrito.get(i).fim - 1, 0);
                     // text.setSpan(new ForegroundColorSpan(Color.RED), negrito.get(i).comeco, negrito.get(i).fim - 1, 0);
-                    text.setSpan(new ForegroundColorSpan(Color.TRANSPARENT), negrito.get(i).comeco - 1, negrito.get(i).comeco, 0);
-                    text.setSpan(new ForegroundColorSpan(Color.TRANSPARENT), negrito.get(i).fim - 1, negrito.get(i).fim, 0);
+                   // text.setSpan(new ForegroundColorSpan(Color.TRANSPARENT), negrito.get(i).comeco - 1, negrito.get(i).comeco, 0);
+                   // text.setSpan(new ForegroundColorSpan(Color.TRANSPARENT), negrito.get(i).fim - 1, negrito.get(i).fim, 0);
                     // text.setSpan(new ForegroundColorSpan(Color.RED), 5, 9, 0);
 
 
@@ -231,7 +238,7 @@ public class ExibirLetraActivity extends AppCompatActivity {
             while (true) {
                 if (ativar) {
                     try {
-                        Thread.sleep(10 * velocidade);
+                        Thread.sleep(200 / velocidade);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -243,7 +250,6 @@ public class ExibirLetraActivity extends AppCompatActivity {
                         }
                     });
                 }
-
 
 
             }

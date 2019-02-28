@@ -38,6 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
+        android:visibility="gone"
         android:background="@color/black_overlay"
 
         android:orientation="vertical">
@@ -105,7 +106,7 @@
                     android:layout_width="300dp"
                     android:layout_height="30dp"
                     android:layout_weight="1"
-                    android:max="20"
+                    android:max="19"
                     android:layout_gravity="center" />
                 <ImageView
                     android:id="@+id/exibir_letra_image_fechar"
