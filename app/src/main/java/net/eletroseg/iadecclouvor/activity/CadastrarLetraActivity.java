@@ -1,5 +1,6 @@
 package net.eletroseg.iadecclouvor.activity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +12,10 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
@@ -25,7 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class CadastrarLetraActivity extends AppCompatActivity {
-EditText nome, cantor, tom, link, editLetra;
+    EditText nome, cantor, tom, link, editLetra;
     MenuItem menuSalvar;
     MenuItem menuEditar;
 
@@ -35,6 +39,9 @@ EditText nome, cantor, tom, link, editLetra;
     boolean abilitar = true;
     boolean ativar = false;
     ArrayList<Selecao> negrito = new ArrayList<>();
+
+    Dialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +52,6 @@ EditText nome, cantor, tom, link, editLetra;
         tom = findViewById(R.id.cadastro_hino_edit_tom);
         link = findViewById(R.id.cadastro_hino_edit_link);
         editLetra = findViewById(R.id.cadastro_hino_edit_letra);
-
 
 
         editLetra.addTextChangedListener(new TextWatcher() {
@@ -104,8 +110,8 @@ EditText nome, cantor, tom, link, editLetra;
                 final SpannableString text = new SpannableString(editLetra.getText().toString());
                 for (int i = 0; i < negrito.size(); i++) {
 
-                     text.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), negrito.get(i).comeco, negrito.get(i).fim - 1, 0);
-                   // text.setSpan(new ForegroundColorSpan(Color.RED), negrito.get(i).comeco, negrito.get(i).fim - 1, 0);
+                    text.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), negrito.get(i).comeco, negrito.get(i).fim - 1, 0);
+                    // text.setSpan(new ForegroundColorSpan(Color.RED), negrito.get(i).comeco, negrito.get(i).fim - 1, 0);
                     text.setSpan(new ForegroundColorSpan(Color.GRAY), negrito.get(i).comeco - 1, negrito.get(i).comeco, 0);
                     text.setSpan(new ForegroundColorSpan(Color.GRAY), negrito.get(i).fim - 1, negrito.get(i).fim, 0);
                     // text.setSpan(new ForegroundColorSpan(Color.RED), 5, 9, 0);
@@ -125,12 +131,13 @@ EditText nome, cantor, tom, link, editLetra;
         });
 
     }
-    private boolean validar(){
-        boolean  a = true;
 
-        if (editLetra.getText().toString().isEmpty()){
+    private boolean validar() {
+        boolean a = true;
+
+        if (editLetra.getText().toString().isEmpty()) {
             a = false;
-        }else if (nome.getText().toString().isEmpty()){
+        } else if (nome.getText().toString().isEmpty()) {
             a = false;
         }
 
@@ -138,9 +145,9 @@ EditText nome, cantor, tom, link, editLetra;
         return a;
     }
 
-    private void salvar(){
+    private void salvar() {
         Letra letra = new Letra();
-        if (validar()){
+        if (validar()) {
 
             DatabaseReference reference = InstanciaFirebase.getDatabase().getReference("letras").push();
             letra.id = reference.getKey();
@@ -153,11 +160,11 @@ EditText nome, cantor, tom, link, editLetra;
             letra.repeticao = "0";
             letra.data = data();
             reference.setValue(letra);
-            Intent intent =  new Intent(CadastrarLetraActivity.this, ListaLetrasActivity.class);
+            Intent intent = new Intent(CadastrarLetraActivity.this, ListaLetrasActivity.class);
             startActivity(intent);
             finish();
 
-        }else {
+        } else {
             Toast.makeText(this, "Campos nao podem ser vazios", Toast.LENGTH_SHORT).show();
         }
     }
@@ -168,7 +175,6 @@ EditText nome, cantor, tom, link, editLetra;
         String dateString = sdf.format(date);
         return dateString;
     }
-
 
 
     @Override
@@ -193,7 +199,7 @@ EditText nome, cantor, tom, link, editLetra;
 //
         if (id == R.id.item_menu_letra_salvar) {
 
-          salvar();
+            salvar();
         } else if (id == R.id.item_menu_letra_editar) {
 
         } else if (id == android.R.id.home) {
@@ -204,5 +210,46 @@ EditText nome, cantor, tom, link, editLetra;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void dialogSair(String texto) {
+        dialog = new Dialog(this);
+        dialog.setContentView(R.layout.layout_sair);
+        TextView msg = dialog.findViewById(R.id.layout_text_sair_msg);
+        Button ok = dialog.findViewById(R.id.layout_btn_sair_ok);
+        Button cancelar = dialog.findViewById(R.id.layout_btn_sair_cancelar);
+
+        msg.setText(texto);
+
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CadastrarLetraActivity.this, ListaLetrasActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (nome.getText().toString().isEmpty() & cantor.getText().toString().isEmpty() & tom.getText().toString().isEmpty() &
+                link.getText().toString().isEmpty() & editLetra.getText().toString().isEmpty()) {
+
+            Intent intent = new Intent(CadastrarLetraActivity.this, ListaLetrasActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            dialogSair("Deseja sair sem salvar?");
+        }
     }
 }

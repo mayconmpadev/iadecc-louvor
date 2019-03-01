@@ -31,7 +31,7 @@ public class ExibirLetraActivity extends AppCompatActivity {
     LinearLayout linearLayout;
     SeekBar seekBar;
     String hino;
-    ImageView inicio, fechar;
+    ImageView inicio, fechar, compartilhar;
     boolean c = true;
     boolean d = true;
     boolean e = true;
@@ -59,6 +59,8 @@ public class ExibirLetraActivity extends AppCompatActivity {
         fonte1 = findViewById(R.id.exibir_letra_tamanho_1);
         fonte2 = findViewById(R.id.exibir_letra_tamanho_2);
         fonte3 = findViewById(R.id.exibir_letra_tamanho_3);
+        fonte3 = findViewById(R.id.exibir_letra_tamanho_3);
+        compartilhar = findViewById(R.id.exibir_letra_image_compartilhar);
         fonte1.setTextColor(getResources().getColor(R.color.vermelho));
         fonte1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,6 +118,16 @@ public class ExibirLetraActivity extends AppCompatActivity {
                     ativar = false;
                     e = true;
                 }
+            }
+        });
+
+        compartilhar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(intent.EXTRA_TEXT, letraDoHino.getText().toString());
+                startActivity(Intent.createChooser(intent, "Compartilhe"));
             }
         });
 
@@ -238,7 +250,7 @@ f++;
             while (true) {
                 if (ativar) {
                     try {
-                        Thread.sleep(200 / velocidade);
+                        Thread.sleep(300 / velocidade);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

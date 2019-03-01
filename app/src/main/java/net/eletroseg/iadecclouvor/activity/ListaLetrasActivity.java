@@ -263,4 +263,11 @@ public class ListaLetrasActivity extends AppCompatActivity {
         startActivity(i);
 
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(ListaLetrasActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
 }

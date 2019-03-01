@@ -5,6 +5,7 @@
         android:id="@+id/item_menu_letra_editar"
         android:title="editar"
         android:icon="@drawable/ic_action_edit_branco"
+        android:visible="false"
         android:orderInCategory="200"
         app:showAsAction="ifRoom"
         android:tooltipText="editar"

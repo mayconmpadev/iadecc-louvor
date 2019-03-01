@@ -11,7 +11,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/text_sair_msg"
+        android:id="@+id/layout_text_sair_msg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/preto"
@@ -28,7 +28,7 @@
         android:layout_marginLeft="30dp"
         android:orientation="horizontal">
         <Button
-            android:id="@+id/btn_sair_cancelar"
+            android:id="@+id/layout_btn_sair_cancelar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/verde_claro"
@@ -39,7 +39,7 @@
 
 
         <Button
-            android:id="@+id/btn_sair_ok"
+            android:id="@+id/layout_btn_sair_ok"
             android:layout_width="wrap_content"
             android:background="@color/branco"
             android:textStyle="bold"
