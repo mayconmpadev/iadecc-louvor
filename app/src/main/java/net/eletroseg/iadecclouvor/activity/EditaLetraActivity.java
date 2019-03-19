@@ -164,6 +164,7 @@ public class EditaLetraActivity extends AppCompatActivity {
 
             DatabaseReference reference = InstanciaFirebase.getDatabase().getReference("letras").child(sId);
 
+            letra.id = sId;
             letra.nome = nome.getText().toString();
             letra.cantor = cantor.getText().toString();
             letra.tom = tom.getText().toString();
