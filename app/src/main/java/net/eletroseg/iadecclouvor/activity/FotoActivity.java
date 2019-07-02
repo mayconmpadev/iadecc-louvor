@@ -203,7 +203,7 @@ public class FotoActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                if (usuario.foto != null) {
+                if (!usuario.foto.equals("")) {
                     Picasso.with(FotoActivity.this).load(usuario.foto).into(foto);
                 }
             }

@@ -232,9 +232,9 @@ foto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                if (usuario.foto != null) {
+                if (!usuario.foto.equals("")) {
 
-                    Picasso.with(MainActivity.this).load(usuario.foto).into(foto);
+                    Picasso.with(MainActivity.this).load(usuario.foto).placeholder(getResources().getDrawable(R.drawable.cifra_48)).into(foto);
 
                 }
             }
