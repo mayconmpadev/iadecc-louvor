@@ -53,6 +53,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         FirebaseApp.initializeApp(this);
+        getSupportActionBar().hide();
+
         email = findViewById(R.id.edit_login_email);
         senha = findViewById(R.id.edit_login_senha);
         entrar = findViewById(R.id.btn_login_entrar);
