@@ -2,10 +2,6 @@ package net.eletroseg.iadecclouvor.activity;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,8 +11,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,6 +36,7 @@ import net.eletroseg.iadecclouvor.util.ConfiguracaoFiribase;
 import net.eletroseg.iadecclouvor.util.InstanciaFirebase;
 import net.eletroseg.iadecclouvor.util.Parametro;
 import net.eletroseg.iadecclouvor.util.SPM;
+import net.eletroseg.iadecclouvor.util.Util;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -43,8 +45,8 @@ public class LoginActivity extends AppCompatActivity {
     private EditText email, senha;
     private Button entrar;
     private TextInputLayout inputLayoutEmail, inputLayoutSenha;
-    private TextView cadastrar, recuperarSenha;
-    private LinearLayout layout;
+    private TextView recuperarSenha;
+    private LinearLayout layout, cadastrar;
     private Dialog dialog;
     SPM spm = new SPM(LoginActivity.this);
 
@@ -61,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
         senha = findViewById(R.id.edit_login_senha);
         inputLayoutEmail = findViewById(R.id.input_layout_login_email);
         inputLayoutSenha = findViewById(R.id.input_layout_login_senha);
-        cadastrar = findViewById(R.id.text_cadastrar);
+        cadastrar = findViewById(R.id.linear_cadastrar);
         recuperarSenha = findViewById(R.id.text_recuperar_senha);
         layout = findViewById(R.id.layout_login);
         layout.setVisibility(View.INVISIBLE);
@@ -86,33 +88,143 @@ public class LoginActivity extends AppCompatActivity {
         recuperarSenha.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                inputLayoutEmail.setErrorEnabled(false);
-                if (!email.getText().toString().equals("")) {
-                    FirebaseAuth.getInstance().sendPasswordResetEmail(email.getText().toString())
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(LoginActivity.this, "Um email de redefinição " +
-                                                "de senha foi enviado ao email " + email.getText().toString(), Toast.LENGTH_LONG).show();
-                                        inputLayoutEmail.setErrorEnabled(false);
-                                    } else {
-                                        inputLayoutEmail.setErrorEnabled(true);
-                                        inputLayoutEmail.setError("Esse email nao esta cadastrado");
-                                    }
-                                }
-                            });
-                } else {
-                    inputLayoutEmail.setErrorEnabled(true);
-                    inputLayoutEmail.setError("nao pode ser vazio");
-                }
+        dialogRedefinirSenha("Atenção", "Tem certeza que deseja redefinir sua senha?");
 
 
             }
         });
     }
 
+    private void redefinirSenha() {
+        inputLayoutEmail.setErrorEnabled(false);
+        if (!email.getText().toString().equals("")) {
+            FirebaseAuth.getInstance().sendPasswordResetEmail(email.getText().toString())
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                dialog.dismiss();
+                                dialogPadrao("Atenção", "Um email de redefinição de senha foi enviado para *" + email.getText().toString() +
+                                        " * clique no link para redefinir sua senha");
+                                inputLayoutEmail.setErrorEnabled(false);
+                            } else {
+                                dialog.dismiss();
+                                inputLayoutEmail.setErrorEnabled(true);
+                                inputLayoutEmail.setError("Esse email nao esta cadastrado");
+                            }
+                        }
+                    });
+        } else {
+            dialog.dismiss();
+            inputLayoutEmail.setErrorEnabled(true);
+            inputLayoutEmail.setError("nao pode ser vazio");
+        }
+    }
 
+    private void dialogRenvioEmailConfirmacao(final String sTitulo, String menssagem) {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_padrao_ok_cancelar);
+        //instancia os objetos que estão no layout customdialog.xml
+        final TextView titulo = dialog.findViewById(R.id.dialog_padrao_text_titulo);
+        final TextView msg = dialog.findViewById(R.id.dialog_padrao_text_msg);
+        final Button cancelar = dialog.findViewById(R.id.dialog_padrao_btn_esquerda);
+        final Button ok = dialog.findViewById(R.id.dialog_padrao_btn_direita);
+        final LinearLayout layout = dialog.findViewById(R.id.root);
+        ok.setText("Reenviar");
+        cancelar.setText("sair");
+        layout.setVisibility(View.VISIBLE);
+
+
+        Util.textoNegrito(menssagem, msg, null);
+        titulo.setText(sTitulo);
+
+
+        cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firebaseAuth.signOut();
+                dialog.dismiss();
+            }
+        });
+
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(LoginActivity.this, "reenviar", Toast.LENGTH_SHORT).show();
+                verificarEmail2();
+                dialog.dismiss();
+            }
+        });
+
+        //exibe na tela o dialog
+        dialog.show();
+
+    }
+
+    private void dialogRedefinirSenha(final String sTitulo, String menssagem) {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_padrao_ok_cancelar);
+        //instancia os objetos que estão no layout customdialog.xml
+        final TextView titulo = dialog.findViewById(R.id.dialog_padrao_text_titulo);
+        final TextView msg = dialog.findViewById(R.id.dialog_padrao_text_msg);
+        final Button cancelar = dialog.findViewById(R.id.dialog_padrao_btn_esquerda);
+        final Button ok = dialog.findViewById(R.id.dialog_padrao_btn_direita);
+        final LinearLayout layout = dialog.findViewById(R.id.root);
+        ok.setText("Redefinir");
+        cancelar.setText("sair");
+        layout.setVisibility(View.VISIBLE);
+
+
+        Util.textoNegrito(menssagem, msg, null);
+        titulo.setText(sTitulo);
+
+
+        cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firebaseAuth.signOut();
+                dialog.dismiss();
+            }
+        });
+
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exibeProgresso();
+                redefinirSenha();
+                dialog.dismiss();
+            }
+        });
+
+        //exibe na tela o dialog
+        dialog.show();
+
+    }
+
+    private void dialogPadrao(final String sTitulo, String menssagem) {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_padrao);
+
+        dialog.setCanceledOnTouchOutside(false);
+        //instancia os objetos que estão no layout customdialog.xml
+        final TextView titulo = dialog.findViewById(R.id.dialog_padrao_text_titulo);
+        final TextView msg = dialog.findViewById(R.id.dialog_padrao_text_msg);
+        final Button ok = dialog.findViewById(R.id.dialog_padrao_btn_direita);
+        ok.setText("OK");
+        Util.textoNegrito(menssagem, msg, null);
+        titulo.setText(sTitulo);
+
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        //exibe na tela o dialog
+        dialog.show();
+
+    }
     private void verificar() {
         if (email.getText().toString().isEmpty()) {
             inputLayoutEmail.setErrorEnabled(true);
@@ -152,8 +264,10 @@ public class LoginActivity extends AppCompatActivity {
                         finish();
 
                     } else {
-                        firebaseAuth.signOut();
-                        exibeDialogEmail();
+                       // firebaseAuth.signOut();
+                        String msg = "Um email de confirmação foi enviado para *" + email.getText().toString() + "* clique no link " +
+                                "de confirmação do email para validar seu cadastro. Caso nao tenha recebido clique em reenviar";
+                        dialogRenvioEmailConfirmacao("Reenvio", msg);
                     }
 
 
@@ -207,44 +321,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void exibeDialogEmail() {
-        final Dialog dialog = new Dialog(this);
 
-        dialog.setContentView(R.layout.dialogo_sair);
-
-        //define o título do Dialog
-        dialog.setTitle("Email nao confirmado");
-
-        //instancia os objetos que estão no layout customdialog.xml
-        final Button sair = (Button) dialog.findViewById(R.id.btn_dialogo_sair_sim);
-        final Button continuar = (Button) dialog.findViewById(R.id.btn_dialogo_sair_nao);
-        final TextView msg = (TextView) dialog.findViewById(R.id.text_dialogo_sair);
-        continuar.setText("Reenviar");
-
-        msg.setText("Um email de confirmacao foi enviado para " + email.getText().toString().toUpperCase() + " clique no link" +
-                "de confirmacao do email para validar seu cadastro. Caso nao tenha recebido clique em reenviar");
-
-
-        sair.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                verificarEmail();
-                //finaliza o dialog
-                dialog.dismiss();
-            }
-        });
-
-        continuar.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                //finaliza o dialog
-                dialog.dismiss();
-            }
-        });
-
-
-        //exibe na tela o dialog
-        dialog.show();
-
-    }
 
     private void verificarEmail() {
         try {
@@ -264,6 +341,39 @@ public class LoginActivity extends AppCompatActivity {
 
                         } else {
                             Toast.makeText(LoginActivity.this, "Verifique se o email cadastrado esta correto!", Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+                });
+            }
+
+        } catch (Exception e) {
+            Toast.makeText(this, e.getMessage().toString(), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private void verificarEmail2() {
+        try {
+            firebaseAuth = ConfiguracaoFiribase.getFirebaseAutenticacao();
+            final FirebaseUser user = firebaseAuth.getCurrentUser();
+
+
+
+            if (user != null) {
+                user.updateEmail(email.getText().toString());
+                user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                        if (task.isSuccessful()) {
+                            Toast.makeText(LoginActivity.this, "Um e-mail de verificação foi eniado " +
+                                    "para o endereço " + user.getEmail(), Toast.LENGTH_LONG).show();
+
+                            firebaseAuth.signOut();
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Verifique se o e-mail cadastrado está correto!", Toast.LENGTH_LONG).show();
+                            firebaseAuth.signOut();
                         }
 
                     }

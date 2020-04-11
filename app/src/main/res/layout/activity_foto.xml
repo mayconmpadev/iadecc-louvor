@@ -28,19 +28,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:orientation="horizontal"
         android:layout_weight="1">
        <Button
            android:id="@+id/foto_btn_alterar"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
+           android:textColor="@color/branco"
+           android:background="@drawable/btn_rounded_roxo"
+           android:layout_marginRight="30dp"
+           android:layout_weight="1"
            android:text="alterar"/>
 
         <Button
+            android:layout_weight="1"
             android:id="@+id/foto_btn_excluir"
             android:layout_width="wrap_content"
+            android:textColor="@color/branco"
+            android:background="@drawable/btn_rounded_roxo"
             android:layout_height="wrap_content"
-            android:text="excluir"/>
+            android:text="salvar"/>
 
     </LinearLayout>
 

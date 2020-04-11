@@ -3,26 +3,27 @@ package net.eletroseg.iadecclouvor.activity;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+
 import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ImageView foto;
     Dialog dialog;
     Button sincronizar;
+    public Uri resultUri;
 
    // Perfil perfil;
 
@@ -95,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 foto.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(MainActivity.this, FotoActivity.class);
+        Intent intent =  new Intent(MainActivity.this, FotoActivity.class);
         startActivity(intent);
        // finish();
     }
@@ -107,6 +109,8 @@ foto.setOnClickListener(new View.OnClickListener() {
         }
         verificarConexao();
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -156,7 +160,7 @@ foto.setOnClickListener(new View.OnClickListener() {
 
         if (id == R.id.nav_letras) {
             // Handle the camera action
-            Intent intent = new Intent(MainActivity.this, ListaLetrasActivity.class);
+            Intent intent = new Intent(MainActivity.this, ListaHinosActivity.class);
             startActivity(intent);
             finish();
 
@@ -231,11 +235,12 @@ foto.setOnClickListener(new View.OnClickListener() {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists() & dataSnapshot != null) {
+                    if (!usuario.foto.equals("")) {
 
-                if (!usuario.foto.equals("")) {
+                        Picasso.with(MainActivity.this).load(usuario.foto).placeholder(getResources().getDrawable(R.drawable.cifra_48)).into(foto);
 
-                    Picasso.with(MainActivity.this).load(usuario.foto).placeholder(getResources().getDrawable(R.drawable.cifra_48)).into(foto);
-
+                    }
                 }
             }
 

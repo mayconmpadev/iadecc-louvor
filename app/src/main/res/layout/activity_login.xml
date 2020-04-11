@@ -10,10 +10,21 @@
     android:orientation="vertical"
     tools:context=".activity.LoginActivity">
 
-    <android.support.design.widget.TextInputLayout
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="30dp"
+        android:src="@drawable/roxopng"
+        android:scaleType="fitCenter">
+
+    </ImageView>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/input_layout_login_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColorHint="@color/preto"
+
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"
         >
@@ -22,17 +33,18 @@
             android:id="@+id/edit_login_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:hint="email" />
+            android:hint="email"
+            android:inputType="textEmailAddress" />
 
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/input_layout_login_senha"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="32dp"
+        android:textColorHint="@color/preto"
         android:layout_marginRight="32dp"
         app:passwordToggleEnabled="true"
         android:layout_marginTop="32dp">
@@ -46,33 +58,55 @@
             android:hint="senha" />
 
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/btn_login_entrar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="20dp"
         android:layout_marginLeft="32dp"
+        android:background="@drawable/btn_rounded_roxo"
+        android:textColor="@color/branco"
         android:layout_marginRight="32dp"
         android:layout_marginTop="32dp"
         android:text="Entrar" />
+
+
+<LinearLayout
+    android:id="@+id/linear_cadastrar"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
     <TextView
-        android:id="@+id/text_cadastrar"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/preto"
         android:layout_marginLeft="32dp"
+        android:layout_marginTop="16dp"
+        android:text="Nao tem conta?"/>
+
+    <TextView
+        android:id="@+id/text_cadastrar2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:textColor="@color/colorPrimaryDark"
+android:textStyle="bold"
         android:layout_marginRight="32dp"
         android:layout_marginTop="16dp"
-        android:text="Nao tem conta? Cadastre-se."/>
+        android:text=" Cadastre-se."/>
+
+</LinearLayout>
+
 
     <TextView
         android:id="@+id/text_recuperar_senha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/preto"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"
         android:layout_marginTop="16dp"

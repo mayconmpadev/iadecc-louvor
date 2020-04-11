@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimaryDark">#800080</color>
+    <color name="colorAccent">#800080</color>
     <color name="roxo">#d903ff</color>
     <color name="cinza">#b4adad</color>
     <color name="azul">#0000FF</color>
@@ -15,4 +15,7 @@
     <color name="verde_claro">#86d186</color>
     <color name="black_overlay">#66000000</color>
     <color name="tranparente">#00404040</color>
+    <color name="red_500">#F44336</color>
+    <color name="green_500">#4CAF50</color>
+    <color name="overlay_dark_10">#1A000000</color>
 </resources>

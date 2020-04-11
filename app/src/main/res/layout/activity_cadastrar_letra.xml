@@ -5,20 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="5dp"
+    android:id="@+id/linear_cadastro"
+    android:padding="10dp"
     tools:context=".activity.CadastrarLetraActivity">
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/preto"
+                android:textColor="@color/colorPrimaryDark"
                 android:text="Nome:"/>
             <EditText
                 android:id="@+id/cadastro_hino_edit_nome"
@@ -30,7 +29,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/preto"
+                android:textColor="@color/colorPrimaryDark"
                 android:text="Cantor:"/>
             <EditText
                 android:id="@+id/cadastro_hino_edit_cantor"
@@ -42,44 +41,93 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/preto"
+                android:textColor="@color/colorPrimaryDark"
+                android:text="Categoria"/>
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/spinner_categoria"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/categoria_hinos"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimaryDark"
                 android:text="Tom:"/>
+
             <EditText
                 android:id="@+id/cadastro_hino_edit_tom"
                 android:layout_width="match_parent"
-                android:inputType="text"
                 android:layout_height="wrap_content"
-                />
+                android:inputType="text" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/preto"
-                android:text="Link:"/>
-            <EditText
-                android:id="@+id/cadastro_hino_edit_link"
-                android:layout_width="match_parent"
-                android:inputType="text"
-                android:layout_height="wrap_content"
-                />
+                android:textColor="@color/colorPrimaryDark"
+                android:text="Arquivo de audio:"/>
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
+              <EditText
+                  android:id="@+id/edit_audio"
+                  android:layout_width="match_parent"
+                  android:inputType="text"
+                  android:enabled="false"
+                  android:layout_weight="1"
+                  android:layout_height="wrap_content"
+                  />
+
+              <Button
+                  android:id="@+id/procurar_audio"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="procurar"
+                  android:background="@drawable/btn_rounded_transparente">
+
+              </Button>
+          </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/preto"
+                android:textColor="@color/colorPrimaryDark"
                 android:text="Letra:"/>
             <EditText
                 android:id="@+id/cadastro_hino_edit_letra"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="70dp"
                 android:gravity="top"
+                android:background="@drawable/borda_roxa"
                 android:inputType="textMultiLine"
-                android:layout_weight="1"
+
                 />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2">
+
+            </View>
+
+            <Button
+                android:id="@+id/btn_salvar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:background="@drawable/btn_rounded_roxo"
+                android:textColor="@color/branco"
+                android:layout_marginTop="32dp"
+                android:text="salvar" />
 
         </LinearLayout>
 
-    </ScrollView>
+
+
+
 
 
 

@@ -2,10 +2,6 @@ package net.eletroseg.iadecclouvor.activity;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,12 +10,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.rtoshiro.util.format.SimpleMaskFormatter;
 import com.github.rtoshiro.util.format.text.MaskTextWatcher;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -30,15 +32,14 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import net.eletroseg.iadecclouvor.R;
-
 import net.eletroseg.iadecclouvor.modelo.Usuario;
 import net.eletroseg.iadecclouvor.util.Base64Custom;
 import net.eletroseg.iadecclouvor.util.ConfiguracaoFiribase;
 import net.eletroseg.iadecclouvor.util.InstanciaFirebase;
+import net.eletroseg.iadecclouvor.util.Util;
 
 import java.util.ArrayList;
 
@@ -63,7 +64,7 @@ public class CadastroLoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastro_login);
-
+        getSupportActionBar().hide();
         inputLayoutEmail = findViewById(R.id.input_layout_cadastro_login_email);
         inputLayoutSenha = findViewById(R.id.input_layout_cadastro_login_senha);
         inputLayoutConfirmar = findViewById(R.id.input_layout_cadastro_login_confirmar);
@@ -133,12 +134,10 @@ public class CadastroLoginActivity extends AppCompatActivity {
 
                     verificarEmail();
 
-                    dialog.dismiss();
+
 
                     String identificadorDoUsuario = Base64Custom.codificarBase64(usuarios.email);
-                    usuarios.id = identificadorDoUsuario ;
-
-
+                    usuarios.id = identificadorDoUsuario;
 
 
                 } else {
@@ -171,7 +170,7 @@ public class CadastroLoginActivity extends AppCompatActivity {
 
     private void verificarEmail() {
         try {
-
+            dialog.dismiss();
             final FirebaseUser user = firebaseAuth.getCurrentUser();
 
             if (user != null) {
@@ -180,14 +179,12 @@ public class CadastroLoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
 
                         if (task.isSuccessful()) {
-                            Toast.makeText(CadastroLoginActivity.this, "Um email de verificação foi enviado " +
-                                    "para " + user.getEmail(), Toast.LENGTH_LONG).show();
+                            dialogSenhaPadrao("Confirmção", "Um email de confirmação foi enviado para *" + email.getText().toString() + "*"
+                                    + ", clique no link para validar o cadastro");
                             if (firebaseAuth.getCurrentUser() != null) {
-                               salvar();
+                                salvar();
                                 firebaseAuth.signOut();
-                                Intent intent = new Intent(CadastroLoginActivity.this, LoginActivity.class);
-                                startActivity(intent);
-                                finish();
+
                             }
 
                         } else {
@@ -198,9 +195,37 @@ public class CadastroLoginActivity extends AppCompatActivity {
                 });
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
+            dialog.dismiss();
             Toast.makeText(this, e.getMessage().toString(), Toast.LENGTH_SHORT).show();
         }
+
+    }
+
+    private void dialogSenhaPadrao(final String sTitulo, String menssagem) {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_padrao);
+        dialog.setCanceledOnTouchOutside(false);
+        //instancia os objetos que estão no layout customdialog.xml
+        final TextView titulo = dialog.findViewById(R.id.dialog_padrao_text_titulo);
+        final TextView msg = dialog.findViewById(R.id.dialog_padrao_text_msg);
+        final Button ok = dialog.findViewById(R.id.dialog_padrao_btn_direita);
+        ok.setText("OK");
+        Util.textoNegrito(menssagem, msg, null);
+        titulo.setText(sTitulo);
+
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                Intent intent = new Intent(CadastroLoginActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        //exibe na tela o dialog
+        dialog.show();
 
     }
 
@@ -339,10 +364,10 @@ public class CadastroLoginActivity extends AppCompatActivity {
                     inputLayoutNome.setErrorEnabled(false);
                     usuarios = new Usuario();
                     usuarios.email = email.getText().toString();
-                    usuarios.senha =  senha.getText().toString();
+                    usuarios.senha = senha.getText().toString();
                     usuarios.nome = nome.getText().toString().toLowerCase();
-                    usuarios.telefone =  telefone.getText().toString();
-                    usuarios.moderador = "nao" ;
+                    usuarios.telefone = telefone.getText().toString();
+                    usuarios.moderador = "nao";
                     usuarios.foto = "";
 
                     if (validarCampos()) {
@@ -353,7 +378,7 @@ public class CadastroLoginActivity extends AppCompatActivity {
                     inputLayoutNome.setError("Esse nome ja existe");
                 }
 
-                dialog.dismiss();
+               // dialog.dismiss();
             }
 
             @Override
@@ -363,7 +388,8 @@ public class CadastroLoginActivity extends AppCompatActivity {
         });
 
     }
-    private void salvar(){
+
+    private void salvar() {
 
         DatabaseReference reference = InstanciaFirebase.getDatabase().getReference("usuarios").child(usuarios.id);
         reference.setValue(usuarios);

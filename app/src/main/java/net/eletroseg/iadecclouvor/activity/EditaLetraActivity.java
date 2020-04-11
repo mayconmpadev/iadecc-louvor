@@ -2,7 +2,6 @@ package net.eletroseg.iadecclouvor.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.SpannableString;
@@ -14,10 +13,12 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.database.DatabaseReference;
 
 import net.eletroseg.iadecclouvor.R;
-import net.eletroseg.iadecclouvor.modelo.Letra;
+import net.eletroseg.iadecclouvor.modelo.Hino;
 import net.eletroseg.iadecclouvor.modelo.Selecao;
 import net.eletroseg.iadecclouvor.util.InstanciaFirebase;
 
@@ -159,20 +160,20 @@ public class EditaLetraActivity extends AppCompatActivity {
     }
 
     private void salvar() {
-        Letra letra = new Letra();
+        Hino hino = new Hino();
         if (validar()) {
 
             DatabaseReference reference = InstanciaFirebase.getDatabase().getReference("letras").child(sId);
 
-            letra.id = sId;
-            letra.nome = nome.getText().toString();
-            letra.cantor = cantor.getText().toString();
-            letra.tom = tom.getText().toString();
-            letra.link = link.getText().toString();
-            letra.letra = editLetra.getText().toString();
-            letra.data = sData;
-            reference.setValue(letra);
-            Intent intent = new Intent(EditaLetraActivity.this, ListaLetrasActivity.class);
+            hino.id = sId;
+            hino.nome = nome.getText().toString();
+            hino.cantor = cantor.getText().toString();
+            hino.tom = tom.getText().toString();
+            //hino.link = link.getText().toString();
+            hino.letra = editLetra.getText().toString();
+            hino.data = sData;
+            reference.setValue(hino);
+            Intent intent = new Intent(EditaLetraActivity.this, ListaHinosActivity.class);
             startActivity(intent);
             finish();
 

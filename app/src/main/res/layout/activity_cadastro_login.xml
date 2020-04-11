@@ -7,9 +7,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context="com.example.maycon.sistemaintegrado.activity.CadastroLoginActivity">
+    tools:context="activity.CadastroLoginActivity">
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/input_layout_cadastro_login_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,11 +20,13 @@
             android:inputType="textEmailAddress"
             android:id="@+id/edit_cadastro_login_email"
             android:layout_width="match_parent"
+            android:textColor="@color/preto"
+
             android:layout_height="wrap_content" />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/input_layout_cadastro_login_senha"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,9 +40,9 @@
 
             android:layout_height="wrap_content" />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/input_layout_cadastro_login_confirmar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -53,9 +55,9 @@
             android:inputType="textPassword"
             android:layout_height="wrap_content" />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/input_layout_cadastro_login_nome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -68,9 +70,9 @@
             android:inputType="text"
             android:layout_height="wrap_content" />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/input_layout_cadastro_login_telefone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -83,7 +85,7 @@
             android:inputType="phone"
             android:layout_height="wrap_content" />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <View
         android:layout_width="match_parent"
@@ -92,10 +94,17 @@
 
     </View>
 
+
+
     <Button
         android:id="@+id/btn_cadastro_login_salvar"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/borda"
-        android:text="Salvar"/>
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+
+        android:background="@drawable/btn_rounded_roxo"
+        android:textColor="@color/branco"
+
+        android:layout_marginTop="32dp"
+        android:text="salvar" />
 </LinearLayout>

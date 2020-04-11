@@ -8,18 +8,20 @@ import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,6 +30,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import net.eletroseg.iadecclouvor.R;
 import net.eletroseg.iadecclouvor.modelo.Usuario;
@@ -44,7 +48,7 @@ public class FotoActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     SPM spm = new SPM(FotoActivity.this);
     private static final int GALLERY_INTENT = 2;
-    Uri uri;
+   public Uri uri;
     Usuario usuario;
     Dialog dialog;
     FirebaseStorage firebaseStorage;
@@ -55,15 +59,14 @@ public class FotoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_foto);
+        getSupportActionBar().hide();
         foto = findViewById(R.id.foto_image_perfil);
         galeria = findViewById(R.id.foto_btn_alterar);
         excluir = findViewById(R.id.foto_btn_excluir);
         galeria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                startActivityForResult(intent, GALLERY_INTENT);
+               chamarImagens();
             }
         });
         excluir.setOnClickListener(new View.OnClickListener() {
@@ -75,24 +78,7 @@ public class FotoActivity extends AppCompatActivity {
         buscarPerfilWeb();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == GALLERY_INTENT && resultCode == RESULT_OK) {
-            uri = data.getData();
-            try {
-                Bitmap imagem = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-                Bitmap rotatedBitmap = null;
-                rotatedBitmap = rotateBitmap1(this, uri, imagem);
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                rotatedBitmap.compress(Bitmap.CompressFormat.PNG, 5, stream);
-                foto.setImageBitmap(rotatedBitmap);
-                uri = getImageUri(this, rotatedBitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+
 
     public static Bitmap rotateBitmap1(Context context, Uri photoUri, Bitmap bitmap) {
         int orientation = getOrientation(context, photoUri);
@@ -128,7 +114,7 @@ public class FotoActivity extends AppCompatActivity {
     }
 
     private void salvarFoto() {
-        // exibeProgresso();
+        exibeProgresso();
         if (uri != null) {
             firebaseStorage = FirebaseStorage.getInstance();
             firebaseStorage = FirebaseStorage.getInstance();
@@ -168,13 +154,35 @@ public class FotoActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                uri = result.getUri();
+                foto.setImageURI(uri);
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+                Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+        }
+    }
+
+    private void chamarImagens() {
+        CropImage.activity() // chama intenção de busca a imagem
+                .setAspectRatio(1, 1)
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .start(this);
+    }
+
     private void salvar() {
         usuario.foto = fotoGaleria;
         firebaseAuth = ConfiguracaoFiribase.getFirebaseAutenticacao();
         DatabaseReference reference = InstanciaFirebase.getDatabase().getReference("usuarios").child(spm.getPreferencia("USUARIO_LOGADO", "USUARIO", "erro")).child("foto");
         reference.setValue(usuario.foto);
         reference.keepSynced(true);
-        //dialog.dismiss();
+        dialog.dismiss();
         Toast.makeText(this, "Salvo com sucesso", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(FotoActivity.this, MainActivity.class);
         startActivity(intent);
@@ -213,6 +221,23 @@ public class FotoActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+    public void exibeProgresso() {
+
+
+        dialog = new Dialog(this);
+
+
+        dialog.setContentView(R.layout.progresso_circular);
+
+        //define o título do Dialog
+        dialog.setTitle("Editar:");
+
+        //instancia os objetos que estão no layout customdialog.xml
+        final ProgressBar nao = dialog.findViewById(R.id.progresso_circulo);
+
+        dialog.show();
 
     }
 }

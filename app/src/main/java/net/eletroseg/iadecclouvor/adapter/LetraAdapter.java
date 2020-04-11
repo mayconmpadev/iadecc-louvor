@@ -10,7 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.Filter;
 import net.eletroseg.iadecclouvor.R;
-import net.eletroseg.iadecclouvor.modelo.Letra;
+import net.eletroseg.iadecclouvor.modelo.Hino;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,13 +23,13 @@ public class LetraAdapter extends BaseAdapter {
 
     String pesquisa = "";
     //Itens de exibição / filtrados
-    private List<Letra> itens_exibicao;
+    private List<Hino> itens_exibicao;
     //Essa lista contem todos os itens.
-    private List<Letra> itens;
+    private List<Hino> itens;
     //Utilizado no getView para carregar e construir um item.
     private LayoutInflater layoutInflater;
 
-    public LetraAdapter(Context context, List<Letra> itens) {
+    public LetraAdapter(Context context, List<Hino> itens) {
         this.itens = itens;
         this.itens_exibicao = itens;
         layoutInflater = LayoutInflater.from(context);
@@ -53,14 +53,14 @@ public class LetraAdapter extends BaseAdapter {
     @Override
     public View getView(int arg0, View arg1, ViewGroup arg2) {
         ItemHelper itemHelper = new ItemHelper();
-        Letra objeto = itens_exibicao.get(arg0);
+        Hino objeto = itens_exibicao.get(arg0);
 
         if (arg1 == null) {
             arg1 = layoutInflater.inflate(R.layout.item_lista_letra, null);
 
-            itemHelper.nome = (TextView) arg1.findViewById(R.id.text_item_lista_letra_nome);
-            itemHelper.cantor = (TextView) arg1.findViewById(R.id.text_item_lista_letra_cantor);
-            itemHelper.data = (TextView) arg1.findViewById(R.id.text_item_lista_letra_data);
+            itemHelper.nome = (TextView) arg1.findViewById(R.id.text_nome);
+            itemHelper.cantor = (TextView) arg1.findViewById(R.id.text_cantor);
+            itemHelper.data = (TextView) arg1.findViewById(R.id.text_data);
             arg1.setTag(itemHelper);
         } else {
             itemHelper = (ItemHelper) arg1.getTag();
@@ -97,11 +97,11 @@ public class LetraAdapter extends BaseAdapter {
                     results.values = itens;
                 } else {
                     //cria um array para armazenar os objetos filtrados.
-                    List<Letra> itens_filtrados = new ArrayList<Letra>();
+                    List<Hino> itens_filtrados = new ArrayList<Hino>();
 
                     //percorre toda lista verificando se contem a palavra do filtro na descricao do objeto.
                     for (int i = 0; i < itens.size(); i++) {
-                        Letra data = itens.get(i);
+                        Hino data = itens.get(i);
 
                         filtro = filtro.toString().toLowerCase();
                         String condicao = data.nome.toLowerCase();
@@ -128,7 +128,7 @@ public class LetraAdapter extends BaseAdapter {
             @SuppressWarnings("unchecked")
             @Override
             protected void publishResults(CharSequence constraint, Filter.FilterResults results) {
-                itens_exibicao = (List<Letra>) results.values; // Valores filtrados.
+                itens_exibicao = (List<Hino>) results.values; // Valores filtrados.
                 notifyDataSetChanged();  // Notifica a lista de alteração
             }
 

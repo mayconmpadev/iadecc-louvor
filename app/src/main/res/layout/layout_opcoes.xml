@@ -21,7 +21,7 @@
         android:layout_gravity="center"
         android:textSize="15dp"
         android:textColor="@color/preto"
-        android:text="visualizar letra"/>
+        android:text="visualizar hino"/>
 
     </LinearLayout>
 
@@ -36,20 +36,21 @@
         android:id="@+id/layout_linear_letra_editar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="4dp"
-        android:orientation="horizontal">
+        android:padding="4dp">
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="16dp"
-            android:src="@drawable/edit_48"/>
+            android:src="@drawable/edit_48" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textSize="15dp"
+            android:text="editar hino"
             android:textColor="@color/preto"
-            android:text="editar letra"/>
+            android:textSize="15dp" />
 
     </LinearLayout>
     <View

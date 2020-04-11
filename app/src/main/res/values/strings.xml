@@ -6,4 +6,12 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+
+    <string-array name="categoria_hinos">
+        <item>novo</item>
+        <item>congregacional</item>
+        <item>harpa</item>
+        <item>coral</item>
+    </string-array>
+
 </resources>
