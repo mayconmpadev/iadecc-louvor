@@ -5,7 +5,7 @@ package net.eletroseg.iadecclouvor.util;
  */
 
 public  class Parametro {
-    public static String nome;
+    public static String nome = "";
 
     public static String flag = "normal";
     public static String letra = "";
