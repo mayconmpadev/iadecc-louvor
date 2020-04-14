@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatSeekBar;
@@ -27,6 +28,7 @@ import net.eletroseg.iadecclouvor.util.Tools;
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
+import java.util.ArrayList;
 
 public class PlayActivity extends AppCompatActivity {
 
@@ -34,6 +36,9 @@ public class PlayActivity extends AppCompatActivity {
     private AppCompatSeekBar seek_song_progressbar;
     private FloatingActionButton bt_play;
     private TextView tv_song_current_duration, tv_song_total_duration;
+ArrayList<String> arrayList = new ArrayList<>();
+int cont = 0;
+boolean repetir = false;
 
     // Media Player
     private MediaPlayer mp;
@@ -47,8 +52,11 @@ public class PlayActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
-
-        initToolbar();
+arrayList.add("Hh");
+arrayList.add("Getsêmani");
+arrayList.add("Data");
+arrayList.add("Leque");
+    initToolbar();
         initComponent();
 
 
@@ -78,8 +86,25 @@ public class PlayActivity extends AppCompatActivity {
         mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                // Changing button image to play button
-                bt_play.setImageResource(R.drawable.ic_play_arrow);
+                cont++;
+                if (cont< arrayList.size()){
+                    Parametro.nome = arrayList.get(cont);
+                    Toast.makeText(PlayActivity.this, Parametro.nome, Toast.LENGTH_SHORT).show();
+                    mp.reset();
+                    play();
+                }else {
+                    if (repetir){
+                        cont  = 0;
+                        mp.reset();
+                        play();
+                    }else {
+                        bt_play.setImageResource(R.drawable.ic_play_arrow);
+                    }
+
+
+                }
+
+
             }
         });
         if (mp.isPlaying()){
@@ -151,6 +176,7 @@ public class PlayActivity extends AppCompatActivity {
             case R.id.bt_repeat: {
                 toggleButtonColor((ImageButton) v);
                 Snackbar.make(parent_view, "Repeat", Snackbar.LENGTH_SHORT).show();
+                repetir = !repetir;
                 break;
             }
             case R.id.bt_shuffle: {
