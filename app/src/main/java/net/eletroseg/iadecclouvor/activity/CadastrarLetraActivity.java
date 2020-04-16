@@ -79,7 +79,7 @@ public class CadastrarLetraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastrar_letra);
-        getSupportActionBar().hide();
+//        getSupportActionBar().hide();
         nome = findViewById(R.id.cadastro_hino_edit_nome);
         cantor = findViewById(R.id.cadastro_hino_edit_cantor);
         tom = findViewById(R.id.cadastro_hino_edit_tom);

@@ -105,7 +105,7 @@ public class ListaHinosActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                mAdapter.getFilter().filter(s.toString());
 
             }
 
@@ -149,11 +149,17 @@ public class ListaHinosActivity extends AppCompatActivity {
                     // read the inbox which removes bold from the row
                     Hino inbox = mAdapter.getItem(pos);
                     Parametro.nome = obj.nome;
-             Intent intent = new Intent(getApplicationContext(), PlayActivity.class);
+                    if (verificarNaMemoria(Parametro.nome)){
+                        Intent intent = new Intent(getApplicationContext(), PlayActivity.class);
 
-             startActivity(intent);
+                        startActivity(intent);
+                    }else {
+                        downloadfile(obj);
+                        Toast.makeText(ListaHinosActivity.this, "baixando o hino", Toast.LENGTH_SHORT).show();
+                    }
 
-                    //downloadfile(obj);
+
+
                 }
             }
 
@@ -360,9 +366,9 @@ public class ListaHinosActivity extends AppCompatActivity {
                 DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
                 dm.enqueue(request);
                 Progresso.dialog.dismiss();
-             //  if (tipo == 1) {
-               //    registerReceiver(onCompleteVisualizar, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-              //  }
+
+                  registerReceiver(onCompleteVisualizar, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+
 
             }
         });
@@ -373,21 +379,7 @@ public class ListaHinosActivity extends AppCompatActivity {
     BroadcastReceiver onCompleteVisualizar = new BroadcastReceiver() {
         public void onReceive(Context ctxt, Intent intent) {
 
-            File pdfFolder = new File(android.os.Environment.getExternalStorageDirectory()
-                    + File.separator
-                    + "iadecc/hinos"
-                    + File.separator);
-            if (!pdfFolder.exists()) {
-                pdfFolder.mkdirs();
-            }
-            File myFile = new File(pdfFolder + File.separator + "Hh" + ".mp3");
-            Uri uri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getApplicationContext().getPackageName() + ".provider", myFile);
-            intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(uri, "application/pdf");
-            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
-            startActivity(intent);
-            Progresso.dialog.dismiss();
+            Toast.makeText(ctxt, "acabou", Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -412,6 +404,24 @@ public class ListaHinosActivity extends AppCompatActivity {
         DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
         dm.enqueue(request);
 
+        registerReceiver(onCompleteVisualizar, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+
+    }
+
+    private boolean verificarNaMemoria(String nome){
+        File pdfFolder = new File(android.os.Environment.getExternalStorageDirectory()
+                + File.separator
+                + "Iadecc/hinos"
+                + File.separator);
+        if (!pdfFolder.exists()) {
+            pdfFolder.mkdirs();
+        }
+        File myFile = new File(pdfFolder + File.separator + nome + ".mp3");
+        if (myFile.exists()) {
+           return  true;
+        }else {
+            return false;
+        }
     }
 
     @Override

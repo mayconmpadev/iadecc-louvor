@@ -11,7 +11,7 @@ public  class Parametro {
     public static String letra = "";
     public static boolean tipo = false;
 
-    public static boolean bModoSalvar = false;
+    public static boolean download = false;
     public static boolean primeiroAcesso = false;
     public static boolean cep = false;
 

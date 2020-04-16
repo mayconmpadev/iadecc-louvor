@@ -104,9 +104,9 @@ foto.setOnClickListener(new View.OnClickListener() {
 });
         Permissao.validaPermissoes(1, this, permissoesNecessarias);
 
-        if (!drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.openDrawer(GravityCompat.START);
-        }
+     //   if (!drawer.isDrawerOpen(GravityCompat.START)) {
+       //     drawer.openDrawer(GravityCompat.START);
+        //}
         verificarConexao();
     }
 
