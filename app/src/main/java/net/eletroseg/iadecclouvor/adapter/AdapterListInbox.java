@@ -10,6 +10,7 @@ import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -78,19 +79,32 @@ public class AdapterListInbox extends RecyclerView.Adapter<AdapterListInbox.View
         holder.cantor.setText(hino.cantor);
         holder.data.setText(hino.data);
         holder.lyt_parent.setActivated(selected_items.get(position, false));
+      //  Toast.makeText(ctx, "onBindViewHolder", Toast.LENGTH_SHORT).show();
 if (verificarNaMemoria(hino.nome)){
+    holder.progressBar.setVisibility(View.INVISIBLE);
+    holder.imageView.setVisibility(View.VISIBLE);
     holder.imageView.setImageResource(R.drawable.ic_cloud_download_ok);
+   // Toast.makeText(ctx, "ok ok ", Toast.LENGTH_SHORT).show();
 }else {
+
     holder.imageView.setImageResource(R.drawable.ic_cloud_download);
 }
+
+
         holder.lyt_parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (onClickListener == null) return;
-
+                if (onClickListener == null) return ;
+               // Toast.makeText(ctx, "onClickListener", Toast.LENGTH_SHORT).show();
                 onClickListener.onItemClick(v, hino, position);
                 if (!verificarNaMemoria(hino.nome)){
+                    holder.imageView.setVisibility(View.INVISIBLE);
                     holder.progressBar.setVisibility(View.VISIBLE);
+                }else {
+
+                    holder.progressBar.setVisibility(View.INVISIBLE);
+                    holder.imageView.setVisibility(View.VISIBLE);
+                    holder.imageView.setImageResource(R.drawable.ic_cloud_download_ok);
                 }
             }
         });
@@ -158,6 +172,11 @@ if (verificarNaMemoria(hino.nome)){
         void onItemLongClick(View view, Hino obj, int pos);
     }
 
+    public void hinoBaixado(String hino){
+
+
+    }
+
     /**
      * Método responsável pelo filtro. Utilizaremos em um EditText
      *
@@ -212,7 +231,7 @@ if (verificarNaMemoria(hino.nome)){
     }
 
     private boolean verificarNaMemoria(String nome){
-        File pdfFolder = new File(android.os.Environment.getExternalStorageDirectory()
+        File pdfFolder = new File(ctx.getExternalFilesDir(null)
                 + File.separator
                 + "Iadecc/hinos"
                 + File.separator);

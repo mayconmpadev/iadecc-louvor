@@ -2,15 +2,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_playlist"
-        android:icon="@drawable/ic_queue_music"
-        android:orderInCategory="100"
-        android:title="Playlist"
-        app:showAsAction="always" />
+        android:id="@+id/item_menu_compartilhar"
+        android:title="novo"
+        android:orderInCategory="200"
+        android:icon="@drawable/ic_action_compartilhar_branco"
+        app:showAsAction="ifRoom"
 
+
+        />
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="Settings"
-        app:showAsAction="never" />
+        android:id="@+id/item_menu_menu"
+        android:title="novo"
+        android:orderInCategory="200"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_menu_menu"
+
+        />
+
+
 </menu>

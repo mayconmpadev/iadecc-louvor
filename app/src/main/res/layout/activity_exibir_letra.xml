@@ -38,7 +38,7 @@
         android:id="@+id/exibir_letra_layout_velocidade"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:visibility="visible"
         android:padding="8dp"
 
         android:background="@color/black_overlay"

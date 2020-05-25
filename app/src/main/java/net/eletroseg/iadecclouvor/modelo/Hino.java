@@ -1,9 +1,12 @@
 package net.eletroseg.iadecclouvor.modelo;
 
-public class Hino {
+import java.io.Serializable;
+
+public class Hino implements Serializable {
     public String id;
     public String nome;
     public String letra;
+    public String cifra;
     public String cantor;
     public String tom;
     public String categoria;

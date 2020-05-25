@@ -52,11 +52,12 @@ import net.eletroseg.iadecclouvor.util.Parametro;
 import net.eletroseg.iadecclouvor.util.Progresso;
 import net.eletroseg.iadecclouvor.util.Util;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class CadastrarLetraActivity extends AppCompatActivity {
-    EditText nome, cantor, tom, audio, editLetra;
+    EditText nome, cantor, tom, audio, editLetra, editCifra;
     Spinner spinner;
     Button procurar, salvar;
     MenuItem menuSalvar;
@@ -70,10 +71,11 @@ public class CadastrarLetraActivity extends AppCompatActivity {
     int b = 0;
     int posicao = 0;
     boolean abilitar = true;
-    boolean ativar = false;
+    boolean bEdit = false;
     ArrayList<Selecao> negrito = new ArrayList<>();
 
     Dialog dialog;
+    File myFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,16 +87,23 @@ public class CadastrarLetraActivity extends AppCompatActivity {
         tom = findViewById(R.id.cadastro_hino_edit_tom);
         audio = findViewById(R.id.edit_audio);
         editLetra = findViewById(R.id.cadastro_hino_edit_letra);
+        editCifra = findViewById(R.id.cadastro_hino_edit_cifra);
         linearLayout = findViewById(R.id.linear_cadastro);
         procurar = findViewById(R.id.procurar_audio);
         spinner = findViewById(R.id.spinner_categoria);
         salvar = findViewById(R.id.btn_salvar);
-
+        recuperarIntent();
         salvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (verificarEditText()){
-                    verificarNome(nome.getText().toString(), nome);
+                if (verificarEditText()) {
+                    if (bEdit) {
+
+                        salvarProduto();
+                    } else {
+                        verificarNome(nome.getText().toString(), nome);
+                    }
+
                 }
 
             }
@@ -117,10 +126,29 @@ public class CadastrarLetraActivity extends AppCompatActivity {
                 }
             }
         });
+
+        editCifra.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    Intent intent = new Intent(getApplicationContext(), CifraActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
         editLetra.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), LetraActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        editCifra.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Parametro.cifra = Parametro.letra;
+                Intent intent = new Intent(getApplicationContext(), CifraActivity.class);
                 startActivity(intent);
             }
         });
@@ -138,6 +166,32 @@ public class CadastrarLetraActivity extends AppCompatActivity {
                 dialogTons2(view);
             }
         });
+
+    }
+
+    private void recuperarIntent() {
+        Intent intent = getIntent();
+        hino = (Hino) intent.getSerializableExtra("hino");
+        if (hino != null) {
+            bEdit = true;
+            nome.setText(hino.nome);
+            cantor.setText(hino.cantor);
+            tom.setText(hino.tom);
+            audio.setText(hino.nome + ".mp3");
+            Parametro.letra = hino.letra;
+            Parametro.cifra = hino.cifra;
+            String sUnidades = hino.categoria;
+            String[] arrayCategoria = getResources().getStringArray(R.array.categoria_hinos);
+            for (int i = 0; i < arrayCategoria.length; i++) {
+                if (arrayCategoria[i].equals(sUnidades)) {
+                    spinner.setSelection(i);
+                    break;
+                }
+            }
+        } else {
+            hino = new Hino();
+            bEdit = false;
+        }
 
     }
 
@@ -379,7 +433,7 @@ public class CadastrarLetraActivity extends AppCompatActivity {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tom.setText(view.getText().toString());
+               // tom.setText(view.getText().toString());
             }
         });
 
@@ -499,18 +553,22 @@ public class CadastrarLetraActivity extends AppCompatActivity {
 
     private void salvarProduto() {
 
-        hino = new Hino();
+        Progresso.progressoCircular(this);
         hino.nome = nome.getText().toString();
         hino.cantor = cantor.getText().toString();
         hino.tom = tom.getText().toString();
         hino.data = data();
         hino.categoria = spinner.getSelectedItem().toString();
         hino.letra = Parametro.letra;
+        hino.cifra = Parametro.cifra;
 
         if (uri == null) {
             uri = Uri.parse("android.resource://com.example.compacpdv/drawable/sem_foto");
         }
-        hino.audioHino = uri.toString();
+        if (!audio.getText().toString().equals(hino.nome + ".mp3")) {
+            excluirHinoLocal(hino.nome);
+            hino.audioHino = uri.toString();
+        }
 
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -586,11 +644,17 @@ public class CadastrarLetraActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Util.textoNegrito(Parametro.letra, null, editLetra);
+        if (Parametro.letra != null){
+            Util.textoNegrito(Parametro.letra, null, editLetra);
+        }
+        if (Parametro.cifra != null){
+            Util.textoNegrito(Parametro.cifra, null, editCifra);
+        }
+
 
     }
 
-    private boolean verificarEditText(){
+    private boolean verificarEditText() {
         boolean a = false;
         ArrayList<EditText> arrayList = new ArrayList<>();
         arrayList.add(nome);
@@ -600,19 +664,39 @@ public class CadastrarLetraActivity extends AppCompatActivity {
         arrayList.add(audio);
 
         for (int i = 0; i < arrayList.size(); i++) {
-            if (arrayList.get(i).getText().toString().isEmpty()){
+            if (arrayList.get(i).getText().toString().isEmpty()) {
                 arrayList.get(i).requestFocus();
                 arrayList.get(i).setError("o campo não pode ser vazio");
                 a = false;
                 break;
-            }else {
+            } else {
                 arrayList.get(i).setError(null);
                 a = true;
             }
         }
 
 
-       return a;
+        return a;
+    }
+
+    public void excluirHinoLocal(String nome) {
+
+        try {
+            File pdfFolder = new File(this.getExternalFilesDir(null)
+                    + File.separator
+                    + "Iadecc/hinos"
+                    + File.separator);
+            if (!pdfFolder.exists()) {
+                pdfFolder.mkdirs();
+            }
+            myFile = new File(pdfFolder + File.separator + nome + ".mp3");
+            if (myFile.exists()) {
+                myFile.delete();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

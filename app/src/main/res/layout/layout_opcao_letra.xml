@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="30dp"
+    android:background="@drawable/borda"
+    android:orientation="vertical">
+
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="horizontal"
+       >
+       <TextView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="Tamanho da letra"
+           android:layout_weight="1"
+           android:textColor="@color/preto" />
+
+       <ImageView
+           android:layout_width="wrap_content"
+           android:id="@+id/image_fechar"
+           android:layout_height="wrap_content"
+           android:src="@drawable/ic_action_close_black_24dp">
+
+       </ImageView>
+   </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+
+        android:padding="20dp">
+
+
+        <TextView
+            android:id="@+id/text_p"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Pequena"
+            android:textStyle="bold" />
+
+
+        <View
+            android:layout_width="10dp"
+            android:layout_height="1dp">
+
+        </View>
+
+
+        <TextView
+            android:id="@+id/text_m"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Média"
+            android:textStyle="bold" />
+
+
+        <View
+            android:layout_width="10dp"
+            android:layout_height="1dp">
+
+        </View>
+
+
+        <TextView
+            android:id="@+id/text_g"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Grande"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Velocidade da transposição"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/preto" />
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:orientation="horizontal">
+
+        <SeekBar
+            android:id="@+id/exibir_letra_seekbar"
+            android:layout_width="300dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:max="20"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:id="@+id/exibir_letra_text_velocidade"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/preto"
+            android:textStyle="bold"
+            android:textSize="23sp"
+            android:text="0"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

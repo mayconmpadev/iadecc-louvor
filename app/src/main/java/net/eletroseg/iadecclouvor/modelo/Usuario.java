@@ -1,14 +1,13 @@
 package net.eletroseg.iadecclouvor.modelo;
 
 
-
-
+import java.io.Serializable;
 
 /**
  * Created by dell on 20/04/2017.
  */
 
-public class Usuario {
+public class Usuario implements Serializable {
 
     public String id;
     public String email;

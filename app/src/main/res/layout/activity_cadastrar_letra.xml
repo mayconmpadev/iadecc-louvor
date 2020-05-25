@@ -101,6 +101,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:gravity="top"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/borda_roxa"
+                android:inputType="textMultiLine"
+
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimaryDark"
+                android:text="Cifra:"/>
+            <EditText
+                android:id="@+id/cadastro_hino_edit_cifra"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:gravity="top"
                 android:background="@drawable/borda_roxa"
                 android:inputType="textMultiLine"
 

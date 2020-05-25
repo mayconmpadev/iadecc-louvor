@@ -14,4 +14,158 @@
         <item>coral</item>
     </string-array>
 
+    <string-array name="notas_musicais">
+        <item> C </item>
+        <item> D </item>
+        <item> E </item>
+        <item> F </item>
+        <item> G </item>
+        <item> A </item>
+        <item> B </item>
+        <item> / </item>
+        <item> # </item>
+        <item> b </item>
+        <item> m </item>
+        <item> M </item>
+
+
+    </string-array>
+
+    <string-array name="todas_notas_musicais">
+        <item> "C  " </item>
+        <item> "C/" </item>
+        <item> "C#" </item>
+        <item> "Cb" </item>
+        <item> "Cm" </item>
+        <item> "C#m" </item>
+        <item> "Cbm" </item>
+        <item> "C1" </item>
+        <item> "C2" </item>
+        <item> "C3" </item>
+        <item> "C4" </item>
+        <item> "C5" </item>
+        <item> "C6" </item>
+        <item> "C7" </item>
+        <item> "C8" </item>
+        <item> "C9" </item>
+
+        <item> "D  " </item>
+        <item> "D/" </item>
+        <item> "D#" </item>
+        <item> "Db" </item>
+        <item> "Dm" </item>
+        <item> "D#m" </item>
+        <item> "Dbm" </item>
+        <item> "D1" </item>
+        <item> "D2" </item>
+        <item> "D3" </item>
+        <item> "D4" </item>
+        <item> "D5" </item>
+        <item> "D6" </item>
+        <item> "D7" </item>
+        <item> "D8" </item>
+        <item> "D9" </item>
+
+        <item> "E  " </item>
+        <item> "E/" </item>
+        <item> "E#" </item>
+        <item> "Eb" </item>
+        <item> "Em" </item>
+        <item> "E#m" </item>
+        <item> "Ebm" </item>
+        <item> "E1" </item>
+        <item> "E2" </item>
+        <item> "E3" </item>
+        <item> "E4" </item>
+        <item> "E5" </item>
+        <item> "E6" </item>
+        <item> "E7" </item>
+        <item> "E8" </item>
+        <item> "E9" </item>
+
+        <item> "F  " </item>
+        <item> "F/" </item>
+        <item> "F#" </item>
+        <item> "Eb" </item>
+        <item> "Fm" </item>
+        <item> "F#m" </item>
+        <item> "Fbm" </item>
+        <item> "F1" </item>
+        <item> "F2" </item>
+        <item> "F3" </item>
+        <item> "F4" </item>
+        <item> "F5" </item>
+        <item> "F6" </item>
+        <item> "F7" </item>
+        <item> "F8" </item>
+        <item> "F9" </item>
+
+        <item> "G  " </item>
+        <item> "G/" </item>
+        <item> "G#" </item>
+        <item> "Gb" </item>
+        <item> "Gm" </item>
+        <item> "G#m" </item>
+        <item> "Gbm" </item>
+        <item> "G1" </item>
+        <item> "G2" </item>
+        <item> "G3" </item>
+        <item> "G4" </item>
+        <item> "G5" </item>
+        <item> "G6" </item>
+        <item> "G7" </item>
+        <item> "G8" </item>
+        <item> "G9" </item>
+
+        <item> "A  " </item>
+        <item> "A/" </item>
+        <item> "A#" </item>
+        <item> "Ab" </item>
+        <item> "Am " </item>
+        <item> "A#m" </item>
+        <item> "Abm" </item>
+        <item> "A1" </item>
+        <item> "A2" </item>
+        <item> "A3" </item>
+        <item> "A4" </item>
+        <item> "A5" </item>
+        <item> "A6" </item>
+        <item> "A7" </item>
+        <item> "A8" </item>
+        <item> "A9" </item>
+
+        <item> "B  " </item>
+        <item> "B/" </item>
+        <item> "B#" </item>
+        <item> "Bb" </item>
+        <item> "Bm" </item>
+        <item> "B#m" </item>
+        <item> "Bbm" </item>
+        <item> "B1" </item>
+        <item> "B2" </item>
+        <item> "B3" </item>
+        <item> "B4" </item>
+        <item> "B5" </item>
+        <item> "B6" </item>
+        <item> "B7" </item>
+        <item> "B8" </item>
+        <item> "B9" </item>
+
+        <item> / </item>
+        <item> M </item>
+        <item> 1 </item>
+        <item> 2/ </item>
+        <item> 3 </item>
+        <item> 4 </item>
+        <item> 5 </item>
+        <item> 6 </item>
+        <item> 7 </item>
+        <item> 8 </item>
+        <item> 9 </item>
+
+
+
+    </string-array>
+    <string name="title_activity_maps">Map</string>
+
 </resources>

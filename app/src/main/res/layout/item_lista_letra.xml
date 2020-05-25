@@ -1,111 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.balysv.materialripple.MaterialRippleLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<com.balysv.materialripple.MaterialRippleLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/RippleStyleBlack"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/lyt_parent"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="8dp"
-    android:background="@drawable/bg_multi_selection"
-    android:clickable="true"
-    android:orientation="horizontal">
-<ImageView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/lyt_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_multi_selection"
+        android:clickable="true"
+        android:orientation="horizontal"
+        android:padding="8dp">
 
-    android:src="@drawable/ic_som">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
 
-</ImageView>
-   <LinearLayout
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:layout_marginLeft="10dp"
-       android:layout_weight="1"
-       android:layout_gravity="center"
-       android:orientation="vertical">
-       <TextView
-           android:id="@+id/text_nome"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
+            android:src="@drawable/ic_som">
 
-           android:textSize="15sp"
-           android:textColor="@android:color/black"
-           android:text="equipamento" />
+        </ImageView>
 
-   <LinearLayout
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:orientation="horizontal">
-       <TextView
-           android:id="@+id/text_cantor"
-           android:layout_width="wrap_content"
-android:layout_weight="1"
-           android:layout_gravity="center"
-           android:layout_height="wrap_content"
-           android:text="defeito" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-      <RelativeLayout
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content">
-          <ProgressBar
-              android:id="@+id/item_progresso_circulo"
-              android:layout_width="25dp"
-              android:layout_height="25dp"
-              android:visibility="invisible"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-              android:indeterminateDrawable="@drawable/progress"
-              android:background="@android:color/transparent"
-              android:progressDrawable="@android:color/transparent" />
+                <TextView
+                    android:id="@+id/text_nome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="equipamento"
+                    android:textColor="@android:color/black"
+                    android:textSize="15sp" />
 
-          <ImageView
-              android:id="@+id/image_download"
-              android:layout_width="25dp"
-              android:layout_height="25dp"
-              android:src="@drawable/ic_cloud_download">
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-          </ImageView>
-      </RelativeLayout>
-   </LinearLayout>
+                    <ProgressBar
+                        android:id="@+id/item_progresso_circulo"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:background="@android:color/transparent"
 
-       <LinearLayout
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:gravity="right"
-           android:orientation="horizontal">
+                        android:indeterminateDrawable="@drawable/progress"
+                        android:progressDrawable="@android:color/transparent"
+                        android:visibility="invisible" />
 
-           <TextView
-               android:id="@+id/text_data"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_weight="1"
-               android:textSize="11dp"
-               android:textColor="@android:color/holo_purple"
-               android:layout_gravity="center"
-               android:text="25-03-2018" />
+                    <ImageView
+                        android:id="@+id/image_download"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/ic_cloud_download">
 
-           <RatingBar
-
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               style="?android:attr/ratingBarStyleSmall"
-               android:rating="4"
-               android:indeterminate="false">
+                    </ImageView>
+                </RelativeLayout>
+            </LinearLayout>
 
 
-           </RatingBar>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/text_cantor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:text="defeito" />
 
 
+            </LinearLayout>
 
-       </LinearLayout>
-   </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:orientation="horizontal">
 
-</LinearLayout>
-    </com.balysv.materialripple.MaterialRippleLayout>
+                <TextView
+                    android:id="@+id/text_data"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:text="25-03-2018"
+                    android:textColor="@android:color/holo_purple"
+                    android:textSize="11dp" />
+
+                <RatingBar
+
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="false"
+                    android:rating="4">
+
+
+                </RatingBar>
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</com.balysv.materialripple.MaterialRippleLayout>
