@@ -7,10 +7,14 @@ import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -304,11 +308,54 @@ public class PlayActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         obj = (Hino) intent.getSerializableExtra("hino");
+        String tipo = intent.getStringExtra("tipo");
 
         nome_hino.setText(obj.nome);
         nome_cantor.setText(obj.cantor);
-        letra_hino.setText(obj.letra);
-        Util.textoNegrito(letra_hino.getText().toString(), letra_hino, null);
+        if (tipo.equals("letra")){
+            letra_hino.setText(obj.letra);
+            Util.textoNegrito(letra_hino.getText().toString(), letra_hino, null);
+        }else {
+            letra_hino.setText(obj.cifra);
+            textoNegrito2(letra_hino.getText().toString(), letra_hino, null);
+
+        }
+
+    }
+
+    public void textoNegrito2(final String texto, final TextView textView, final EditText editText) {
+        runOnUiThread(new Runnable() {
+            public void run() {
+
+                final SpannableString text = new SpannableString(texto);
+                int a = 0;
+                int b = texto.length();
+                int c = 0;
+
+                // String notas = "CDEFGAB/#bmM123456789";
+                String[] arrayNotas = getResources().getStringArray(R.array.todas_notas_musicais);
+                for (int j = 0; j < arrayNotas.length; j++) {
+                    String nota = arrayNotas[j];
+
+
+                    for (int i = -1; (i = texto.indexOf(nota, i + 1)) != -1; i++) {
+                        b = i;
+                        c = i + nota.length();
+                        // prints "4", "13", "22"
+                        text.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), b, c, 0);
+                        text.setSpan(new ForegroundColorSpan(Color.parseColor("#FF6D00")), b, c, 0);
+
+                    }
+                }
+
+                if (textView == null) {
+                    editText.setText(text, EditText.BufferType.SPANNABLE);
+                } else {
+                    textView.setText(text, EditText.BufferType.SPANNABLE);
+                }
+
+            }
+        });
     }
 
     public void controlClick(View v) {
@@ -458,6 +505,8 @@ public class PlayActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 letra_hino.setTextSize(15f);
+                Util.vibrar(getApplicationContext(), 30);
+
 
             }
         });
@@ -466,6 +515,7 @@ public class PlayActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 letra_hino.setTextSize(18f);
+                Util.vibrar(getApplicationContext(), 30);
 
             }
         });
@@ -474,6 +524,7 @@ public class PlayActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 letra_hino.setTextSize(25f);
+                Util.vibrar(getApplicationContext(), 30);
 
             }
         });

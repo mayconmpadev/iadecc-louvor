@@ -1,9 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:paddingLeft="25dp"
+    android:paddingRight="25dp"
     tools:context=".activity.ListaAvisosActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="30dp"
+        android:id="@+id/btn_aviso_culto"
+        android:background="@drawable/btn_roxo_transparente"
+
+        android:paddingLeft="50dp"
+        android:paddingTop="15dp"
+        android:paddingRight="50dp"
+        android:paddingBottom="15dp"
+        android:text="Culto"
+        android:textSize="20sp">
+
+    </Button>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingRight="50dp"
+        android:paddingLeft="50dp"
+        android:id="@+id/btn_aviso_ministrante"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/btn_roxo_transparente"
+        android:text="Ministrante"
+        android:textSize="20sp">
+
+    </Button>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingRight="50dp"
+        android:paddingLeft="50dp"
+        android:paddingBottom="15dp"
+        android:id="@+id/btn_aviso_vocal"
+        android:paddingTop="15dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/btn_roxo_transparente"
+        android:text="Vocal"
+        android:textSize="20sp">
+
+    </Button>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingRight="50dp"
+        android:paddingLeft="50dp"
+        android:paddingBottom="15dp"
+        android:id="@+id/btn_aviso_instrumental"
+        android:paddingTop="15dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/btn_roxo_transparente"
+        android:text="Instrumental"
+        android:textSize="20sp">
+
+    </Button>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingRight="50dp"
+        android:paddingLeft="50dp"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"
+        android:id="@+id/btn_aviso_musicas"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/btn_roxo_transparente"
+        android:text="Hinos"
+        android:textSize="20sp">
+
+    </Button>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimaryDark"
+        android:text="Observação:"/>
+    <EditText
+        android:id="@+id/edit_aviso_observacao"
+        android:layout_width="match_parent"
+        android:inputType="textCapWords"
+        android:layout_height="wrap_content"
+        />
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="2">
+
+    </View>
+    <Button
+        android:id="@+id/btn_aviso_salvar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:background="@drawable/btn_rounded_roxo"
+        android:textColor="@color/branco"
+        android:layout_marginTop="32dp"
+        android:text="salvar" />
+
+</LinearLayout>

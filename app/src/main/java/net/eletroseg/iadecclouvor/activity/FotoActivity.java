@@ -7,11 +7,11 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.net.Uri;
-import android.provider.MediaStore;
-
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -19,9 +19,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.github.rtoshiro.util.format.SimpleMaskFormatter;
+import com.github.rtoshiro.util.format.text.MaskTextWatcher;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,44 +44,54 @@ import net.eletroseg.iadecclouvor.util.InstanciaFirebase;
 import net.eletroseg.iadecclouvor.util.SPM;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.util.ArrayList;
 
 public class FotoActivity extends AppCompatActivity {
     ImageView foto;
-    Button galeria, excluir;
+    EditText nome, telefone;
+    Button salvar;
+    FloatingActionButton galeria;
     FirebaseAuth firebaseAuth;
     SPM spm = new SPM(FotoActivity.this);
     private static final int GALLERY_INTENT = 2;
-   public Uri uri;
+    public Uri uri;
     Usuario usuario;
     Dialog dialog;
+    boolean b = true;
     FirebaseStorage firebaseStorage;
     StorageReference storageReference;
+    ArrayList<Usuario> arrayListUsuarios =  new ArrayList<>();
     String fotoGaleria;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_foto);
-        getSupportActionBar().hide();
+        //   getSupportActionBar().hide();
         foto = findViewById(R.id.foto_image_perfil);
         galeria = findViewById(R.id.foto_btn_alterar);
-        excluir = findViewById(R.id.foto_btn_excluir);
+        nome = findViewById(R.id.foto_edit_nome);
+        telefone = findViewById(R.id.foto_edit_telefone);
+        salvar = findViewById(R.id.foto_btn_salvar);
+
+        SimpleMaskFormatter simpleMoeda = new SimpleMaskFormatter("(NN)NNNNN-NNNN");
+        MaskTextWatcher maskMoeda = new MaskTextWatcher(telefone, simpleMoeda);
+        telefone.addTextChangedListener(maskMoeda);
+
         galeria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               chamarImagens();
+                chamarImagens();
             }
         });
-        excluir.setOnClickListener(new View.OnClickListener() {
+        salvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                salvarFoto();
+                verificarNome();
             }
         });
         buscarPerfilWeb();
     }
-
 
 
     public static Bitmap rotateBitmap1(Context context, Uri photoUri, Bitmap bitmap) {
@@ -131,6 +145,7 @@ public class FotoActivity extends AppCompatActivity {
                             String imagem;
                             imagem = downloadUrl.toString();
                             fotoGaleria = imagem;
+                            usuario.foto = fotoGaleria;
                             salvar();
                         }
                     });
@@ -177,28 +192,35 @@ public class FotoActivity extends AppCompatActivity {
     }
 
     private void salvar() {
-        usuario.foto = fotoGaleria;
+        exibeProgresso();
+        usuario.nome = nome.getText().toString();
+        usuario.telefone = telefone.getText().toString();
         firebaseAuth = ConfiguracaoFiribase.getFirebaseAutenticacao();
-        DatabaseReference reference = InstanciaFirebase.getDatabase().getReference("usuarios").child(spm.getPreferencia("USUARIO_LOGADO", "USUARIO", "erro")).child("foto");
-        reference.setValue(usuario.foto);
+        DatabaseReference reference = InstanciaFirebase.getDatabase().getReference("usuarios").child(spm.getPreferencia("USUARIO_LOGADO", "USUARIO", "erro"));
+        reference.setValue(usuario).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+                dialog.dismiss();
+                Toast.makeText(getApplicationContext(), "Salvo com sucesso", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(FotoActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
         reference.keepSynced(true);
-        dialog.dismiss();
-        Toast.makeText(this, "Salvo com sucesso", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(FotoActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     private void buscarPerfilWeb() {
         usuario = new Usuario();
-        DatabaseReference reference = InstanciaFirebase.getDatabase().getReference("usuarios").child(spm.getPreferencia("USUARIO_LOGADO", "USUARIO", "erro")).child("foto");
+        DatabaseReference reference = InstanciaFirebase.getDatabase().getReference("usuarios").child(spm.getPreferencia("USUARIO_LOGADO", "USUARIO", "erro"));
         reference.keepSynced(true);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 if (dataSnapshot.exists() & dataSnapshot != null) {
-                    usuario.foto = dataSnapshot.getValue().toString();
+                    usuario = dataSnapshot.getValue(Usuario.class);
                 }
             }
 
@@ -210,7 +232,8 @@ public class FotoActivity extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                nome.setText(usuario.nome);
+                telefone.setText(usuario.telefone);
                 if (!usuario.foto.equals("")) {
                     Picasso.with(FotoActivity.this).load(usuario.foto).into(foto);
                 }
@@ -223,6 +246,78 @@ public class FotoActivity extends AppCompatActivity {
         });
 
     }
+
+    private void verificarNome() {
+        DatabaseReference reference = InstanciaFirebase.getDatabase().getReference("usuarios");
+        arrayListUsuarios.clear();
+        b = true;
+        ChildEventListener childEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                Usuario usuarios = dataSnapshot.getValue(Usuario.class);
+                arrayListUsuarios.add(usuarios);
+
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        reference.addChildEventListener(childEventListener);
+
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (int i = 0; i < arrayListUsuarios.size(); i++) {
+
+                    if (arrayListUsuarios.get(i).nome.toLowerCase().equals(nome.getText().toString().toLowerCase())) {
+                        if (!arrayListUsuarios.get(i).id.equals(spm.getPreferencia("USUARIO_LOGADO", "USUARIO", ""))){
+                            b = false;
+                        }
+
+                        break;
+                    }
+
+                }
+
+
+                if (b) {
+                    salvarFoto();
+                }else {
+
+                    Toast.makeText(FotoActivity.this, "Esse nome ja existe", Toast.LENGTH_SHORT).show();
+                }
+
+                // dialog.dismiss();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
     public void exibeProgresso() {
 
 

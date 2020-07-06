@@ -1,7 +1,6 @@
 package net.eletroseg.iadecclouvor.adapter;
 
 import android.content.Context;
-
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,26 +9,27 @@ import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import net.eletroseg.iadecclouvor.R;
-import net.eletroseg.iadecclouvor.modelo.Hino;
+import com.bumptech.glide.Glide;
 
-import java.io.File;
+import net.eletroseg.iadecclouvor.R;
+import net.eletroseg.iadecclouvor.activity.SelecaoUsuarioActivity;
+import net.eletroseg.iadecclouvor.modelo.Usuario;
+import net.eletroseg.iadecclouvor.util.Parametro;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdapterListInbox extends RecyclerView.Adapter<AdapterListInbox.ViewHolder> {
+public class AdapterSelecaoUsuario extends RecyclerView.Adapter<AdapterSelecaoUsuario.ViewHolder> {
 
     private Context ctx;
     String pesquisa = "";
     //Itens de exibição / filtrados
-    private List<Hino> itens_exibicao;
+    private List<Usuario> itens_exibicao;
     //Essa lista contem todos os itens.
-    private List<Hino> itens;
+    private List<Usuario> itens;
     private OnClickListener onClickListener = null;
 
     private SparseBooleanArray selected_items;
@@ -41,23 +41,21 @@ public class AdapterListInbox extends RecyclerView.Adapter<AdapterListInbox.View
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView nome, cantor, data;
+        public TextView nome, status;
         public ImageView imageView;
         public ProgressBar progressBar;
         public View lyt_parent;
 
         public ViewHolder(View view) {
             super(view);
-            nome = (TextView) view.findViewById(R.id.text_nome);
-            cantor = (TextView) view.findViewById(R.id.text_cantor);
-            data = (TextView) view.findViewById(R.id.text_data);
-            imageView = (ImageView) view.findViewById(R.id.image_download);
-            progressBar = (ProgressBar) view.findViewById(R.id.item_progresso_circulo);
+            nome = (TextView) view.findViewById(R.id.nome);
+            status = (TextView) view.findViewById(R.id.status);
+            imageView = (ImageView) view.findViewById(R.id.image);
             lyt_parent = (View) view.findViewById(R.id.lyt_parent);
         }
     }
 
-    public AdapterListInbox(Context mContext, List<Hino> items) {
+    public AdapterSelecaoUsuario(Context mContext, List<Usuario> items) {
         this.ctx = mContext;
         this.itens = items;
         this.itens_exibicao = items;
@@ -66,29 +64,26 @@ public class AdapterListInbox extends RecyclerView.Adapter<AdapterListInbox.View
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_lista_letra, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_people_chat, parent, false);
         return new ViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        final Hino hino = itens_exibicao.get(position);
+        final Usuario usuario = itens_exibicao.get(position);
 
         // displaying text view data
-        holder.nome.setText(hino.nome);
-        holder.cantor.setText(hino.cantor);
-        holder.data.setText(hino.data);
+        if (SelecaoUsuarioActivity.arrayListIds.contains(usuario.id)){
+            holder.lyt_parent.setBackgroundResource(R.color.cinza);
+        }else {
+            holder.lyt_parent.setBackgroundResource(R.color.branco);
+        }
+        holder.nome.setText(usuario.nome.substring(0, 1).toUpperCase() + usuario.nome.substring(1));
+        holder.status.setText(usuario.status);
         holder.lyt_parent.setActivated(selected_items.get(position, false));
+        Glide.with(ctx).load(usuario.foto).into(holder.imageView);
       //  Toast.makeText(ctx, "onBindViewHolder", Toast.LENGTH_SHORT).show();
-if (verificarNaMemoria(hino.nome)){
-    holder.progressBar.setVisibility(View.INVISIBLE);
-    holder.imageView.setVisibility(View.VISIBLE);
-    holder.imageView.setImageResource(R.drawable.ic_cloud_download_ok);
-   // Toast.makeText(ctx, "ok ok ", Toast.LENGTH_SHORT).show();
-}else {
 
-    holder.imageView.setImageResource(R.drawable.ic_cloud_download);
-}
 
 
         holder.lyt_parent.setOnClickListener(new View.OnClickListener() {
@@ -96,16 +91,8 @@ if (verificarNaMemoria(hino.nome)){
             public void onClick(View v) {
                 if (onClickListener == null) return ;
                // Toast.makeText(ctx, "onClickListener", Toast.LENGTH_SHORT).show();
-                onClickListener.onItemClick(v, hino, position);
-                if (!verificarNaMemoria(hino.nome)){
-                    holder.imageView.setVisibility(View.INVISIBLE);
-                    holder.progressBar.setVisibility(View.VISIBLE);
-                }else {
+                onClickListener.onItemClick(v, usuario, position);
 
-                    holder.progressBar.setVisibility(View.INVISIBLE);
-                    holder.imageView.setVisibility(View.VISIBLE);
-                    holder.imageView.setImageResource(R.drawable.ic_cloud_download_ok);
-                }
             }
         });
 
@@ -113,14 +100,14 @@ if (verificarNaMemoria(hino.nome)){
             @Override
             public boolean onLongClick(View v) {
                 if (onClickListener == null) return false;
-                onClickListener.onItemLongClick(v, hino, position);
+                onClickListener.onItemLongClick(v, usuario, position);
                 return true;
             }
         });
 
     }
 
-    public Hino getItem(int position) {
+    public Usuario getItem(int position) {
         return itens.get(position);
     }
 
@@ -167,9 +154,9 @@ if (verificarNaMemoria(hino.nome)){
     }
 
     public interface OnClickListener {
-        void onItemClick(View view, Hino obj, int pos);
+        void onItemClick(View view, Usuario obj, int pos);
 
-        void onItemLongClick(View view, Hino obj, int pos);
+        void onItemLongClick(View view, Usuario obj, int pos);
     }
 
     public void hinoBaixado(String hino){
@@ -195,19 +182,19 @@ if (verificarNaMemoria(hino.nome)){
                     results.values = itens;
                 } else {
                     //cria um array para armazenar os objetos filtrados.
-                    List<Hino> itens_filtrados = new ArrayList<Hino>();
+                    List<Usuario> itens_filtrados = new ArrayList<Usuario>();
 
                     //percorre toda lista verificando se contem a palavra do filtro na descricao do objeto.
                     for (int i = 0; i < itens.size(); i++) {
-                        Hino data = itens.get(i);
+                        Usuario usuario = itens.get(i);
 
                         filtro = filtro.toString().toLowerCase();
-                        String condicao = data.nome.toLowerCase();
+                        String condicao = usuario.nome.toLowerCase();
 
 
                         if (condicao.contains(filtro)) {
                             //se conter adiciona na lista de itens filtrados.
-                            itens_filtrados.add(data);
+                            itens_filtrados.add(usuario);
                             pesquisa = (String) filtro;
                         }
 
@@ -222,7 +209,7 @@ if (verificarNaMemoria(hino.nome)){
             @SuppressWarnings("unchecked")
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                itens_exibicao = (List<Hino>) results.values; // Valores filtrados.
+                itens_exibicao = (List<Usuario>) results.values; // Valores filtrados.
                 notifyDataSetChanged();  // Notifica a lista de alteração
             }
 
@@ -230,19 +217,5 @@ if (verificarNaMemoria(hino.nome)){
         return filter;
     }
 
-    private boolean verificarNaMemoria(String nome){
-        File pdfFolder = new File(ctx.getExternalFilesDir(null)
-                + File.separator
-                + "Iadecc/hinos"
-                + File.separator);
-        if (!pdfFolder.exists()) {
-            pdfFolder.mkdirs();
-        }
-        File myFile = new File(pdfFolder + File.separator + nome + ".mp3");
-        if (myFile.exists()) {
-            return  true;
-        }else {
-            return false;
-        }
-    }
+
 }

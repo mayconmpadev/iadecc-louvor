@@ -7,7 +7,15 @@
     android:background="@drawable/borda"
     android:orientation="vertical">
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:id="@+id/image_fechar"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/ic_action_close_black_24dp">
 
+    </ImageView>
    <LinearLayout
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
@@ -20,13 +28,7 @@
            android:layout_weight="1"
            android:textColor="@color/preto" />
 
-       <ImageView
-           android:layout_width="wrap_content"
-           android:id="@+id/image_fechar"
-           android:layout_height="wrap_content"
-           android:src="@drawable/ic_action_close_black_24dp">
 
-       </ImageView>
    </LinearLayout>
 
 
@@ -43,6 +45,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:padding="8dp"
+            android:background="@drawable/borda_roxa_redolda"
             android:text="Pequena"
             android:textStyle="bold" />
 
@@ -60,6 +64,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Média"
+            android:padding="8dp"
+            android:background="@drawable/borda_roxa_redolda"
             android:textStyle="bold" />
 
 
@@ -76,6 +82,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Grande"
+            android:padding="8dp"
+            android:background="@drawable/borda_roxa_redolda"
             android:textStyle="bold" />
 
 

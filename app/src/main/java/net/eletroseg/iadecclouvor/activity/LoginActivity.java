@@ -27,12 +27,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import net.eletroseg.iadecclouvor.R;
 
 import net.eletroseg.iadecclouvor.util.Base64Custom;
 import net.eletroseg.iadecclouvor.util.ConfiguracaoFiribase;
+import net.eletroseg.iadecclouvor.util.Constantes;
 import net.eletroseg.iadecclouvor.util.InstanciaFirebase;
 import net.eletroseg.iadecclouvor.util.Parametro;
 import net.eletroseg.iadecclouvor.util.SPM;
@@ -49,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
     private LinearLayout layout, cadastrar;
     private Dialog dialog;
     SPM spm = new SPM(LoginActivity.this);
+    String moderador = "não";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -257,11 +260,10 @@ public class LoginActivity extends AppCompatActivity {
                     dialog.dismiss();
                     if (firebaseAuth.getCurrentUser().isEmailVerified()) {
 
-                        SPM spm = new SPM(LoginActivity.this);
+
                         spm.setPreferencia("USUARIO_LOGADO", "USUARIO", Base64Custom.codificarBase64(firebaseAuth.getCurrentUser().getEmail()));
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
+                        usuarioTipo();
+
 
                     } else {
                        // firebaseAuth.signOut();
@@ -455,6 +457,40 @@ public class LoginActivity extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+    private void usuarioTipo(){
+        String usuario =   spm.getPreferencia("USUARIO_LOGADO", "USUARIO", "");
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference().child(Constantes.USUARIOS).child(usuario).child("moderador");
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                moderador = dataSnapshot.getValue(String.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                spm.setPreferencia("USUARIO_LOGADO", "MODERADOR", moderador);
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();

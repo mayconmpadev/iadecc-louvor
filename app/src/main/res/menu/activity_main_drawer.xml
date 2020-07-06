@@ -13,9 +13,9 @@
             android:icon="@drawable/ic_menu_gallery"
             android:title="Cifras" />
         <item
-            android:id="@+id/nav_escala"
+            android:id="@+id/nav_usuario"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:title="Integrantes" />
         <item
             android:id="@+id/nav_configuracao"
             android:icon="@drawable/ic_menu_manage"

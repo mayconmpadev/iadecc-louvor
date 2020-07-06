@@ -28,6 +28,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatSeekBar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -45,7 +46,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import net.eletroseg.iadecclouvor.R;
-import net.eletroseg.iadecclouvor.adapter.AdapterListInbox;
+import net.eletroseg.iadecclouvor.adapter.AdapterListaHino;
 import net.eletroseg.iadecclouvor.modelo.Hino;
 import net.eletroseg.iadecclouvor.util.Base64Custom;
 import net.eletroseg.iadecclouvor.util.Constantes;
@@ -63,7 +64,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 public class ListaHinosActivity extends AppCompatActivity {
 
@@ -77,14 +77,15 @@ public class ListaHinosActivity extends AppCompatActivity {
     private AppCompatSeekBar seek_song_progressbar;
     private FloatingActionButton fab, play;
     private SPM spm = new SPM(ListaHinosActivity.this);
-    private AdapterListInbox mAdapter;
+    private AdapterListaHino mAdapter;
     private ActionMode actionMode;
     Hino hino2;
     MediaPlayer mp;
     ObjDld objDld;
     ArrayList<Hino> arrayListHino = new ArrayList<>();
+    ArrayList<Hino> arrayListPlayList = new ArrayList<>();
     String sPesquisa = "";
-Hino obj;
+    Hino obj;
     ArrayList<ObjDld> position = new ArrayList<>();
     File myFile;
     File pdfFolder;
@@ -92,7 +93,7 @@ Hino obj;
     int cont = 0;
     ArrayList<String> arrayList = new ArrayList<>();
     boolean bRepetir = false;
-    boolean bControles = true;
+    String tipo = "";
 
     // Media Player
 
@@ -107,9 +108,27 @@ Hino obj;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_hinos);
 //        getSupportActionBar().hide();
+        utils = new MusicUtils();
         iniciarComponentes();
+        recuperaIntent();
+       // CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+       // p.setAnchorId(View.NO_ID);
+       // fab.setLayoutParams(p);
 
-        buscarClienteWeb();
+        if (spm.getPreferencia("USUARIO_LOGADO","MODERADOR","").equals("sim")){
+            fab.show();
+        }else {
+
+            fab.hide();
+        }
+
+        if (tipo.equals("lista")) {
+            arrayListHino.addAll(arrayListPlayList);
+        } else {
+            buscarClienteWeb();
+        }
+
+
         voltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -154,27 +173,60 @@ Hino obj;
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-play();
+                ouvir();
             }
         });
 
         prev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (cont == 0) {
+                    mp.reset();
+                    cont = arrayListHino.size() - 1;
+                    mAdapter.hinoEmExecucao(cont);
+                    mAdapter.notifyDataSetChanged();
+                    ouvir();
+                } else {
+                    mp.reset();
+                    cont--;
+                    mAdapter.hinoEmExecucao(cont);
+                    mAdapter.notifyDataSetChanged();
+                    ouvir();
+                }
 
-                mp.reset();
-                cont--;
-                play();
             }
         });
 
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!verificarNaMemoria(arrayListHino.get(cont).nome)) {
+                    objDld = new ObjDld();
+                    objDld.nomeDoHino = arrayListHino.get(cont).nome;
+                    objDld.posicao = cont;
+                    position.add(objDld);
+                    hino2 = arrayListHino.get(cont);
+                    downloadfile(arrayListHino.get(cont));
+                } else {
 
-                mp.reset();
-                cont++;
-                play();
+                    if (cont < arrayListHino.size() - 1) {
+                        mp.reset();
+                        cont++;
+                        mAdapter.hinoEmExecucao(cont);
+                        mAdapter.notifyDataSetChanged();
+                        ouvir();
+                    } else {
+                        cont = 0;
+                        mAdapter.hinoEmExecucao(cont);
+                        mAdapter.notifyDataSetChanged();
+                        mp.reset();
+                        ouvir();
+
+                    }
+
+                }
+
+
                 //Snackbar.make(parent_view, "Next", Snackbar.LENGTH_SHORT).show();
             }
         });
@@ -196,7 +248,6 @@ play();
         });
 
 
-
     }
 
     private void iniciarComponentes() {
@@ -211,7 +262,7 @@ play();
         aleatorio = findViewById(R.id.bt_aleatorio);
         tempoInicial = findViewById(R.id.tv_song_current_duration);
         tempoFinal = findViewById(R.id.tv_song_total_duration);
-principal = findViewById(R.id.root);
+        principal = findViewById(R.id.root);
         seek_song_progressbar = (AppCompatSeekBar) findViewById(R.id.seek_song_progressbar);
         // set Progress bar values
         seek_song_progressbar.setProgress(0);
@@ -222,9 +273,9 @@ principal = findViewById(R.id.root);
         recyclerView.setHasFixedSize(true);
 
         //set data and list adapter
-        mAdapter = new AdapterListInbox(this, arrayListHino);
+        mAdapter = new AdapterListaHino(this, arrayListHino);
         recyclerView.setAdapter(mAdapter);
-        mAdapter.setOnClickListener(new AdapterListInbox.OnClickListener() {
+        mAdapter.setOnClickListener(new AdapterListaHino.OnClickListener() {
             @Override
             public void onItemClick(View view, Hino objeto, int pos) {
                 obj = objeto;
@@ -237,7 +288,7 @@ principal = findViewById(R.id.root);
                     Hino inbox = mAdapter.getItem(pos);
 
                     if (verificarNaMemoria(Parametro.nome)) {
-                       dialogOpcao();
+                        dialogOpcao();
                     } else {
 
                         objDld = new ObjDld();
@@ -258,9 +309,20 @@ principal = findViewById(R.id.root);
                 enableActionMode(pos);
                 obj = objeto;
                 dialogEditar(objeto.nome);
+                cont = pos;
+                mAdapter.hinoEmExecucao(cont);
+                mAdapter.notifyDataSetChanged();
             }
         });
         mp = new MediaPlayer();
+    }
+
+    private void recuperaIntent() {
+
+        Intent intent = getIntent();
+        tipo = intent.getStringExtra("tipo");
+        arrayListPlayList = (ArrayList<Hino>) getIntent().getSerializableExtra("playlist");
+
     }
 
 
@@ -284,13 +346,6 @@ principal = findViewById(R.id.root);
         }
     }
 
-    private void deleteInboxes() {
-        List<Integer> selectedItemPositions = mAdapter.getSelectedItems();
-        for (int i = selectedItemPositions.size() - 1; i >= 0; i--) {
-            mAdapter.removeData(selectedItemPositions.get(i));
-        }
-        mAdapter.notifyDataSetChanged();
-    }
 
     //---------------------------------------------------- BUSCA OS DADOS NO FIREBASE -----------------------------------------------------------------
 
@@ -521,13 +576,14 @@ principal = findViewById(R.id.root);
         ouvirComLetra.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mp.isPlaying()){
+                if (mp.isPlaying()) {
                     mp.pause();
                 }
 
 
                 Intent intent = new Intent(getApplicationContext(), PlayActivity.class);
                 intent.putExtra("hino", obj);
+                intent.putExtra("tipo", "letra");
                 startActivity(intent);
                 dialog.dismiss();
 
@@ -538,6 +594,10 @@ principal = findViewById(R.id.root);
             @Override
             public void onClick(View view) {
 
+                Intent intent = new Intent(getApplicationContext(), PlayActivity.class);
+                intent.putExtra("hino", obj);
+                intent.putExtra("tipo", "cifra");
+                startActivity(intent);
                 dialog.dismiss();
             }
         });
@@ -573,8 +633,8 @@ principal = findViewById(R.id.root);
         ouvirComLetra.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              dialogExcluir("Excluir", "Deseja excluir o hino *" + nome + "*?", nome);
-              dialog.dismiss();
+                dialogExcluir("Excluir", "Deseja excluir o hino *" + nome + "*?", nome);
+                dialog.dismiss();
 
             }
         });
@@ -589,18 +649,21 @@ principal = findViewById(R.id.root);
         startActivity(intent);
     }
 
-    private void ouvir(){
-        if (mp == null){
+    private void ouvir() {
+        if (mp == null) {
             mp = new MediaPlayer();
-        }else {
+        } else {
             mp.reset();
         }
 
         mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                if (!bRepetir){
+                if (!bRepetir) {
                     cont++;
+                    mAdapter.hinoEmExecucao(cont);
+                    mAdapter.notifyDataSetChanged();
+
                 }
 
                 if (cont < arrayListHino.size()) {
@@ -613,7 +676,10 @@ principal = findViewById(R.id.root);
                 } else {
                     if (bRepetir) {
                         cont = 0;
-                        mp.reset();
+                        mAdapter.hinoEmExecucao(cont);
+                        mAdapter.notifyDataSetChanged();
+
+                        mp.stop();
                         play();
                     } else {
                         play.setImageResource(R.drawable.ic_play_arrow);
@@ -630,7 +696,6 @@ principal = findViewById(R.id.root);
         play();
 
 
-        utils = new MusicUtils();
         // Listeners
         seek_song_progressbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -704,6 +769,8 @@ principal = findViewById(R.id.root);
                 mp.setDataSource(fd);
                 mp.prepare();
                 mp.start();
+                mAdapter.hinoEmExecucao(cont);
+                mAdapter.notifyDataSetChanged();
                 // Changing button image to pause button
                 play.setImageResource(R.drawable.ic_pause);
                 // Updating progress bar
@@ -761,21 +828,20 @@ principal = findViewById(R.id.root);
         FirebaseStorage storage = FirebaseStorage.getInstance();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-            final StorageReference storageReferencere = storage.getReference().child(Constantes.AUDIO)
-                    .child(Base64Custom.codificarBase64(nome));
-            DatabaseReference reference = database.getReference().child(Constantes.HINO)
-                    .child(Base64Custom.codificarBase64(nome));
-            reference.removeValue();
-            storageReferencere.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    Progresso.dialog.dismiss();
+        final StorageReference storageReferencere = storage.getReference().child(Constantes.AUDIO)
+                .child(Base64Custom.codificarBase64(nome));
+        DatabaseReference reference = database.getReference().child(Constantes.HINO)
+                .child(Base64Custom.codificarBase64(nome));
+        reference.removeValue();
+        storageReferencere.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Progresso.dialog.dismiss();
 
-                }
-            });
+            }
+        });
 
         excluirHinoLocal(nome);
-
 
 
     }
@@ -840,7 +906,11 @@ principal = findViewById(R.id.root);
 
     @Override
     public void onBackPressed() {
+        mp.stop();
 
+        // mp = null;
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
         finish();
     }
 

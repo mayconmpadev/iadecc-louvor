@@ -1,17 +1,24 @@
 package net.eletroseg.iadecclouvor.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -19,32 +26,63 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.bumptech.glide.Glide;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import net.eletroseg.iadecclouvor.R;
+import net.eletroseg.iadecclouvor.TesteActivity;
+import net.eletroseg.iadecclouvor.adapter.AdapterGradeUsuario;
+import net.eletroseg.iadecclouvor.adapter.AdapterSelecaoHino;
+import net.eletroseg.iadecclouvor.fragment.DomingoFragment;
+import net.eletroseg.iadecclouvor.fragment.EspecialFragment;
+import net.eletroseg.iadecclouvor.fragment.QuartaFragment;
+import net.eletroseg.iadecclouvor.modelo.Cronograma;
+import net.eletroseg.iadecclouvor.modelo.Hino;
 import net.eletroseg.iadecclouvor.modelo.Usuario;
 import net.eletroseg.iadecclouvor.util.Base64Custom;
 import net.eletroseg.iadecclouvor.util.ConfiguracaoFiribase;
+import net.eletroseg.iadecclouvor.util.Constantes;
 import net.eletroseg.iadecclouvor.util.InstanciaFirebase;
 import net.eletroseg.iadecclouvor.util.Permissao;
+import net.eletroseg.iadecclouvor.util.Progresso;
 import net.eletroseg.iadecclouvor.util.SPM;
+import net.eletroseg.iadecclouvor.util.Servico;
+import net.eletroseg.iadecclouvor.util.Tools;
+import net.eletroseg.iadecclouvor.widget.LineItemDecoration;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     TextView usuario, empresa;
     ImageView foto;
-    Dialog dialog;
-    Button sincronizar;
-    public Uri resultUri;
+    private FloatingActionButton domingo, quarta, especial;
+    private FloatingActionMenu fabMenu;
 
-   // Perfil perfil;
+    private ViewPager view_pager;
+    private TabLayout tab_layout;
+    Toolbar toolbar;
+
 
     SPM spm = new SPM(MainActivity.this);
     private String[] permissoesNecessarias = new String[]{
@@ -56,28 +94,55 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     };
 
+    @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        sincronizar = findViewById(R.id.btn_sincronizar);
-        sincronizar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+       // setSupportActionBar(toolbar);
+        initToolbar();
+        iniciarComponentes();
+        if (spm.getPreferencia("USUARIO_LOGADO","MODERADOR","").equals("sim")){
+            fabMenu.setVisibility(View.VISIBLE);
+        }else {
+            fabMenu.setVisibility(View.INVISIBLE);
+        }
+        startService(new Intent(this, Servico.class));
+        domingo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+                Intent intent = new Intent(getApplicationContext(), ListaAvisosActivity.class);
+                intent.putExtra("tipo", "domingo");
+                startActivity(intent);
+                finish();
             }
         });
-//hhh
+
+        quarta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(getApplicationContext(), ListaAvisosActivity.class);
+                intent.putExtra("tipo", "quarta");
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        especial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(getApplicationContext(), ListaAvisosActivity.class);
+                intent.putExtra("tipo", "especial");
+                startActivity(intent);
+                finish();
+            }
+        });
+
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -94,23 +159,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         buscarPerfilWeb();
         usuario.setText(spm.getPreferencia("VENDEDOR_LOGADO", "VENDEDOR", ""));
         empresa.setText(Base64Custom.decodificarBase64(spm.getPreferencia("USUARIO_LOGADO", "USUARIO", "")));
-foto.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-        Intent intent =  new Intent(MainActivity.this, FotoActivity.class);
-        startActivity(intent);
-       // finish();
-    }
-});
+        foto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, FotoActivity.class);
+                startActivity(intent);
+            }
+        });
         Permissao.validaPermissoes(1, this, permissoesNecessarias);
 
-     //   if (!drawer.isDrawerOpen(GravityCompat.START)) {
-       //     drawer.openDrawer(GravityCompat.START);
-        //}
         verificarConexao();
     }
 
+    private void initToolbar() {
 
+        toolbar.setNavigationIcon(R.drawable.ic_cloud_download);
+        toolbar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.grey_60), PorterDuff.Mode.SRC_ATOP);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Gallery");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Tools.setSystemBarColor(this, R.color.grey_5);
+        Tools.setSystemBarLight(this);
+    }
+
+    private void iniciarComponentes() {
+        fabMenu = findViewById(R.id.fab_menu);
+        domingo = findViewById(R.id.fab_main_domingo);
+        quarta = findViewById(R.id.fab_main_quarta);
+        especial = findViewById(R.id.fab_main_especial);
+        view_pager = (ViewPager) findViewById(R.id.view_pager);
+        setupViewPager(view_pager);
+
+        tab_layout = (TabLayout) findViewById(R.id.tab_layout);
+        tab_layout.setupWithViewPager(view_pager);
+        view_pager.setOffscreenPageLimit (2);
+    }
 
     @Override
     public void onBackPressed() {
@@ -152,7 +235,7 @@ foto.setOnClickListener(new View.OnClickListener() {
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -161,6 +244,7 @@ foto.setOnClickListener(new View.OnClickListener() {
         if (id == R.id.nav_letras) {
             // Handle the camera action
             Intent intent = new Intent(MainActivity.this, ListaHinosActivity.class);
+            intent.putExtra("tipo", "web");
             startActivity(intent);
             finish();
 
@@ -169,8 +253,8 @@ foto.setOnClickListener(new View.OnClickListener() {
             startActivity(intent);
             finish();
 
-        } else if (id == R.id.nav_escala) {
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        } else if (id == R.id.nav_usuario) {
+            Intent intent = new Intent(MainActivity.this, ListaUsuarioActivity.class);
             startActivity(intent);
             finish();
 
@@ -180,7 +264,7 @@ foto.setOnClickListener(new View.OnClickListener() {
             startActivity(intent);
             finish();
 
-        }else if (id == R.id.nav_avisos) {
+        } else if (id == R.id.nav_avisos) {
             Intent intent = new Intent(MainActivity.this, ListaAvisosActivity.class);
             startActivity(intent);
             finish();
@@ -250,6 +334,46 @@ foto.setOnClickListener(new View.OnClickListener() {
             }
         });
 
+    }
+    private void setupViewPager(ViewPager viewPager) {
+        SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(DomingoFragment.newInstance(), "DOMINGO");
+        adapter.addFragment(QuartaFragment.newInstance(), "QUARTA");
+        adapter.addFragment(EspecialFragment.newInstance(), "ESPECIAL");
+
+        viewPager.setAdapter(adapter);
+
+    }
+    //---------------------------------------------------- BUSCA OS DADOS NO FIREBASE -----------------------------------------------------------------
+
+    private class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        public SectionsPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
     }
 
 

@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -24,7 +25,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.CifraActivity"></activity>
+        <activity android:name=".TesteActivity"></activity>
+        <activity android:name=".activity.SelecaoHinoActivity" />
+        <activity android:name=".activity.SelecaoUsuarioActivity" />
+        <activity android:name=".activity.ListaUsuarioActivity" />
+        <activity android:name=".activity.CifraActivity" />
+        <receiver android:name=".util.BootCompletedIntentReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <service
+            android:name=".util.Servico"
+            android:exported="false"
+            android:permission="TODO"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -40,15 +54,33 @@
         <activity
             android:name=".activity.PlayActivity"
             android:launchMode="singleInstance" />
-        <activity android:name=".activity.LetraActivity" />
-        <activity android:name=".activity.EditaLetraActivity" />
-        <activity android:name=".activity.ExibirLetraActivity" />
-        <activity android:name=".activity.CadastrarLetraActivity" />
-        <activity android:name=".activity.FotoActivity" />
-        <activity android:name=".activity.ListaAvisosActivity" />
-        <activity android:name=".activity.ConfiguracaoActivity" />
-        <activity android:name=".activity.ListaCifrasActivity" />
-        <activity android:name=".activity.ListaHinosActivity" />
+        <activity
+            android:name=".activity.LetraActivity"
+            android:screenOrientation="fullSensor" />
+        <activity
+            android:name=".activity.EditaLetraActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ExibirLetraActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.CadastrarLetraActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.FotoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ListaAvisosActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ConfiguracaoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ListaCifrasActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ListaHinosActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".activity.CadastroLoginActivity" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
@@ -65,6 +97,7 @@
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <service android:name=".util.MeuServico" />

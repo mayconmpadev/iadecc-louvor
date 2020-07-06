@@ -43,6 +43,17 @@
         </View>
 
         <Button
+            android:id="@+id/btn_notas_cifra"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/tranparente"
+            android:text="Notas"
+
+
+            android:textColor="@color/colorPrimaryDark" />
+
+        <Button
             android:id="@+id/btn_limpar_cifra"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

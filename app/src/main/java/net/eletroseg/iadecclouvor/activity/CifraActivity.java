@@ -28,7 +28,7 @@ import net.eletroseg.iadecclouvor.util.Parametro;
 import java.util.ArrayList;
 
 public class CifraActivity extends AppCompatActivity {
-    private Button limpar, salvar;
+    private Button limpar, salvar, notas;
     private EditText cifra, dialogNotas;
     private LinearLayout linearLayout;
     int a = 0;
@@ -82,13 +82,12 @@ public class CifraActivity extends AppCompatActivity {
                 }
             }
         });
-        cifra.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                dialogNota();
-                return true;
-            }
-        });
+       notas.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               dialogNota();
+           }
+       });
 
         limpar.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -104,6 +103,7 @@ public class CifraActivity extends AppCompatActivity {
     private void recuperarComponentes() {
         linearLayout = findViewById(R.id.linear_cifra);
         limpar = findViewById(R.id.btn_limpar_cifra);
+        notas = findViewById(R.id.btn_notas_cifra);
         salvar = findViewById(R.id.btn_salvar_cifra);
         cifra = findViewById(R.id.edit_cifra);
     }

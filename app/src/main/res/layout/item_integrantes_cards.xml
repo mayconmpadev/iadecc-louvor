@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+android:padding="10dp"
+    android:orientation="vertical">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="50sp"
+        android:layout_height="50dp"
+        android:id="@+id/image_integrante"
+        android:layout_marginBottom="5dp"
+        android:src="@drawable/photo_female_4">
+
+    </de.hdodenhof.circleimageview.CircleImageView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/nomes_lista"
+        android:id="@+id/text_integrante"
+        android:layout_gravity="center"
+        android:textColor="@color/colorPrimaryDark"
+        android:text="Nome:"/>
+
+</LinearLayout>

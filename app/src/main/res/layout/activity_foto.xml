@@ -5,53 +5,80 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="10dp"
     tools:context=".activity.FotoActivity">
-    
 
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+       android:layout_gravity="center"
         android:orientation="vertical"
-        android:layout_weight="1">
+        android:padding="10dp">
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/foto_image_perfil"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
             android:src="@drawable/icon_iadecc"
             app:srcCompat="@mipmap/ic_launcher_round" />
-    </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:orientation="horizontal"
-        android:layout_weight="1">
-       <Button
-           android:id="@+id/foto_btn_alterar"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:textColor="@color/branco"
-           android:background="@drawable/btn_rounded_roxo"
-           android:layout_marginRight="30dp"
-           android:layout_weight="1"
-           android:text="alterar"/>
-
-        <Button
-            android:layout_weight="1"
-            android:id="@+id/foto_btn_excluir"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/foto_btn_alterar"
             android:layout_width="wrap_content"
-            android:textColor="@color/branco"
-            android:background="@drawable/btn_rounded_roxo"
             android:layout_height="wrap_content"
-            android:text="salvar"/>
+            android:src="@drawable/ic_action_foto"
+            app:fabSize="mini"
+            android:layout_gravity="center"
+            android:background="@drawable/btn_rounded_roxo"
 
+            android:text="alterar"
+            android:textColor="@color/branco" />
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimaryDark"
+        android:text="Nome:"/>
+    <EditText
+        android:id="@+id/foto_edit_nome"
+        android:layout_width="match_parent"
+        android:inputType="textCapSentences"
+        android:layout_height="wrap_content"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimaryDark"
+        android:text="Telefone:"/>
+    <EditText
+        android:id="@+id/foto_edit_telefone"
+        android:layout_width="match_parent"
+        android:inputType="textCapSentences"
+        android:layout_height="wrap_content"
+        />
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="2">
+
+    </View>
+
+    <Button
+        android:id="@+id/foto_btn_salvar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:background="@drawable/btn_rounded_roxo"
+        android:textColor="@color/branco"
+        android:layout_marginTop="32dp"
+        android:text="salvar" />
+
 
 
 

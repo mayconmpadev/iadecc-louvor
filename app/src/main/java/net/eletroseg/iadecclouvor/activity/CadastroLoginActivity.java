@@ -64,7 +64,7 @@ public class CadastroLoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastro_login);
-        getSupportActionBar().hide();
+        //getSupportActionBar().hide();
         inputLayoutEmail = findViewById(R.id.input_layout_cadastro_login_email);
         inputLayoutSenha = findViewById(R.id.input_layout_cadastro_login_senha);
         inputLayoutConfirmar = findViewById(R.id.input_layout_cadastro_login_confirmar);
@@ -368,14 +368,18 @@ public class CadastroLoginActivity extends AppCompatActivity {
                     usuarios.nome = nome.getText().toString().toLowerCase();
                     usuarios.telefone = telefone.getText().toString();
                     usuarios.moderador = "nao";
+                    usuarios.status = "ativo";
                     usuarios.foto = "";
 
                     if (validarCampos()) {
                         cadastrarUsuario();
+                    }else {
+                        dialog.dismiss();
                     }
                 } else {
                     inputLayoutNome.setErrorEnabled(true);
                     inputLayoutNome.setError("Esse nome ja existe");
+                    dialog.dismiss();
                 }
 
                // dialog.dismiss();

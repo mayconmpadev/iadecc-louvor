@@ -5,19 +5,14 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -28,7 +23,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -147,7 +141,6 @@ public class CadastrarLetraActivity extends AppCompatActivity {
         editCifra.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Parametro.cifra = Parametro.letra;
                 Intent intent = new Intent(getApplicationContext(), CifraActivity.class);
                 startActivity(intent);
             }
@@ -232,60 +225,6 @@ public class CadastrarLetraActivity extends AppCompatActivity {
 
     }
 
-    private void contrV(String texto) {
-        abilitar = false;
-        for (int i = 0; i < texto.length(); i++) {
-            if (texto.substring(i, i + 1).equals("*")) {
-                if (a == 0) {
-                    a = i + 1;
-
-                } else {
-
-                    b = i + 1;
-                    Selecao selecao = new Selecao();
-                    selecao.comeco = a;
-                    selecao.fim = b;
-                    negrito.add(selecao);
-                    a = 0;
-                    b = 0;
-
-                }
-            }
-        }
-
-        setarTexto();
-        abilitar = true;
-
-    }
-
-    private void setarTexto() {
-        runOnUiThread(new Runnable() {
-
-            public void run() {
-                final SpannableString text = new SpannableString(editLetra.getText().toString());
-                for (int i = 0; i < negrito.size(); i++) {
-
-                    text.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), negrito.get(i).comeco, negrito.get(i).fim - 1, 0);
-                    // text.setSpan(new ForegroundColorSpan(Color.RED), negrito.get(i).comeco, negrito.get(i).fim - 1, 0);
-                    text.setSpan(new ForegroundColorSpan(Color.GRAY), negrito.get(i).comeco - 1, negrito.get(i).comeco, 0);
-                    text.setSpan(new ForegroundColorSpan(Color.GRAY), negrito.get(i).fim - 1, negrito.get(i).fim, 0);
-                    // text.setSpan(new ForegroundColorSpan(Color.RED), 5, 9, 0);
-
-
-                }
-                abilitar = false;
-                negrito.clear();
-                editLetra.setText(text, EditText.BufferType.SPANNABLE);
-                a = 0;
-                b = 0;
-
-                editLetra.setSelection(posicao);
-
-
-            }
-        });
-
-    }
 
     private boolean validar() {
         boolean a = true;
@@ -392,52 +331,6 @@ public class CadastrarLetraActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
-        dialog.show();
-
-    }
-
-
-    private void dialogTons() {
-        final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.dialog_tons);
-
-        dialog.setCanceledOnTouchOutside(false);
-        //instancia os objetos que estão no layout customdialog.xml
-
-        final Button A = dialog.findViewById(R.id.btn_A);
-        final Button Bb = dialog.findViewById(R.id.btn_Bb);
-        final Button B = dialog.findViewById(R.id.btn_B);
-        final Button C = dialog.findViewById(R.id.btn_C);
-        final Button Db = dialog.findViewById(R.id.btn_Db);
-        final Button D = dialog.findViewById(R.id.btn_D);
-        final Button Eb = dialog.findViewById(R.id.btn_Eb);
-        final Button E = dialog.findViewById(R.id.btn_E);
-        final Button F = dialog.findViewById(R.id.btn_F);
-        final Button Gb = dialog.findViewById(R.id.btn_Gb);
-        final Button G = dialog.findViewById(R.id.btn_G);
-        final Button Ab = dialog.findViewById(R.id.btn_Ab);
-        final Button Am = dialog.findViewById(R.id.btn_Am);
-        final Button Bbm = dialog.findViewById(R.id.btn_Bbm);
-        final Button Bm = dialog.findViewById(R.id.btn_Bm);
-        final Button Cm = dialog.findViewById(R.id.btn_Cm);
-        final Button Csm = dialog.findViewById(R.id.btn_Csm);
-        final Button Dm = dialog.findViewById(R.id.btn_Dm);
-        final Button Ebm = dialog.findViewById(R.id.btn_Ebm);
-        final Button Em = dialog.findViewById(R.id.btn_Em);
-        final Button Fm = dialog.findViewById(R.id.btn_Fm);
-        final Button Fsm = dialog.findViewById(R.id.btn_Fsm);
-        final Button Gm = dialog.findViewById(R.id.btn_Gm);
-        final Button Gsm = dialog.findViewById(R.id.btn_Gsm);
-        final Button view = new Button(this);
-
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               // tom.setText(view.getText().toString());
-            }
-        });
-
-        //exibe na tela o dialog
         dialog.show();
 
     }
@@ -594,8 +487,8 @@ public class CadastrarLetraActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     Uri uri = task.getResult();
                     hino.audioHino = uri.toString();
-
-                    databaseReference.child(Base64Custom.codificarBase64(hino.nome)).setValue(hino).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    hino.id = Base64Custom.codificarBase64(hino.nome);
+                    databaseReference.child(hino.id).setValue(hino).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
@@ -626,28 +519,13 @@ public class CadastrarLetraActivity extends AppCompatActivity {
     }
 
 
-    private void toast(String msg, int corTexto, int colorFundo) { // toast personalizado
-        View layout = getLayoutInflater().inflate(R.layout.toast_custom, (ViewGroup) findViewById(R.id.custom_toast_layout_id));
-        TextView text = (TextView) layout.findViewById(R.id.text);
-        text.setTextColor(getResources().getColor(corTexto));
-        text.setText(msg);
-        CardView lyt_card = (CardView) layout.findViewById(R.id.lyt_card);
-        lyt_card.setCardBackgroundColor(getResources().getColor(colorFundo));
-
-        Toast toast = new Toast(this);
-        toast.setDuration(Toast.LENGTH_LONG);
-        toast.setView(layout);
-        toast.show();
-    }
-
-
     @Override
     protected void onResume() {
         super.onResume();
-        if (Parametro.letra != null){
+        if (Parametro.letra != null) {
             Util.textoNegrito(Parametro.letra, null, editLetra);
         }
-        if (Parametro.cifra != null){
+        if (Parametro.cifra != null) {
             Util.textoNegrito(Parametro.cifra, null, editCifra);
         }
 
