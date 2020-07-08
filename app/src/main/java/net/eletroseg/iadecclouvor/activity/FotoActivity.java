@@ -60,7 +60,7 @@ public class FotoActivity extends AppCompatActivity {
     boolean b = true;
     FirebaseStorage firebaseStorage;
     StorageReference storageReference;
-    ArrayList<Usuario> arrayListUsuarios =  new ArrayList<>();
+    ArrayList<Usuario> arrayListUsuarios = new ArrayList<>();
     String fotoGaleria;
 
     @Override
@@ -203,8 +203,6 @@ public class FotoActivity extends AppCompatActivity {
 
                 dialog.dismiss();
                 Toast.makeText(getApplicationContext(), "Salvo com sucesso", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(FotoActivity.this, MainActivity.class);
-                startActivity(intent);
                 finish();
             }
         });
@@ -290,7 +288,7 @@ public class FotoActivity extends AppCompatActivity {
                 for (int i = 0; i < arrayListUsuarios.size(); i++) {
 
                     if (arrayListUsuarios.get(i).nome.toLowerCase().equals(nome.getText().toString().toLowerCase())) {
-                        if (!arrayListUsuarios.get(i).id.equals(spm.getPreferencia("USUARIO_LOGADO", "USUARIO", ""))){
+                        if (!arrayListUsuarios.get(i).id.equals(spm.getPreferencia("USUARIO_LOGADO", "USUARIO", ""))) {
                             b = false;
                         }
 
@@ -302,7 +300,7 @@ public class FotoActivity extends AppCompatActivity {
 
                 if (b) {
                     salvarFoto();
-                }else {
+                } else {
 
                     Toast.makeText(FotoActivity.this, "Esse nome ja existe", Toast.LENGTH_SHORT).show();
                 }

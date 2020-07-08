@@ -1,23 +1,10 @@
 package net.eletroseg.iadecclouvor.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.AppCompatSeekBar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.app.DownloadManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -29,15 +16,17 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -48,21 +37,15 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import net.eletroseg.iadecclouvor.R;
-import net.eletroseg.iadecclouvor.adapter.AdapterListaHino;
 import net.eletroseg.iadecclouvor.adapter.AdapterListaUsuario;
 import net.eletroseg.iadecclouvor.modelo.Usuario;
 import net.eletroseg.iadecclouvor.util.Base64Custom;
 import net.eletroseg.iadecclouvor.util.Constantes;
 import net.eletroseg.iadecclouvor.util.MusicUtils;
-import net.eletroseg.iadecclouvor.util.Parametro;
 import net.eletroseg.iadecclouvor.util.Progresso;
 import net.eletroseg.iadecclouvor.util.SPM;
 import net.eletroseg.iadecclouvor.util.Util;
-import net.eletroseg.iadecclouvor.widget.LineItemDecoration;
 
-import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -93,8 +76,6 @@ public class ListaUsuarioActivity extends AppCompatActivity {
     Usuario obj;
 
 
-
-
     int cont = 0;
     ArrayList<String> arrayList = new ArrayList<>();
     boolean bRepetir = false;
@@ -115,14 +96,22 @@ public class ListaUsuarioActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lista_usuario);
 //        getSupportActionBar().hide();
         iniciarComponentes();
-if (spm.getPreferencia("USUARIO_LOGADO", "MODERADOR", "não").equals("não")){
-    fab.setVisibility(View.GONE);
+        if (spm.getPreferencia("USUARIO_LOGADO","MODERADOR","").equals("sim")){
+            fab.show();
+        }else {
+
+            fab.hide();
+        }
+        if (spm.getPreferencia("USUARIO_LOGADO", "MODERADOR", "não").equals("não")) {
+            fab.setVisibility(View.GONE);
         }
         buscarClienteWeb();
         voltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAdapter.notifyDataSetChanged();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                finish();
 
             }
         });
@@ -161,7 +150,6 @@ if (spm.getPreferencia("USUARIO_LOGADO", "MODERADOR", "não").equals("não")){
         });
 
 
-
     }
 
     private void iniciarComponentes() {
@@ -180,10 +168,10 @@ if (spm.getPreferencia("USUARIO_LOGADO", "MODERADOR", "não").equals("não")){
         mAdapter.setOnClickListener(new AdapterListaUsuario.OnClickListener() {
             @Override
             public void onItemClick(View view, Usuario objeto, int pos) {
-                if (objeto.id.equals(spm.getPreferencia("USUARIO_LOGADO", "USUARIO",""))){
+                if (objeto.id.equals(spm.getPreferencia("USUARIO_LOGADO", "USUARIO", ""))) {
                     Intent intent = new Intent(getApplicationContext(), FotoActivity.class);
                     startActivity(intent);
-                }else {
+                } else {
                     dialogPerfil(objeto);
                 }
 
@@ -345,8 +333,6 @@ if (spm.getPreferencia("USUARIO_LOGADO", "MODERADOR", "não").equals("não")){
     }
 
 
-
-
     private void dialogOpcao() {
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.layout_opcao_play);
@@ -362,7 +348,6 @@ if (spm.getPreferencia("USUARIO_LOGADO", "MODERADOR", "não").equals("não")){
                 dialog.dismiss();
             }
         });
-
 
 
         ouvirComCifra.setOnClickListener(new View.OnClickListener() {
@@ -435,7 +420,6 @@ if (spm.getPreferencia("USUARIO_LOGADO", "MODERADOR", "não").equals("não")){
                 dialog.dismiss();
             }
         });
-
 
 
         dialog.show();
@@ -517,11 +501,10 @@ if (spm.getPreferencia("USUARIO_LOGADO", "MODERADOR", "não").equals("não")){
     }
 
 
-
-
     @Override
     public void onBackPressed() {
-
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
         finish();
     }
 

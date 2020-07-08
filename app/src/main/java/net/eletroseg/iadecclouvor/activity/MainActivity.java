@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ImageView foto;
     private FloatingActionButton domingo, quarta, especial;
     private FloatingActionMenu fabMenu;
-
+boolean sair = false;
     private ViewPager view_pager;
     private TabLayout tab_layout;
     Toolbar toolbar;
@@ -197,11 +197,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            finish();
+            if (sair){
+                finish();
+            }else {
+                Toast.makeText(this, "aperte novamente para fechar", Toast.LENGTH_SHORT).show();
+                sair = true;
+            }
         }
     }
 
@@ -249,9 +255,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             finish();
 
         } else if (id == R.id.nav_cifras) {
-            Intent intent = new Intent(MainActivity.this, ListaCifrasActivity.class);
-            startActivity(intent);
-            finish();
+            Toast.makeText(this, "Este menu está em construção", Toast.LENGTH_SHORT).show();
 
         } else if (id == R.id.nav_usuario) {
             Intent intent = new Intent(MainActivity.this, ListaUsuarioActivity.class);
@@ -260,14 +264,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         } else if (id == R.id.nav_configuracao) {
-            Intent intent = new Intent(MainActivity.this, ConfiguracaoActivity.class);
-            startActivity(intent);
-            finish();
+            Toast.makeText(this, "Este menu está em construção", Toast.LENGTH_SHORT).show();
 
         } else if (id == R.id.nav_avisos) {
-            Intent intent = new Intent(MainActivity.this, ListaAvisosActivity.class);
-            startActivity(intent);
-            finish();
+            Toast.makeText(this, "Este menu está em construção", Toast.LENGTH_SHORT).show();
 
         }
 
@@ -375,6 +375,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return mFragmentTitleList.get(position);
         }
     }
+
 
 
 }
