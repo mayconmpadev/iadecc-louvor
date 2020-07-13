@@ -2,21 +2,46 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="20dp"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/dialog_config_usuari_text_nome"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="@color/preto"
+        android:textStyle="bold"
+        android:text="Nome">
+
+    </TextView>
+
     <CheckBox
-        android:id="@+id/dialog_config_usuari_btn_modeador"
+        android:id="@+id/dialog_config_usuari_cbx_modeador"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="moderador">
 
     </CheckBox>
     <CheckBox
-        android:id="@+id/dialog_config_usuari_btn_"
+        android:id="@+id/dialog_config_usuari_cbx_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="ativo">
 
     </CheckBox>
+    <Button
+        android:id="@+id/dialog_config_usuari_btn_salvar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:background="@drawable/btn_rounded_roxo"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="salvar"
+        android:textColor="@color/branco"
+        android:textStyle="bold" />
 
 </LinearLayout>

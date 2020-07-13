@@ -64,7 +64,6 @@ public class CadastroLoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastro_login);
-        //getSupportActionBar().hide();
         inputLayoutEmail = findViewById(R.id.input_layout_cadastro_login_email);
         inputLayoutSenha = findViewById(R.id.input_layout_cadastro_login_senha);
         inputLayoutConfirmar = findViewById(R.id.input_layout_cadastro_login_confirmar);
@@ -133,7 +132,6 @@ public class CadastroLoginActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
 
                     verificarEmail();
-
 
 
                     String identificadorDoUsuario = Base64Custom.codificarBase64(usuarios.email);
@@ -373,7 +371,7 @@ public class CadastroLoginActivity extends AppCompatActivity {
 
                     if (validarCampos()) {
                         cadastrarUsuario();
-                    }else {
+                    } else {
                         dialog.dismiss();
                     }
                 } else {
@@ -382,7 +380,7 @@ public class CadastroLoginActivity extends AppCompatActivity {
                     dialog.dismiss();
                 }
 
-               // dialog.dismiss();
+                // dialog.dismiss();
             }
 
             @Override

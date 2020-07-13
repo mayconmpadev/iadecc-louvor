@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -12,6 +13,8 @@ import android.text.TextWatcher;
 import android.view.ActionMode;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -41,6 +44,7 @@ import net.eletroseg.iadecclouvor.adapter.AdapterListaUsuario;
 import net.eletroseg.iadecclouvor.modelo.Usuario;
 import net.eletroseg.iadecclouvor.util.Base64Custom;
 import net.eletroseg.iadecclouvor.util.Constantes;
+import net.eletroseg.iadecclouvor.util.InstanciaFirebase;
 import net.eletroseg.iadecclouvor.util.MusicUtils;
 import net.eletroseg.iadecclouvor.util.Progresso;
 import net.eletroseg.iadecclouvor.util.SPM;
@@ -96,9 +100,9 @@ public class ListaUsuarioActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lista_usuario);
 //        getSupportActionBar().hide();
         iniciarComponentes();
-        if (spm.getPreferencia("USUARIO_LOGADO","MODERADOR","").equals("sim")){
+        if (spm.getPreferencia("USUARIO_LOGADO", "MODERADOR", "").equals("sim")) {
             fab.show();
-        }else {
+        } else {
 
             fab.hide();
         }
@@ -182,7 +186,7 @@ public class ListaUsuarioActivity extends AppCompatActivity {
             public void onItemLongClick(View view, Usuario objeto, int pos) {
                 enableActionMode(pos);
                 obj = objeto;
-                dialogEditar(objeto.nome);
+                dialogEditar(objeto);
             }
         });
     }
@@ -221,7 +225,7 @@ public class ListaUsuarioActivity extends AppCompatActivity {
     private void buscarClienteWeb() {
         Progresso.progressoCircular(this);
         arrayListHino.clear();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        FirebaseDatabase database = InstanciaFirebase.getDatabase();
         DatabaseReference reference = database.getReference().child(Constantes.USUARIOS);
         reference.keepSynced(true);
         reference.addChildEventListener(new ChildEventListener() {
@@ -369,37 +373,83 @@ public class ListaUsuarioActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void dialogEditar(final String nome) {
+    private void dialogEditar(final Usuario usuario) {
         final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.layout_opcao_edit);
-        final LinearLayout ouvir = dialog.findViewById(R.id.ll_enviar);
-        LinearLayout ouvirComLetra = dialog.findViewById(R.id.ll_status);
-        LinearLayout ouvirComCifra = dialog.findViewById(R.id.ll_pagamento);
-        LinearLayout adicionarPlayList = dialog.findViewById(R.id.ll_pdf);
+        dialog.setContentView(R.layout.dialog_config_usuario);
+        TextView integrante = dialog.findViewById(R.id.dialog_config_usuari_text_nome);
+        final CheckBox moderador = dialog.findViewById(R.id.dialog_config_usuari_cbx_modeador);
+        final CheckBox status = dialog.findViewById(R.id.dialog_config_usuari_cbx_status);
+        Button salvar = dialog.findViewById(R.id.dialog_config_usuari_btn_salvar);
 
-        ouvir.setOnClickListener(new View.OnClickListener() {
+        integrante.setText(usuario.nome.substring(0, 1).toUpperCase() + usuario.nome.substring(1));
+        if (usuario.moderador.equals("sim")){
+            moderador.setChecked(true);
+        }else {
+
+            moderador.setChecked(false);
+        }
+
+        if (usuario.status.equals("ativo")){
+            status.setChecked(true);
+        }else {
+
+            status.setChecked(false);
+        }
+     moderador.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+         @Override
+         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+             if (b){
+                 moderador.setChecked(true);
+             }else {
+                 moderador.setChecked(false);
+             }
+         }
+     });
+
+        status.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-
-                editar(obj);
-                dialog.dismiss();
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b){
+                    status.setChecked(true);
+                }else {
+                    status.setChecked(false);
+                }
             }
         });
 
-        ouvirComLetra.setOnClickListener(new View.OnClickListener() {
+        salvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialogExcluir("Excluir", "Deseja excluir o hino *" + nome + "*?", nome);
-                dialog.dismiss();
+                Progresso.progressoCircular(ListaUsuarioActivity.this);
+                if (moderador.isChecked()){
+                    usuario.moderador = "sim";
+                }else {
+                    usuario.moderador = "nao";
+                }
+
+                if (status.isChecked()){
+                    usuario.status = "ativo";
+                }else {
+                    usuario.status = "desativado";
+                }
+                FirebaseDatabase database = InstanciaFirebase.getDatabase();
+                DatabaseReference reference = database.getReference().child(Constantes.USUARIOS).child(usuario.id);
+                reference.setValue(usuario).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                       Progresso.dialog.dismiss();
+                       dialog.dismiss();
+                    }
+                });
+
 
             }
         });
-
 
         dialog.show();
     }
 
-    private void dialogPerfil(Usuario usuario) {
+    private void dialogPerfil(final Usuario usuario) {
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_light);
         CircleImageView foto = dialog.findViewById(R.id.image_perfil);
@@ -420,7 +470,14 @@ public class ListaUsuarioActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
-
+ligar.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+        Uri uri = Uri.parse("tel:" + "0" + usuario.telefone.replace("\\D", ""));
+        Intent intent = new Intent(Intent.ACTION_DIAL, uri);
+        startActivity(intent);
+    }
+});
 
         dialog.show();
     }
@@ -447,7 +504,7 @@ public class ListaUsuarioActivity extends AppCompatActivity {
     private void excluirUsuario(String nome) {
         Progresso.progressoCircular(this);
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        FirebaseDatabase database = InstanciaFirebase.getDatabase();
 
         final StorageReference storageReferencere = storage.getReference().child(Constantes.AUDIO)
                 .child(Base64Custom.codificarBase64(nome));

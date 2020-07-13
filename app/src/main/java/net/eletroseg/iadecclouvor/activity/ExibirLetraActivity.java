@@ -214,6 +214,27 @@ f++;
             }
         }
 
+        for (int i = 0; i < texto.length(); i++) {
+            if (texto.substring(i, i + 1).equals("#")) {
+                if (a == 0) {
+
+                    a = i - f;
+                    f++;
+                } else {
+
+                    b = i + 1 - f;
+                    f++;
+                    Selecao selecao = new Selecao();
+                    selecao.comeco = a;
+                    selecao.fim = b;
+                    negrito.add(selecao);
+                    a = 0;
+                    b = 0;
+
+                }
+            }
+        }
+
         setarTexto();
         abilitar = true;
 

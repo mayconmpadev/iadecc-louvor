@@ -36,7 +36,6 @@ public class EditaLetraActivity extends AppCompatActivity {
     int b = 0;
     int posicao = 0;
     boolean abilitar = true;
-    boolean ativar = false;
     ArrayList<Selecao> negrito = new ArrayList<>();
 
     @Override
@@ -152,8 +151,8 @@ public class EditaLetraActivity extends AppCompatActivity {
         if (editLetra.getText().toString().isEmpty()) {
             a = false;
         } else if (nome.getText().toString().isEmpty()) {
-            a = false;
         }
+            a = false;
 
 
         return a;
@@ -174,6 +173,7 @@ public class EditaLetraActivity extends AppCompatActivity {
             hino.data = sData;
             reference.setValue(hino);
             Intent intent = new Intent(EditaLetraActivity.this, ListaHinosActivity.class);
+            intent.putExtra("tipo", "");
             startActivity(intent);
             finish();
 

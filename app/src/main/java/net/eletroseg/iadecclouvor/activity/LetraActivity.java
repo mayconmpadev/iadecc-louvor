@@ -7,7 +7,6 @@ import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,7 +18,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import net.eletroseg.iadecclouvor.R;
 import net.eletroseg.iadecclouvor.modelo.Selecao;
 import net.eletroseg.iadecclouvor.util.Parametro;
-import net.eletroseg.iadecclouvor.util.Util;
 
 import java.util.ArrayList;
 
@@ -45,17 +43,16 @@ public class LetraActivity extends AppCompatActivity {
         limpar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String sletra = letra.getText().toString();
-                Util.textoNegrito(sletra, null, letra);
+                letra.setText("");
             }
         });
 
         salvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (letra.getText().toString().isEmpty()){
+                if (letra.getText().toString().isEmpty()) {
                     Toast.makeText(LetraActivity.this, "vazio", Toast.LENGTH_SHORT).show();
-                }else {
+                } else {
                     Parametro.letra = letra.getText().toString();
                     finish();
                 }
@@ -66,12 +63,16 @@ public class LetraActivity extends AppCompatActivity {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 if (abilitar) {
+
                     if (s.toString().length() > start) {
-                        if ("*".equals(String.valueOf(s.toString().charAt(start)))) {
+                        if ("*".equals(String.valueOf(s.toString().charAt(start))) || "+".equals(String.valueOf(s.toString().charAt(start))) || "/".equals(String.valueOf(s.toString().charAt(start)))) {
+
                             ativar = true;
                         } else {
                             ativar = false;
                         }
+
+
                     }
                 }
             }
@@ -86,12 +87,13 @@ public class LetraActivity extends AppCompatActivity {
                     }
                 }
                 if (letra.getText().toString().length() > start) {
-                    if ("*".equals(String.valueOf(letra.getText().toString().charAt(start)))) {
+                    if ("*".equals(String.valueOf(letra.getText().toString().charAt(start))) || "+".equals(String.valueOf(letra.getText().toString().charAt(start))) || "/".equals(String.valueOf(letra.getText().toString().charAt(start)))) {
                         if (abilitar) {
                             posicao = letra.getSelectionStart();
                             textoNegrito2(letra.getText().toString(), null, letra);
                         }
                     }
+
                 }
 
             }
@@ -105,62 +107,6 @@ public class LetraActivity extends AppCompatActivity {
 
     }
 
-
-    private void contrV(String texto) {
-        abilitar = false;
-        for (int i = 0; i < texto.length(); i++) {
-            if (texto.substring(i, i + 1).equals("*")) {
-                if (a == 0) {
-                    a = i + 1;
-
-                } else {
-
-                    b = i + 1;
-                    Selecao selecao = new Selecao();
-                    selecao.comeco = a;
-                    selecao.fim = b;
-                    negrito.add(selecao);
-                    a = 0;
-                    b = 0;
-
-                }
-            }
-        }
-
-        setarTexto();
-        abilitar = true;
-
-    }
-
-    private void setarTexto() {
-        runOnUiThread(new Runnable() {
-
-            public void run() {
-                final SpannableString text = new SpannableString(letra.getText().toString());
-                for (int i = 0; i < negrito.size(); i++) {
-
-                    text.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), negrito.get(i).comeco, negrito.get(i).fim - 1, 0);
-                    // text.setSpan(new ForegroundColorSpan(Color.RED), negrito.get(i).comeco, negrito.get(i).fim - 1, 0);
-                    text.setSpan(new ForegroundColorSpan(Color.GRAY), negrito.get(i).comeco - 1, negrito.get(i).comeco, 0);
-                    text.setSpan(new ForegroundColorSpan(Color.GRAY), negrito.get(i).fim - 1, negrito.get(i).fim, 0);
-                    // text.setSpan(new ForegroundColorSpan(Color.RED), 5, 9, 0);
-
-
-                }
-                abilitar = false;
-                negrito.clear();
-                letra.setText(text, EditText.BufferType.SPANNABLE);
-                a = 0;
-                b = 0;
-
-                letra.setSelection(posicao);
-
-
-            }
-        });
-
-    }
-
     private void recuperarComponentes() {
         limpar = findViewById(R.id.btn_limpar);
         salvar = findViewById(R.id.btn_salvar);
@@ -168,6 +114,7 @@ public class LetraActivity extends AppCompatActivity {
     }
 
     public void textoNegrito2(final String texto, final TextView textView, final EditText editText) {
+
         runOnUiThread(new Runnable() {
             public void run() {
                 abilitar = false;
@@ -175,24 +122,66 @@ public class LetraActivity extends AppCompatActivity {
                 int a = 0;
                 int b = texto.length();
                 int c = 0;
+                int d = 0;
+                int e = texto.length();
+                int f = 0;
+                int g = 0;
+                int h = texto.length();
+                int j = 0;
                 for (int i = 0; i < texto.length(); i++) {
 
-                    if ("*".equals(texto.substring(i, i + 1))) {
+                    if ("+".equals(texto.substring(i, i + 1))) {
                         if (b == texto.length()) {
                             b = a;
                         } else {
                             c = a;
+                            text.setSpan(new ForegroundColorSpan(Color.BLUE), b, c, 0);
                             text.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), b, c, 0);
                             text.setSpan(new ForegroundColorSpan(Color.GRAY), b, b + 1, 0);
                             text.setSpan(new ForegroundColorSpan(Color.GRAY), c, c + 1, 0);
-
-
                             b = texto.length();
                             c = 0;
 
                         }
                     }
                     a++;
+
+                    if ("*".equals(texto.substring(i, i + 1))) {
+                        if (e == texto.length()) {
+                            e = d;
+                        } else {
+                            f = d;
+                            text.setSpan(new ForegroundColorSpan(Color.RED), e, f, 0);
+                            text.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), e, f, 0);
+                            text.setSpan(new ForegroundColorSpan(Color.GRAY), e, e + 1, 0);
+                            text.setSpan(new ForegroundColorSpan(Color.GRAY), f, f + 1, 0);
+
+
+                            e = texto.length();
+                            f = 0;
+
+                        }
+                    }
+
+                    d++;
+
+                    if ("/".equals(texto.substring(i, i + 1))) {
+                        if (h == texto.length()) {
+                            h = g;
+                        } else {
+                            j = g;
+                            text.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), h, j, 0);
+                            text.setSpan(new ForegroundColorSpan(Color.GRAY), h, h + 1, 0);
+                            text.setSpan(new ForegroundColorSpan(Color.GRAY), j, j + 1, 0);
+
+
+                            h = texto.length();
+                            j = 0;
+
+                        }
+                    }
+
+                    g++;
                 }
 
                 if (textView == null) {

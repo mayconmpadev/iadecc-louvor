@@ -24,12 +24,22 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+
         android:theme="@style/AppTheme">
         <activity android:name=".TesteActivity"></activity>
-        <activity android:name=".activity.SelecaoHinoActivity" />
-        <activity android:name=".activity.SelecaoUsuarioActivity" />
-        <activity android:name=".activity.ListaUsuarioActivity" />
-        <activity android:name=".activity.CifraActivity" />
+        <activity
+            android:name=".activity.SelecaoHinoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SelecaoUsuarioActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ListaUsuarioActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.CifraActivity"
+            android:screenOrientation="fullSensor" />
+
         <receiver android:name=".util.BootCompletedIntentReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -38,7 +48,7 @@
         <service
             android:name=".util.Servico"
             android:exported="false"
-            android:permission="TODO"/>
+            android:permission="TODO" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -53,7 +63,7 @@
 
         <activity
             android:name=".activity.PlayActivity"
-            android:launchMode="singleInstance" />
+             />
         <activity
             android:name=".activity.LetraActivity"
             android:screenOrientation="fullSensor" />

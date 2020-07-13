@@ -34,7 +34,7 @@
                 android:id="@+id/text_qtd_selecao_hino"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" "
+                android:text="0"
                 android:layout_marginRight="10dp"
                 android:textColor="@color/branco"
                 android:textSize="20sp"

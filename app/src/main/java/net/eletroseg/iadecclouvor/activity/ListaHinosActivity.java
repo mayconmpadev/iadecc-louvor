@@ -28,7 +28,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatSeekBar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -50,6 +49,7 @@ import net.eletroseg.iadecclouvor.adapter.AdapterListaHino;
 import net.eletroseg.iadecclouvor.modelo.Hino;
 import net.eletroseg.iadecclouvor.util.Base64Custom;
 import net.eletroseg.iadecclouvor.util.Constantes;
+import net.eletroseg.iadecclouvor.util.InstanciaFirebase;
 import net.eletroseg.iadecclouvor.util.MusicUtils;
 import net.eletroseg.iadecclouvor.util.Parametro;
 import net.eletroseg.iadecclouvor.util.Progresso;
@@ -60,7 +60,6 @@ import net.eletroseg.iadecclouvor.widget.LineItemDecoration;
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -111,14 +110,10 @@ public class ListaHinosActivity extends AppCompatActivity {
         utils = new MusicUtils();
         iniciarComponentes();
         recuperaIntent();
-       // CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
-       // p.setAnchorId(View.NO_ID);
-       // fab.setLayoutParams(p);
 
-        if (spm.getPreferencia("USUARIO_LOGADO","MODERADOR","").equals("sim")){
+        if (spm.getPreferencia("USUARIO_LOGADO", "MODERADOR", "").equals("sim")) {
             fab.show();
-        }else {
-
+        } else {
             fab.hide();
         }
 
@@ -128,11 +123,13 @@ public class ListaHinosActivity extends AppCompatActivity {
             buscarClienteWeb();
         }
 
-
         voltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAdapter.notifyDataSetChanged();
+                mp.stop();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                finish();
 
             }
         });
@@ -173,26 +170,45 @@ public class ListaHinosActivity extends AppCompatActivity {
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ouvir();
+                if (verificarNaMemoria(arrayListHino.get(cont).nome)) {
+                    ouvir();
+                } else {
+                    Toast.makeText(ListaHinosActivity.this, "clique no hino para fazer o download", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
         prev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if (cont == 0) {
-                    mp.reset();
+
                     cont = arrayListHino.size() - 1;
+
                     mAdapter.hinoEmExecucao(cont);
                     mAdapter.notifyDataSetChanged();
-                    ouvir();
+                    if (verificarNaMemoria(arrayListHino.get(cont).nome)) {
+                        mp.reset();
+                        ouvir();
+                    } else {
+                        Toast.makeText(ListaHinosActivity.this, "clique no hino para fazer o download", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    mp.reset();
+
+
                     cont--;
                     mAdapter.hinoEmExecucao(cont);
                     mAdapter.notifyDataSetChanged();
-                    ouvir();
+                    if (verificarNaMemoria(arrayListHino.get(cont).nome)) {
+                        mp.reset();
+                        ouvir();
+                    } else {
+                        Toast.makeText(ListaHinosActivity.this, "clique no hino para fazer o download", Toast.LENGTH_SHORT).show();
+                    }
                 }
+
 
             }
         });
@@ -200,34 +216,31 @@ public class ListaHinosActivity extends AppCompatActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!verificarNaMemoria(arrayListHino.get(cont).nome)) {
-                    objDld = new ObjDld();
-                    objDld.nomeDoHino = arrayListHino.get(cont).nome;
-                    objDld.posicao = cont;
-                    position.add(objDld);
-                    hino2 = arrayListHino.get(cont);
-                    downloadfile(arrayListHino.get(cont));
-                } else {
 
-                    if (cont < arrayListHino.size() - 1) {
+                if (cont < arrayListHino.size() - 1) {
+
+                    cont++;
+                    mAdapter.hinoEmExecucao(cont);
+                    mAdapter.notifyDataSetChanged();
+                    if (verificarNaMemoria(arrayListHino.get(cont).nome)) {
                         mp.reset();
-                        cont++;
-                        mAdapter.hinoEmExecucao(cont);
-                        mAdapter.notifyDataSetChanged();
                         ouvir();
                     } else {
-                        cont = 0;
-                        mAdapter.hinoEmExecucao(cont);
-                        mAdapter.notifyDataSetChanged();
+                        Toast.makeText(ListaHinosActivity.this, "clique no hino para fazer o download", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    cont = 0;
+                    mAdapter.hinoEmExecucao(cont);
+                    mAdapter.notifyDataSetChanged();
+                    if (verificarNaMemoria(arrayListHino.get(cont).nome)) {
                         mp.reset();
                         ouvir();
-
+                    } else {
+                        Toast.makeText(ListaHinosActivity.this, "clique no hino para fazer o download", Toast.LENGTH_SHORT).show();
                     }
 
                 }
 
-
-                //Snackbar.make(parent_view, "Next", Snackbar.LENGTH_SHORT).show();
             }
         });
 
@@ -352,7 +365,7 @@ public class ListaHinosActivity extends AppCompatActivity {
     private void buscarClienteWeb() {
         Progresso.progressoCircular(this);
         arrayListHino.clear();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        FirebaseDatabase database = InstanciaFirebase.getDatabase();
         DatabaseReference reference = database.getReference().child(Constantes.HINO);
         reference.keepSynced(true);
         reference.addChildEventListener(new ChildEventListener() {
@@ -441,26 +454,6 @@ public class ListaHinosActivity extends AppCompatActivity {
                 return o1.nome.toLowerCase().compareTo(o2.nome.toLowerCase());
             }
         });
-    }
-
-    private void play(String midia) {
-        MediaPlayer mediaPlayer = new MediaPlayer();
-
-
-        try {
-            mediaPlayer.setDataSource(midia);
-            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-
-                    mp.start();
-                }
-
-            });
-            mediaPlayer.prepare();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void downloadfile(final Hino hino) {
@@ -652,6 +645,7 @@ public class ListaHinosActivity extends AppCompatActivity {
     private void ouvir() {
         if (mp == null) {
             mp = new MediaPlayer();
+            mp.reset();
         } else {
             mp.reset();
         }
@@ -660,6 +654,7 @@ public class ListaHinosActivity extends AppCompatActivity {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 if (!bRepetir) {
+
                     cont++;
                     mAdapter.hinoEmExecucao(cont);
                     mAdapter.notifyDataSetChanged();
@@ -667,6 +662,7 @@ public class ListaHinosActivity extends AppCompatActivity {
                 }
 
                 if (cont < arrayListHino.size()) {
+
                     Parametro.nome = arrayListHino.get(cont).nome;
                     Toast.makeText(ListaHinosActivity.this, Parametro.nome, Toast.LENGTH_SHORT).show();
                     mp.seekTo(0);
@@ -675,6 +671,7 @@ public class ListaHinosActivity extends AppCompatActivity {
 
                 } else {
                     if (bRepetir) {
+
                         cont = 0;
                         mAdapter.hinoEmExecucao(cont);
                         mAdapter.notifyDataSetChanged();
@@ -826,7 +823,7 @@ public class ListaHinosActivity extends AppCompatActivity {
     private void excluirUsuario(String nome) {
         Progresso.progressoCircular(this);
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        FirebaseDatabase database = InstanciaFirebase.getDatabase();
 
         final StorageReference storageReferencere = storage.getReference().child(Constantes.AUDIO)
                 .child(Base64Custom.codificarBase64(nome));
@@ -907,8 +904,6 @@ public class ListaHinosActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         mp.stop();
-
-        // mp = null;
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();

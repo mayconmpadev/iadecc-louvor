@@ -182,7 +182,7 @@ public class ListaAvisosActivity extends AppCompatActivity {
                 calendar.set(Calendar.MONTH, monthOfYear);
                 calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                 long date_ship_millis = calendar.getTimeInMillis();
-                culto.setText(Tools.getFormattedDateEvent(date_ship_millis));
+                culto.setText(Tools.getFormattedDateSimple(date_ship_millis));
                 corBotaoVerde(culto);
 
 

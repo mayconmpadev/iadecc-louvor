@@ -55,7 +55,7 @@ public class Servico extends Service {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    Toast.makeText(Servico.this, "servico", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(Servico.this, "servico", Toast.LENGTH_SHORT).show();
                     Log.i("teste", "oioio");
                 } else {
                     Progresso.dialog.dismiss();

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:rsb="http://schemas.android.com/tools"
     android:id="@+id/parent_view_play"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -53,17 +52,17 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/text_nome_do_hino"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/text_nome_do_hino"
                         android:text="Day Of The Dispair"
                         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                         android:textColor="@color/grey_90" />
 
                     <TextView
+                        android:id="@+id/text_nome_do_cantor"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/text_nome_do_cantor"
                         android:text="The Beat"
                         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                         android:textColor="@color/grey_40" />
@@ -83,39 +82,37 @@
         android:orientation="vertical">
 
 
+        <ScrollView
+            android:id="@+id/letra_sv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fillViewport="true">
 
-            <ScrollView
-                android:id="@+id/letra_sv"
+            <LinearLayout
+                android:id="@+id/exibir_layout_linear"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fillViewport="true"
-                android:layout_weight="1">
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:id="@+id/exibir_layout_linear"
+
+                <TextView
+                    android:id="@+id/text_letra_hino"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_weight="1"
+                    android:padding="10dp"
+                    android:textColor="@color/preto"
+                    android:textSize="15dp" />
 
 
-                    <TextView
-                        android:id="@+id/text_letra_hino"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:padding="10dp"
-                        android:textColor="@color/preto"
-                        android:textSize="15dp" />
-
-
-                </LinearLayout>
-            </ScrollView>
-
+            </LinearLayout>
+        </ScrollView>
 
 
         <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
             android:id="@+id/player_control"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardBackgroundColor="@android:color/white"
             app:cardCornerRadius="0dp"
@@ -128,49 +125,48 @@
                 android:orientation="vertical"
                 android:padding="@dimen/spacing_large">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/btn_repetir"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:textColor="@color/preto"
-android:background="@drawable/borda_pesquisa"
-                    android:text="repetir" />
+                    android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/btn_a"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:textSize="12sp"
-                    android:background="@drawable/borda_roxa_redolda"
-                    android:text="A"
-                    android:textColor="@color/preto" />
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="2dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:background="@color/colorPrimaryDark">
+                    <Button
+                        android:id="@+id/btn_repetir"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/borda_pesquisa"
+                        android:text="repetir"
+                        android:textColor="@color/preto" />
 
-                </View>
+                    <Button
+                        android:id="@+id/btn_a"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/borda_roxa_redolda"
+                        android:text="A"
+                        android:textColor="@color/preto"
+                        android:textSize="12sp" />
 
-                <Button
-                    android:id="@+id/btn_b"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:textSize="12sp"
-                    android:background="@drawable/borda_roxa_redolda"
-                    android:text="B"
-                    android:textColor="@color/preto" />
+                    <View
+                        android:layout_width="wrap_content"
+                        android:layout_height="2dp"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/colorPrimaryDark">
 
-            </LinearLayout>
+                    </View>
 
+                    <Button
+                        android:id="@+id/btn_b"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/borda_roxa_redolda"
+                        android:text="B"
+                        android:textColor="@color/preto"
+                        android:textSize="12sp" />
 
+                </LinearLayout>
 
 
                 <LinearLayout

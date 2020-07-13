@@ -29,6 +29,7 @@ import net.eletroseg.iadecclouvor.R;
 import net.eletroseg.iadecclouvor.adapter.AdapterSelecaoHino;
 import net.eletroseg.iadecclouvor.modelo.Hino;
 import net.eletroseg.iadecclouvor.util.Constantes;
+import net.eletroseg.iadecclouvor.util.InstanciaFirebase;
 import net.eletroseg.iadecclouvor.util.Parametro;
 import net.eletroseg.iadecclouvor.util.Progresso;
 import net.eletroseg.iadecclouvor.util.SPM;
@@ -178,7 +179,7 @@ public class SelecaoHinoActivity extends AppCompatActivity {
     private void buscarClienteWeb() {
         Progresso.progressoCircular(this);
         arrayListHino.clear();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        FirebaseDatabase database = InstanciaFirebase.getDatabase();
         DatabaseReference reference = database.getReference().child(Constantes.HINO);
         reference.keepSynced(true);
         reference.addChildEventListener(new ChildEventListener() {
@@ -335,7 +336,7 @@ public class SelecaoHinoActivity extends AppCompatActivity {
             arrayListIds.add(arrayList.get(i).id);
         }
 
-        quantidade.setText(String.valueOf(arrayListIds));
+        quantidade.setText(String.valueOf(arrayListIds.size()));
         mAdapter.notifyDataSetChanged();
     }
 

@@ -30,6 +30,7 @@ import net.eletroseg.iadecclouvor.R;
 import net.eletroseg.iadecclouvor.adapter.AdapterSelecaoUsuario;
 import net.eletroseg.iadecclouvor.modelo.Usuario;
 import net.eletroseg.iadecclouvor.util.Constantes;
+import net.eletroseg.iadecclouvor.util.InstanciaFirebase;
 import net.eletroseg.iadecclouvor.util.Parametro;
 import net.eletroseg.iadecclouvor.util.Progresso;
 import net.eletroseg.iadecclouvor.util.SPM;
@@ -69,7 +70,7 @@ public class SelecaoUsuarioActivity extends AppCompatActivity {
         voltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAdapter.notifyDataSetChanged();
+                finish();
 
             }
         });
@@ -190,7 +191,7 @@ public class SelecaoUsuarioActivity extends AppCompatActivity {
     private void buscarClienteWeb() {
         Progresso.progressoCircular(this);
         arrayListHino.clear();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        FirebaseDatabase database = InstanciaFirebase.getDatabase();
         DatabaseReference reference = database.getReference().child(Constantes.USUARIOS);
         reference.keepSynced(true);
         reference.addChildEventListener(new ChildEventListener() {

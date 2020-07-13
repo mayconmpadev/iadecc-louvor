@@ -2,21 +2,13 @@ package net.eletroseg.iadecclouvor.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Dialog;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,48 +21,33 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
-import com.bumptech.glide.Glide;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import net.eletroseg.iadecclouvor.R;
-import net.eletroseg.iadecclouvor.TesteActivity;
-import net.eletroseg.iadecclouvor.adapter.AdapterGradeUsuario;
-import net.eletroseg.iadecclouvor.adapter.AdapterSelecaoHino;
 import net.eletroseg.iadecclouvor.fragment.DomingoFragment;
 import net.eletroseg.iadecclouvor.fragment.EspecialFragment;
 import net.eletroseg.iadecclouvor.fragment.QuartaFragment;
-import net.eletroseg.iadecclouvor.modelo.Cronograma;
-import net.eletroseg.iadecclouvor.modelo.Hino;
 import net.eletroseg.iadecclouvor.modelo.Usuario;
 import net.eletroseg.iadecclouvor.util.Base64Custom;
 import net.eletroseg.iadecclouvor.util.ConfiguracaoFiribase;
-import net.eletroseg.iadecclouvor.util.Constantes;
 import net.eletroseg.iadecclouvor.util.InstanciaFirebase;
 import net.eletroseg.iadecclouvor.util.Permissao;
-import net.eletroseg.iadecclouvor.util.Progresso;
 import net.eletroseg.iadecclouvor.util.SPM;
 import net.eletroseg.iadecclouvor.util.Servico;
 import net.eletroseg.iadecclouvor.util.Tools;
-import net.eletroseg.iadecclouvor.widget.LineItemDecoration;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -78,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ImageView foto;
     private FloatingActionButton domingo, quarta, especial;
     private FloatingActionMenu fabMenu;
-boolean sair = false;
+    boolean sair = false;
     private ViewPager view_pager;
     private TabLayout tab_layout;
     Toolbar toolbar;
@@ -100,12 +77,12 @@ boolean sair = false;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-       // setSupportActionBar(toolbar);
+        // setSupportActionBar(toolbar);
         initToolbar();
         iniciarComponentes();
-        if (spm.getPreferencia("USUARIO_LOGADO","MODERADOR","").equals("sim")){
+        if (spm.getPreferencia("USUARIO_LOGADO", "MODERADOR", "").equals("sim")) {
             fabMenu.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             fabMenu.setVisibility(View.INVISIBLE);
         }
         startService(new Intent(this, Servico.class));
@@ -192,7 +169,7 @@ boolean sair = false;
 
         tab_layout = (TabLayout) findViewById(R.id.tab_layout);
         tab_layout.setupWithViewPager(view_pager);
-        view_pager.setOffscreenPageLimit (2);
+        view_pager.setOffscreenPageLimit(2);
     }
 
     @Override
@@ -202,9 +179,9 @@ boolean sair = false;
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            if (sair){
+            if (sair) {
                 finish();
-            }else {
+            } else {
                 Toast.makeText(this, "aperte novamente para fechar", Toast.LENGTH_SHORT).show();
                 sair = true;
             }
@@ -253,9 +230,6 @@ boolean sair = false;
             intent.putExtra("tipo", "web");
             startActivity(intent);
             finish();
-
-        } else if (id == R.id.nav_cifras) {
-            Toast.makeText(this, "Este menu está em construção", Toast.LENGTH_SHORT).show();
 
         } else if (id == R.id.nav_usuario) {
             Intent intent = new Intent(MainActivity.this, ListaUsuarioActivity.class);
@@ -335,6 +309,7 @@ boolean sair = false;
         });
 
     }
+
     private void setupViewPager(ViewPager viewPager) {
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(DomingoFragment.newInstance(), "DOMINGO");
@@ -375,7 +350,6 @@ boolean sair = false;
             return mFragmentTitleList.get(position);
         }
     }
-
 
 
 }

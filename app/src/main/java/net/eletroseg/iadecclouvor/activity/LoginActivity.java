@@ -82,9 +82,7 @@ public class LoginActivity extends AppCompatActivity {
         cadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, CadastroLoginActivity.class);
-                startActivity(intent);
-                finish();
+                dialogPadrao("Cadastro", "Entre em contato com o /Adiministrador/");
             }
         });
 
@@ -473,7 +471,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void usuarioTipo(){
         String usuario =   spm.getPreferencia("USUARIO_LOGADO", "USUARIO", "");
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        FirebaseDatabase database = InstanciaFirebase.getDatabase();
         DatabaseReference reference = database.getReference().child(Constantes.USUARIOS).child(usuario).child("moderador");
 
         reference.addValueEventListener(new ValueEventListener() {

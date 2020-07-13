@@ -23,7 +23,7 @@
         android:layout_gravity="center"
         android:layout_marginBottom="20dp"
         android:gravity="center"
-        android:background="@drawable/borda_roxa">
+        android:background="@drawable/borda_vermelha">
 
     </EditText>
 

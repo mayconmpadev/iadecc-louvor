@@ -158,6 +158,7 @@ public class PlayActivity extends AppCompatActivity {
                     b.setBackgroundResource(R.drawable.btn_rounded_roxo);
                     b.setTextColor(Color.WHITE);
                     fim = mp.getCurrentPosition();
+                    trexo.setBackgroundResource(R.drawable.borda_roxa);
                     Toast.makeText(PlayActivity.this, utils.milliSecondsToTimer(fim), Toast.LENGTH_SHORT).show();
                 }else {
                     Util.vibrar(getApplicationContext(), 100 );
@@ -171,7 +172,7 @@ public class PlayActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (inicio > 0 & fim > 0) {
                     if (!repetir) {
-                        trexo.setBackgroundResource(R.drawable.borda_roxa);
+                        trexo.setBackgroundResource(R.drawable.borda_vermelha);
                         trexo.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                         trexo.setText("parar");
                         repetir = true;
@@ -181,7 +182,7 @@ public class PlayActivity extends AppCompatActivity {
                         trexo.setTextColor(getResources().getColor(R.color.preto));
                         trexo.setText("repetir");
                         repetir = false;
-                        mp.seekTo(0);
+                        mp.seekTo((int)fim);
                         inicio = 0;
                         fim = 0;
                         a.setBackgroundResource(R.drawable.borda_roxa_redolda);
