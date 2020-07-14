@@ -342,6 +342,7 @@ public class CadastrarLetraActivity extends AppCompatActivity {
                 audio.getText().toString().isEmpty() & editLetra.getText().toString().isEmpty()) {
 
             Intent intent = new Intent(CadastrarLetraActivity.this, ListaHinosActivity.class);
+            intent.putExtra("tipo","");
             startActivity(intent);
             finish();
         } else {
@@ -602,5 +603,6 @@ if (abilitar){
         }
 
     }
+
 
 }
