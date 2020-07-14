@@ -51,7 +51,7 @@ import java.util.List;
  */
 public class QuartaFragment extends Fragment {
 
-    private static QuartaFragment fragment2;
+    private static QuartaFragment fragment3;
     private TextView titulo, observacao, nomeMinistrante;
     private ImageView fotoMinistrante;
     private RecyclerView vocal, instrumental, hino;
@@ -77,8 +77,8 @@ Cronograma cronograma;
     }
 
     public static QuartaFragment newInstance() {
-        fragment2 = new QuartaFragment();
-        return fragment2;
+        fragment3 = new QuartaFragment();
+        return fragment3;
     }
 
     @Override
@@ -183,8 +183,8 @@ Cronograma cronograma;
                     titulo.setText(cronograma.diaDoCulto);
                     observacao.setText(cronograma.observacao);
                     nomeMinistrante.setText(cronograma.ministrante.nome.substring(0, 1).toUpperCase() + cronograma.ministrante.nome.substring(1));
-                    if (fragment2.getContext() != null){
-                        Glide.with(fragment2.getContext()).load(cronograma.ministrante.foto).into(fotoMinistrante);
+                    if (fragment3.getContext() != null){
+                        Glide.with(fragment3.getContext()).load(cronograma.ministrante.foto).into(fotoMinistrante);
                     }
 
                 } else {

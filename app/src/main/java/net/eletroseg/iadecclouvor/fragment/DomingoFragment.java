@@ -51,7 +51,7 @@ import java.util.List;
  */
 public class DomingoFragment extends Fragment {
 
-    private static DomingoFragment fragment;
+    private static DomingoFragment fragment1;
     private TextView titulo, observacao, nomeMinistrante;
     private ImageView fotoMinistrante;
     private RecyclerView vocal, instrumental, hino;
@@ -78,8 +78,8 @@ public class DomingoFragment extends Fragment {
     }
 
     public static DomingoFragment newInstance() {
-        fragment = new DomingoFragment();
-        return fragment;
+        fragment1 = new DomingoFragment();
+        return fragment1;
     }
 
     @Override
@@ -177,8 +177,8 @@ public class DomingoFragment extends Fragment {
                     titulo.setText(cronograma.diaDoCulto);
                     observacao.setText(cronograma.observacao);
                     nomeMinistrante.setText(cronograma.ministrante.nome.substring(0, 1).toUpperCase() + cronograma.ministrante.nome.substring(1));
-                    if (fragment.getContext() != null){
-                        Glide.with(fragment.getContext()).load(cronograma.ministrante.foto).into(fotoMinistrante);
+                    if (fragment1.getContext() != null){
+                        Glide.with(fragment1.getContext()).load(cronograma.ministrante.foto).into(fotoMinistrante);
                     }
 
 

@@ -36,6 +36,7 @@ import com.squareup.picasso.Picasso;
 
 import net.eletroseg.iadecclouvor.R;
 import net.eletroseg.iadecclouvor.fragment.DomingoFragment;
+import net.eletroseg.iadecclouvor.fragment.EBDFragment;
 import net.eletroseg.iadecclouvor.fragment.EspecialFragment;
 import net.eletroseg.iadecclouvor.fragment.QuartaFragment;
 import net.eletroseg.iadecclouvor.modelo.Usuario;
@@ -53,7 +54,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     TextView usuario, empresa;
     ImageView foto;
-    private FloatingActionButton domingo, quarta, especial;
+    private FloatingActionButton ebd, domingo, quarta, especial;
     private FloatingActionMenu fabMenu;
     boolean sair = false;
     private ViewPager view_pager;
@@ -86,6 +87,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fabMenu.setVisibility(View.INVISIBLE);
         }
         startService(new Intent(this, Servico.class));
+        ebd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(getApplicationContext(), ListaAvisosActivity.class);
+                intent.putExtra("tipo", "ebd");
+                startActivity(intent);
+                finish();
+            }
+        });
+
         domingo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -161,6 +173,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void iniciarComponentes() {
         fabMenu = findViewById(R.id.fab_menu);
+        ebd = findViewById(R.id.fab_main_ebd);
         domingo = findViewById(R.id.fab_main_domingo);
         quarta = findViewById(R.id.fab_main_quarta);
         especial = findViewById(R.id.fab_main_especial);
@@ -312,6 +325,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void setupViewPager(ViewPager viewPager) {
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(EBDFragment.newInstance(), "EBD");
         adapter.addFragment(DomingoFragment.newInstance(), "DOMINGO");
         adapter.addFragment(QuartaFragment.newInstance(), "QUARTA");
         adapter.addFragment(EspecialFragment.newInstance(), "ESPECIAL");
