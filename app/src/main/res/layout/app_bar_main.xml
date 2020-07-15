@@ -59,7 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_action_add_branco"
-            app:fab_label="Domingo"
+            app:fab_label="EBD"
             app:fab_size="mini"></com.github.clans.fab.FloatingActionButton>
 
         <com.github.clans.fab.FloatingActionButton

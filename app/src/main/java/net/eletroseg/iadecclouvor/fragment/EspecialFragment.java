@@ -111,10 +111,14 @@ public class EspecialFragment extends Fragment {
         playList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), ListaHinosActivity.class);
-                intent.putExtra("tipo", "lista");
-                intent.putExtra("playlist", arrayListHino);
-                startActivity(intent);
+                if (arrayListHino.size() > 0){
+                    Intent intent = new Intent(getContext(), ListaHinosActivity.class);
+                    intent.putExtra("tipo", "lista");
+                    intent.putExtra("playlist", arrayListHino);
+                    startActivity(intent);
+                }else {
+                    Toast.makeText(getActivity(), "Nenhum hino foi adicionado a playlist ainda.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

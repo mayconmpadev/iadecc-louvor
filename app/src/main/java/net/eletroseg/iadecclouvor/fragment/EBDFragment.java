@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -96,10 +97,14 @@ public class EBDFragment extends Fragment {
         playList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), ListaHinosActivity.class);
-                intent.putExtra("tipo", "lista");
-                intent.putExtra("playlist", arrayListHino);
-                startActivity(intent);
+                if (arrayListHino.size() > 0){
+                    Intent intent = new Intent(getContext(), ListaHinosActivity.class);
+                    intent.putExtra("tipo", "lista");
+                    intent.putExtra("playlist", arrayListHino);
+                    startActivity(intent);
+                }else {
+                    Toast.makeText(getActivity(), "Nenhum hino foi adicionado a playlist ainda.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
