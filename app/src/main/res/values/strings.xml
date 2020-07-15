@@ -8,10 +8,21 @@
     <string name="action_settings">Settings</string>
 
     <string-array name="categoria_hinos">
-        <item>novo</item>
-        <item>congregacional</item>
-        <item>harpa</item>
-        <item>coral</item>
+        <item>Novo</item>
+        <item>Congregacional</item>
+        <item>Harpa</item>
+
+    </string-array>
+
+    <string-array name="temas_hinos">
+        <item>Adoração</item>
+        <item>Santa Ceia</item>
+        <item>Restituição</item>
+        <item>Celebração</item>
+        <item>Quebrantamento</item>
+        <item>Fidelidade</item>
+        <item>Missões</item>
+        <item>Consagração</item>
     </string-array>
 
     <string-array name="notas_musicais">
@@ -169,5 +180,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="sublinhado"> <u>Sublinhado</u></string>
+
 
 </resources>

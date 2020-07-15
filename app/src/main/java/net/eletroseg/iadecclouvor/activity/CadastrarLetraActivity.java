@@ -52,7 +52,7 @@ import java.util.ArrayList;
 
 public class CadastrarLetraActivity extends AppCompatActivity {
     EditText nome, cantor, tom, audio, editLetra, editCifra;
-    Spinner spinner;
+    Spinner categoria, tema;
     Button procurar, salvar;
     MenuItem menuSalvar;
     MenuItem menuEditar;
@@ -84,7 +84,8 @@ public class CadastrarLetraActivity extends AppCompatActivity {
         editCifra = findViewById(R.id.cadastro_hino_edit_cifra);
         linearLayout = findViewById(R.id.linear_cadastro);
         procurar = findViewById(R.id.procurar_audio);
-        spinner = findViewById(R.id.spinner_categoria);
+        categoria = findViewById(R.id.spinner_categoria);
+        tema = findViewById(R.id.spinner_tema);
         salvar = findViewById(R.id.btn_salvar);
         recuperarIntent();
         salvar.setOnClickListener(new View.OnClickListener() {
@@ -173,11 +174,21 @@ public class CadastrarLetraActivity extends AppCompatActivity {
             audio.setText(hino.nome + ".mp3");
             Parametro.letra = hino.letra;
             Parametro.cifra = hino.cifra;
-            String sUnidades = hino.categoria;
+            String sCategoria = hino.categoria;
+
             String[] arrayCategoria = getResources().getStringArray(R.array.categoria_hinos);
             for (int i = 0; i < arrayCategoria.length; i++) {
-                if (arrayCategoria[i].equals(sUnidades)) {
-                    spinner.setSelection(i);
+                if (arrayCategoria[i].equals(sCategoria)) {
+                    categoria.setSelection(i);
+                    break;
+                }
+            }
+
+            String sTema = hino.tema;
+            String[] arrayTema = getResources().getStringArray(R.array.temas_hinos);
+            for (int i = 0; i < arrayTema.length; i++) {
+                if (arrayTema[i].equals(sTema)) {
+                    tema.setSelection(i);
                     break;
                 }
             }
@@ -453,7 +464,8 @@ public class CadastrarLetraActivity extends AppCompatActivity {
         hino.cantor = cantor.getText().toString();
         hino.tom = tom.getText().toString();
         hino.data = data();
-        hino.categoria = spinner.getSelectedItem().toString();
+        hino.categoria = categoria.getSelectedItem().toString();
+        hino.tema = tema.getSelectedItem().toString();
         hino.letra = Parametro.letra;
         hino.cifra = Parametro.cifra;
 

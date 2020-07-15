@@ -10,6 +10,7 @@ public class Hino implements Serializable {
     public String cantor;
     public String tom;
     public String categoria;
+    public String tema;
     public String audioHino;
     public String audioSoprano;
     public String audioContralto;

@@ -37,7 +37,7 @@ Cronograma cronograma;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i("LocalService", "Received start id " + startId + ": " + intent);
+     //   Log.i("LocalService", "Received start id " + startId + ": " + intent);
         // We want this service to continue running until it is explicitly
         // stopped, so return sticky.
         return START_STICKY;
@@ -45,7 +45,7 @@ Cronograma cronograma;
 
     @Override
     public void onDestroy() {
-        Toast.makeText(this, "destroi", Toast.LENGTH_SHORT).show();
+     //   Toast.makeText(this, "destroi", Toast.LENGTH_SHORT).show();
         super.onDestroy();
     }
 
@@ -57,38 +57,35 @@ Cronograma cronograma;
 reference.addChildEventListener(new ChildEventListener() {
     @Override
     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-        Toast.makeText(Servico.this, "onChildAdded", Toast.LENGTH_SHORT).show();
-        cronograma = dataSnapshot.getValue(Cronograma.class);
+       // Toast.makeText(Servico.this, "onChildAdded", Toast.LENGTH_SHORT).show();
+        //cronograma = dataSnapshot.getValue(Cronograma.class);
 
     }
 
     @Override
     public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-        Toast.makeText(Servico.this, "onChildChanged", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(Servico.this, "onChildChanged", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-        Toast.makeText(Servico.this, "onChildRemoved", Toast.LENGTH_SHORT).show();
+       // Toast.makeText(Servico.this, "onChildRemoved", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-        Toast.makeText(Servico.this, "onChildMoved", Toast.LENGTH_SHORT).show();
+       // Toast.makeText(Servico.this, "onChildMoved", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onCancelled(@NonNull DatabaseError databaseError) {
-        Toast.makeText(Servico.this, "onCancelled", Toast.LENGTH_SHORT).show();
+       // Toast.makeText(Servico.this, "onCancelled", Toast.LENGTH_SHORT).show();
     }
 });
 reference.addValueEventListener(new ValueEventListener() {
     @Override
     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-        for (int i = 0; i < cronograma.vocal.size(); i++) {
 
-
-        }
     }
 
     @Override
