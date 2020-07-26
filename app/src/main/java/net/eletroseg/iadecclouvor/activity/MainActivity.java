@@ -330,6 +330,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         adapter.addFragment(QuartaFragment.newInstance(), "QUARTA");
         adapter.addFragment(EspecialFragment.newInstance(), "ESPECIAL");
 
+
         viewPager.setAdapter(adapter);
 
     }

@@ -19,14 +19,21 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_iadeccc"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher_iadeccc"
         android:supportsRtl="true"
-
         android:theme="@style/AppTheme">
-        <activity android:name=".TesteActivity"></activity>
+        <activity android:name=".activity.SplashActivity">
+            android:screenOrientation="portrait"
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".TesteActivity" />
         <activity
             android:name=".activity.SelecaoHinoActivity"
             android:screenOrientation="portrait" />
@@ -45,6 +52,7 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
         <service
             android:name=".util.Servico"
             android:exported="false"
@@ -61,15 +69,10 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity
-            android:name=".activity.PlayActivity"
-             />
+        <activity android:name=".activity.PlayActivity" />
         <activity
             android:name=".activity.LetraActivity"
             android:screenOrientation="fullSensor" />
-        <activity
-            android:name=".activity.EditaLetraActivity"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ExibirLetraActivity"
             android:screenOrientation="portrait" />
@@ -98,11 +101,7 @@
         <activity
             android:name=".activity.LoginActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".activity.MainActivity"

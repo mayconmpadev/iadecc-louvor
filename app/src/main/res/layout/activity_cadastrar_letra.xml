@@ -1,190 +1,219 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linear_cadastro"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/linear_cadastro"
     android:padding="10dp"
     tools:context=".activity.CadastrarLetraActivity">
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nome:"
+            android:textColor="@color/colorPrimaryDark" />
+
+        <EditText
+            android:id="@+id/cadastro_hino_edit_nome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapSentences" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cantor:"
+            android:textColor="@color/colorPrimaryDark" />
+
+        <EditText
+            android:id="@+id/cadastro_hino_edit_cantor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapWords" />
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimaryDark"
-                android:text="Nome:"/>
-            <EditText
-                android:id="@+id/cadastro_hino_edit_nome"
-                android:layout_width="match_parent"
-                android:inputType="textCapSentences"
-                android:layout_height="wrap_content"
-                />
+            android:layout_height="wrap_content"
 
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimaryDark"
-                android:text="Cantor:"/>
-            <EditText
-                android:id="@+id/cadastro_hino_edit_cantor"
-                android:layout_width="match_parent"
-                android:inputType="textCapWords"
-                android:layout_height="wrap_content"
-                />
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textColor="@color/colorPrimaryDark"
-                        android:text="Categoria"/>
-
-                    <androidx.appcompat.widget.AppCompatSpinner
-                        android:id="@+id/spinner_categoria"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:entries="@array/categoria_hinos"
-                        />
-
-                </LinearLayout>
-
-                <LinearLayout
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/colorPrimaryDark"
-                        android:text="Temas"/>
+                    android:text="Categoria"
+                    android:textColor="@color/colorPrimaryDark" />
 
-                    <androidx.appcompat.widget.AppCompatSpinner
-                        android:id="@+id/spinner_tema"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:entries="@array/temas_hinos"
-                        />
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/spinner_categoria"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/categoria_hinos" />
 
-
-                </LinearLayout>
             </LinearLayout>
 
-
-
-
-
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimaryDark"
-                android:text="Tom:"/>
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/cadastro_hino_edit_tom"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Temas"
+                    android:textColor="@color/colorPrimaryDark" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimaryDark"
-                android:text="Arquivo de audio:"/>
-          <LinearLayout
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="horizontal">
-              <EditText
-                  android:id="@+id/edit_audio"
-                  android:layout_width="match_parent"
-                  android:inputType="text"
-                  android:enabled="false"
-                  android:layout_weight="1"
-                  android:layout_height="wrap_content"
-                  />
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/spinner_tema"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/temas_hinos" />
 
-              <Button
-                  android:id="@+id/procurar_audio"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="procurar"
-                  android:background="@drawable/btn_rounded_transparente">
 
-              </Button>
-          </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimaryDark"
-                android:text="Letra:"/>
-            <EditText
-                android:id="@+id/cadastro_hino_edit_letra"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:gravity="top"
-                android:layout_marginBottom="15dp"
-                android:background="@drawable/borda_roxa"
-                android:inputType="textMultiLine"
-
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimaryDark"
-                android:text="Cifra:"/>
-            <EditText
-                android:id="@+id/cadastro_hino_edit_cifra"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:gravity="top"
-                android:background="@drawable/borda_roxa"
-                android:inputType="textMultiLine"
-
-                />
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="2">
-
-            </View>
-
-            <Button
-                android:id="@+id/btn_salvar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="20dp"
-                android:background="@drawable/btn_rounded_roxo"
-                android:textColor="@color/branco"
-                android:layout_marginTop="32dp"
-                android:text="salvar" />
-
+            </LinearLayout>
         </LinearLayout>
 
 
+ <LinearLayout
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:layout_marginTop="10dp"
+     android:orientation="horizontal">
+     <LinearLayout
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_weight="1"
+         android:orientation="vertical">
 
+         <TextView
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:text="Tom masculino:"
+             android:textColor="@color/colorPrimaryDark" />
 
+         <EditText
+             android:id="@+id/cadastro_hino_edit_tom_m"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:inputType="text" />
 
+     </LinearLayout>
+
+     <LinearLayout
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_weight="1"
+         android:orientation="vertical">
+
+         <TextView
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:text="Tom feminino:"
+             android:textColor="@color/colorPrimaryDark" />
+
+         <EditText
+             android:id="@+id/cadastro_hino_edit_tom_f"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:inputType="text" />
+
+     </LinearLayout>
+ </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Arquivo de audio:"
+            android:textColor="@color/colorPrimaryDark" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/edit_audio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:enabled="false"
+                android:inputType="text" />
+
+            <Button
+                android:id="@+id/procurar_audio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_rounded_transparente"
+                android:text="procurar">
+
+            </Button>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Letra:"
+            android:textColor="@color/colorPrimaryDark" />
+
+        <EditText
+            android:id="@+id/cadastro_hino_edit_letra"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/borda_roxa"
+            android:gravity="top"
+            android:inputType="textMultiLine"
+
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cifra:"
+            android:textColor="@color/colorPrimaryDark" />
+
+        <EditText
+            android:id="@+id/cadastro_hino_edit_cifra"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@drawable/borda_roxa"
+            android:gravity="top"
+            android:inputType="textMultiLine"
+
+            />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2">
+
+        </View>
+
+        <Button
+            android:id="@+id/btn_salvar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/btn_rounded_roxo"
+            android:padding="20dp"
+            android:text="salvar"
+            android:textColor="@color/branco" />
+
+    </LinearLayout>
 
 
 </LinearLayout>

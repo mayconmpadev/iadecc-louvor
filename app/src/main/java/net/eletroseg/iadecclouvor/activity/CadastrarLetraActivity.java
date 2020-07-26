@@ -51,7 +51,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class CadastrarLetraActivity extends AppCompatActivity {
-    EditText nome, cantor, tom, audio, editLetra, editCifra;
+    EditText nome, cantor, tomM, tomF, audio, editLetra, editCifra;
     Spinner categoria, tema;
     Button procurar, salvar;
     MenuItem menuSalvar;
@@ -60,10 +60,7 @@ public class CadastrarLetraActivity extends AppCompatActivity {
     PopupWindow popUp;
     Hino hino;
     Uri uri;
-    String usuario;
-    int a = 0;
-    int b = 0;
-    int posicao = 0;
+   boolean bTom = true;
     boolean abilitar = true;
     boolean bEdit = false;
     ArrayList<Selecao> negrito = new ArrayList<>();
@@ -78,7 +75,8 @@ public class CadastrarLetraActivity extends AppCompatActivity {
 //        getSupportActionBar().hide();
         nome = findViewById(R.id.cadastro_hino_edit_nome);
         cantor = findViewById(R.id.cadastro_hino_edit_cantor);
-        tom = findViewById(R.id.cadastro_hino_edit_tom);
+        tomM = findViewById(R.id.cadastro_hino_edit_tom_m);
+        tomF = findViewById(R.id.cadastro_hino_edit_tom_f);
         audio = findViewById(R.id.edit_audio);
         editLetra = findViewById(R.id.cadastro_hino_edit_letra);
         editCifra = findViewById(R.id.cadastro_hino_edit_cifra);
@@ -146,17 +144,37 @@ public class CadastrarLetraActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        tom.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        tomM.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
+                    bTom = true;
                     dialogTons2(v);
                 }
             }
         });
-        tom.setOnClickListener(new View.OnClickListener() {
+        tomM.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                bTom = true;
+                dialogTons2(view);
+            }
+        });
+
+        tomF.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    bTom = false;
+                    dialogTons2(v);
+                }
+            }
+        });
+        tomF.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                bTom = true;
                 dialogTons2(view);
             }
         });
@@ -170,7 +188,8 @@ public class CadastrarLetraActivity extends AppCompatActivity {
             bEdit = true;
             nome.setText(hino.nome);
             cantor.setText(hino.cantor);
-            tom.setText(hino.tom);
+            tomM.setText(hino.tomM);
+            tomF.setText(hino.tomF);
             audio.setText(hino.nome + ".mp3");
             Parametro.letra = hino.letra;
             Parametro.cifra = hino.cifra;
@@ -229,7 +248,12 @@ public class CadastrarLetraActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tom.setText(button.getText().toString());
+                if (bTom){
+                    tomM.setText(button.getText().toString());
+                }else {
+                    tomF.setText(button.getText().toString());
+                }
+
                 popUp.dismiss();
             }
         });
@@ -259,7 +283,8 @@ public class CadastrarLetraActivity extends AppCompatActivity {
 
             hino.nome = nome.getText().toString();
             hino.cantor = cantor.getText().toString();
-            hino.tom = tom.getText().toString();
+            hino.tomM = tomM.getText().toString();
+            hino.tomF = tomF.getText().toString();
             hino.data = data();
             // hino.link = link.getText().toString();
             hino.letra = editLetra.getText().toString();
@@ -267,6 +292,7 @@ public class CadastrarLetraActivity extends AppCompatActivity {
             hino.data = data();
             reference.setValue(hino);
             Intent intent = new Intent(CadastrarLetraActivity.this, ListaHinosActivity.class);
+            intent.putExtra("tipo", "");
             startActivity(intent);
             finish();
 
@@ -349,7 +375,7 @@ public class CadastrarLetraActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (nome.getText().toString().isEmpty() & cantor.getText().toString().isEmpty() & tom.getText().toString().isEmpty() &
+        if (nome.getText().toString().isEmpty() & cantor.getText().toString().isEmpty() & tomM.getText().toString().isEmpty() & tomF.getText().toString().isEmpty() &
                 audio.getText().toString().isEmpty() & editLetra.getText().toString().isEmpty()) {
 
             Intent intent = new Intent(CadastrarLetraActivity.this, ListaHinosActivity.class);
@@ -363,7 +389,7 @@ public class CadastrarLetraActivity extends AppCompatActivity {
 
     private void dialogTons2(View v) {
         int[] location = new int[2];
-        tom.getLocationOnScreen(location);
+        v.getLocationOnScreen(location);
         LayoutInflater inflater = (LayoutInflater) CadastrarLetraActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         // Inflate the custom layout/view
         View customView = inflater.inflate(R.layout.dialog_tons, null);
@@ -462,7 +488,8 @@ public class CadastrarLetraActivity extends AppCompatActivity {
         Progresso.progressoCircular(this);
         hino.nome = nome.getText().toString();
         hino.cantor = cantor.getText().toString();
-        hino.tom = tom.getText().toString();
+        hino.tomM = tomM.getText().toString();
+        hino.tomF = tomF.getText().toString();
         hino.data = data();
         hino.categoria = categoria.getSelectedItem().toString();
         hino.tema = tema.getSelectedItem().toString();
@@ -512,6 +539,7 @@ if (abilitar){
 
 
                             Intent intent = new Intent(CadastrarLetraActivity.this, ListaHinosActivity.class);
+                            intent.putExtra("tipo", "");
                             startActivity(intent);
                             finish();
 
@@ -540,6 +568,7 @@ if (abilitar){
 
 
                 Intent intent = new Intent(CadastrarLetraActivity.this, ListaHinosActivity.class);
+                intent.putExtra("tipo", "");
                 startActivity(intent);
                 finish();
 
@@ -577,7 +606,8 @@ if (abilitar){
         arrayList.add(nome);
         arrayList.add(cantor);
         arrayList.add(editLetra);
-        arrayList.add(tom);
+        arrayList.add(tomM);
+        arrayList.add(tomF);
         arrayList.add(audio);
 
         for (int i = 0; i < arrayList.size(); i++) {

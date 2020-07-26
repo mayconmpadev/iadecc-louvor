@@ -7,6 +7,7 @@ import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -135,7 +136,7 @@ public class LetraActivity extends AppCompatActivity {
                             b = a;
                         } else {
                             c = a;
-                            text.setSpan(new ForegroundColorSpan(Color.BLUE), b, c, 0);
+                            text.setSpan(new UnderlineSpan(), b, c, 0);
                             text.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), b, c, 0);
                             text.setSpan(new ForegroundColorSpan(Color.GRAY), b, b + 1, 0);
                             text.setSpan(new ForegroundColorSpan(Color.GRAY), c, c + 1, 0);

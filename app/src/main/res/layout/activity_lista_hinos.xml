@@ -81,7 +81,7 @@
             android:layout_gravity="right"
             android:layout_margin="16dp"
             android:layout_weight="1"
-            android:backgroundTint="@color/colorPrimaryDark"
+            android:backgroundTint="@color/red_600"
             android:clickable="true"
             android:src="@drawable/ic_action_add_branco" />
 

@@ -162,8 +162,10 @@ public class ListaHinosActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mp.stop();
                 Intent intent = new Intent(getApplicationContext(), CadastrarLetraActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -292,7 +294,7 @@ public class ListaHinosActivity extends AppCompatActivity {
             @Override
             public void onItemClick(View view, Hino objeto, int pos) {
                 obj = objeto;
-                cont = pos;
+                //cont = pos;
                 Parametro.nome = obj.nome;
                 if (mAdapter.getSelectedItemCount() > 0) {
                     enableActionMode(pos);
@@ -319,12 +321,17 @@ public class ListaHinosActivity extends AppCompatActivity {
 
             @Override
             public void onItemLongClick(View view, Hino objeto, int pos) {
-                enableActionMode(pos);
-                obj = objeto;
-                dialogEditar(objeto.nome);
-                cont = pos;
-                mAdapter.hinoEmExecucao(cont);
-                mAdapter.notifyDataSetChanged();
+                if (spm.getPreferencia("USUARIO_LOGADO", "MODERADOR", "").equals("sim")) {
+                    enableActionMode(pos);
+                    obj = objeto;
+                    dialogEditar(objeto.nome);
+                    cont = pos;
+                    mAdapter.hinoEmExecucao(cont);
+                    mAdapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(ListaHinosActivity.this, "Essa função é só para moderadores", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
         mp = new MediaPlayer();

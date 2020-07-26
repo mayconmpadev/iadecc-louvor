@@ -20,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -184,9 +185,14 @@ public class ListaUsuarioActivity extends AppCompatActivity {
 
             @Override
             public void onItemLongClick(View view, Usuario objeto, int pos) {
-                enableActionMode(pos);
-                obj = objeto;
-                dialogEditar(objeto);
+                if (spm.getPreferencia("USUARIO_LOGADO", "MODERADOR", "").equals("sim")) {
+                    enableActionMode(pos);
+                    obj = objeto;
+                    dialogEditar(objeto);
+                } else {
+                    Toast.makeText(getApplicationContext(), "Essa função é só para moderadores", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }
@@ -463,7 +469,7 @@ public class ListaUsuarioActivity extends AppCompatActivity {
         email.setText(usuario.email);
         telefone.setText(usuario.telefone);
         Glide.with(this).load(usuario.foto).into(foto);
-
+        final Uri uri = Uri.parse("tel:" + "0" + usuario.telefone.replace("\\D", ""));
         fechar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -473,7 +479,7 @@ public class ListaUsuarioActivity extends AppCompatActivity {
 ligar.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View view) {
-        Uri uri = Uri.parse("tel:" + "0" + usuario.telefone.replace("\\D", ""));
+
         Intent intent = new Intent(Intent.ACTION_DIAL, uri);
         startActivity(intent);
     }

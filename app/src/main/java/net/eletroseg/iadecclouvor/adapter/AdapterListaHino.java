@@ -42,7 +42,7 @@ public class AdapterListaHino extends RecyclerView.Adapter<AdapterListaHino.View
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView nome, cantor, data;
+        public TextView nome, cantor, data, tomM, tomF;
         public ImageView imageView;
         public ProgressBar progressBar;
         public View lyt_parent;
@@ -51,6 +51,8 @@ public class AdapterListaHino extends RecyclerView.Adapter<AdapterListaHino.View
             super(view);
             nome = (TextView) view.findViewById(R.id.text_nome);
             cantor = (TextView) view.findViewById(R.id.text_cantor);
+            tomM = (TextView) view.findViewById(R.id.text_tom_m);
+            tomF = (TextView) view.findViewById(R.id.text_tom_f);
             data = (TextView) view.findViewById(R.id.text_data);
             imageView = (ImageView) view.findViewById(R.id.image_download);
             progressBar = (ProgressBar) view.findViewById(R.id.item_progresso_circulo);
@@ -78,6 +80,8 @@ public class AdapterListaHino extends RecyclerView.Adapter<AdapterListaHino.View
         // displaying text view data
         holder.nome.setText(hino.nome);
         holder.cantor.setText(hino.cantor);
+        holder.tomM.setText(hino.tomM);
+        holder.tomF.setText(hino.tomF);
         holder.data.setText(hino.data);
         holder.lyt_parent.setActivated(selected_items.get(position, false));
         if (iHino == position){

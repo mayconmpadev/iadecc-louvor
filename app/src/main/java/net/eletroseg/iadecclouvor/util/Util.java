@@ -12,6 +12,7 @@ import android.os.Vibrator;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -60,7 +61,7 @@ public class Util {
                 } else {
                     c = a - 1;
                     if ("+".equals(texto.substring(i, i +1))){
-                        text.setSpan(new ForegroundColorSpan(Color.BLUE), b, c, 0);
+                        text.setSpan(new UnderlineSpan(), b, c, 0);
                         text.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), b, c, 0);
                     }else if("*".equals(texto.substring(i, i +1))){
                         text.setSpan(new ForegroundColorSpan(Color.RED), b, c, 0);

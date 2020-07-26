@@ -95,7 +95,7 @@
 
                 <TextView
                     android:id="@+id/text_data"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
@@ -103,16 +103,49 @@
                     android:textColor="@android:color/holo_purple"
                     android:textSize="11dp" />
 
-                <RatingBar
+              <LinearLayout
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:gravity="left"
+                  android:orientation="horizontal">
 
-                    style="?android:attr/ratingBarStyleSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:indeterminate="false"
-                    android:rating="4">
+                  <TextView
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:textSize="12sp"
+                      android:text="M: ">
 
+                  </TextView>
 
-                </RatingBar>
+                  <TextView
+                      android:id="@+id/text_tom_m"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:textColor="@color/preto"
+                      android:layout_marginRight="20dp"
+                      android:text="C">
+
+                  </TextView>
+
+                  <TextView
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:textSize="12sp"
+                      android:text="F: ">
+
+                  </TextView>
+
+                  <TextView
+                      android:id="@+id/text_tom_f"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="B"
+                      android:textColor="@color/preto">
+
+                  </TextView>
+
+              </LinearLayout>
 
 
             </LinearLayout>

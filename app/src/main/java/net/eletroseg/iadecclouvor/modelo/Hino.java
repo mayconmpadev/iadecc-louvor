@@ -8,7 +8,8 @@ public class Hino implements Serializable {
     public String letra;
     public String cifra;
     public String cantor;
-    public String tom;
+    public String tomM;
+    public String tomF;
     public String categoria;
     public String tema;
     public String audioHino;
