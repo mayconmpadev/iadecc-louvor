@@ -183,6 +183,6 @@
 
     <string name="sublinhado"> <u>Sublinhado</u></string>
     <string name="notification_activity">teste</string>
-
+    <string name="default_notification_channel_id">fcm_default_channel</string>
 
 </resources>

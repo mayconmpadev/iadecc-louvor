@@ -4,6 +4,7 @@ package net.eletroseg.iadecclouvor.activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -15,10 +16,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.storage.FirebaseStorage;
 
 import net.eletroseg.iadecclouvor.R;
+import net.eletroseg.iadecclouvor.api.NotificacaoService;
 import net.eletroseg.iadecclouvor.modelo.Cronograma;
+import net.eletroseg.iadecclouvor.modelo.Notificacao;
+import net.eletroseg.iadecclouvor.modelo.NotificacaoDados;
 import net.eletroseg.iadecclouvor.util.Constantes;
 import net.eletroseg.iadecclouvor.util.Parametro;
 import net.eletroseg.iadecclouvor.util.Progresso;
@@ -29,6 +35,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class ListaAvisosActivity extends AppCompatActivity {
     private Button culto, ministrante, vocal, instrumental, musica, salvar;
     private EditText observacao;
@@ -36,12 +48,20 @@ public class ListaAvisosActivity extends AppCompatActivity {
     private SimpleDateFormat dateFormatter;
     String tipo = "";
 
+    private Retrofit retrofit;
+    private String baseUrl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_avisos);
         recuperaIntent();
         iniciarComponentes();
+        baseUrl = "https://fcm.googleapis.com/fcm/";
+        retrofit = new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
         dateFormatter = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
         culto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -214,6 +234,7 @@ public class ListaAvisosActivity extends AppCompatActivity {
         databaseReference.child(cronograma.id).setValue(cronograma).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
+                enviarNotificacao();
                 Progresso.dialog.dismiss();
                 Parametro.staticArrayMinistrante.clear();
                 Parametro.staticArrayVocal.clear();
@@ -295,5 +316,59 @@ public class ListaAvisosActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(),MainActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    public void enviarNotificacao() {
+
+        String tokenAluno = "cvnzDymYyBU:APA91bHNpn9T1RfLK6oSg00onzQIMNh3iJ6BRN-Q9mlo62d1kDrJ-oFVEZecHB4I8oRGZxC9AgHqjuqJx5V0R7Jtq_W9sAj9C8W7ujxLQNV2IYGyvvlxs3usfE5YUst2-qHi14Vr3JMf";
+        String tokenJamilton = "fBwBVkoic1E:APA91bEUkRNc200w1Xx9Wwj1-ULjFa_WRyskcdlZJYbVuF8ThxYDFWNKKFfCFJkaaq-ydl3sS-6QmP4uNAIkITQjxqLZwmzghtXJAWmRxN_oaJNJFKmA53fgeXliHTEaaBxPWS_uu32m";
+
+        String to = "";//Tópico ou token
+        // to = tokenJamilton;
+        //to = tokenAluno;
+        to = "/topics/todos";
+
+        //Monta objeto notificação
+        Notificacao notificacao = new Notificacao("Título da notificação!!", "Corpo da notificação");
+        NotificacaoDados notificacaoDados = new NotificacaoDados(to, notificacao);
+
+        NotificacaoService service = retrofit.create(NotificacaoService.class);
+        Call<NotificacaoDados> call = service.salvarNotificacao(notificacaoDados);
+
+        call.enqueue(new Callback<NotificacaoDados>() {
+            @Override
+            public void onResponse(Call<NotificacaoDados> call, Response<NotificacaoDados> response) {
+
+
+                if (response.isSuccessful()) {
+
+                    Toast.makeText(getApplicationContext(),
+                            "codigo: " + response.code(),
+                            Toast.LENGTH_LONG).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<NotificacaoDados> call, Throwable t) {
+
+            }
+        });
+
+
+    }
+
+    public void recuperarToken() {
+
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+
+                String token = instanceIdResult.getToken();
+                Log.i("getInstanceId", "token getInstanceId: " + token);
+
+            }
+        });
+
     }
 }

@@ -32,6 +32,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.picasso.Picasso;
 
 import net.eletroseg.iadecclouvor.R;
@@ -45,7 +46,7 @@ import net.eletroseg.iadecclouvor.util.ConfiguracaoFiribase;
 import net.eletroseg.iadecclouvor.util.InstanciaFirebase;
 import net.eletroseg.iadecclouvor.util.Permissao;
 import net.eletroseg.iadecclouvor.util.SPM;
-import net.eletroseg.iadecclouvor.util.Servico;
+
 import net.eletroseg.iadecclouvor.util.Tools;
 
 import java.util.ArrayList;
@@ -81,12 +82,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // setSupportActionBar(toolbar);
         initToolbar();
         iniciarComponentes();
+        FirebaseMessaging.getInstance().subscribeToTopic("todos");
         if (spm.getPreferencia("USUARIO_LOGADO", "MODERADOR", "").equals("sim")) {
             fabMenu.setVisibility(View.VISIBLE);
         } else {
             fabMenu.setVisibility(View.INVISIBLE);
         }
-        startService(new Intent(this, Servico.class));
         ebd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

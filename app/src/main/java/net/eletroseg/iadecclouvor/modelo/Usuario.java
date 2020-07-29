@@ -10,6 +10,7 @@ import java.io.Serializable;
 public class Usuario implements Serializable {
 
     public String id;
+    public String token;
     public String email;
     public String senha;
     public String nome;
