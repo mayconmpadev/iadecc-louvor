@@ -397,12 +397,13 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
+                        Toast.makeText(LoginActivity.this, Base64Custom.decodificarBase64(spm.getPreferencia("USUARIO_LOGADO", "USUARIO", "erro")), Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();
                     } else {
                         Toast.makeText(LoginActivity.this, "logoff", Toast.LENGTH_SHORT).show();
-                        spm.setPreferencia("VENDEDOR_LOGADO", "VENDEDOR", "");
+                        spm.setPreferencia("USUARIO_LOGADO", "USUARIO", "");
                         firebaseAuth.signOut();
                         layout.setVisibility(View.VISIBLE);
                     }
@@ -417,57 +418,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    //metodo responsavel por criar o usuario do sistema padrão.
-    private void salvarAdmin() {
-
-     //   final Vendedor vendedor = new Vendedor();
-      //  vendedor.nome = "admin";
-      //  vendedor.senha = "123456";
-      //  vendedor.nivel = "03";
-
-      //  vendedor.id = "usuario_admin";
-
-        firebaseAuth = ConfiguracaoFiribase.getFirebaseAutenticacao();
-
-        final DatabaseReference reference = InstanciaFirebase.getDatabase().getReference(spm.getPreferencia("USUARIO_LOGADO", "USUARIO", "erro")).child("usuario");
-      //  final DatabaseReference reference1 = InstanciaFirebase.getDatabase().getReference(spm.getPreferencia("USUARIO_LOGADO", "USUARIO", "erro")).child("vendedor").child(vendedor.id);
-        reference.keepSynced(true);
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.exists()) {
-                   // reference1.setValue(vendedor);
-                    Parametro.primeiroAcesso = true;
-                    Toast.makeText(LoginActivity.this, "Salvo com sucesso", Toast.LENGTH_SHORT).show();
-
-
-                } else {
-                    Parametro.primeiroAcesso = false;
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-
-    }
 
     private void usuarioTipo(){
         String usuario =   spm.getPreferencia("USUARIO_LOGADO", "USUARIO", "");
