@@ -14,53 +14,54 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import net.eletroseg.iadecclouvor.R;
-import net.eletroseg.iadecclouvor.modelo.Selecao;
-import net.eletroseg.iadecclouvor.util.Parametro;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import net.eletroseg.iadecclouvor.R;
+import net.eletroseg.iadecclouvor.modelo.Avisos;
+import net.eletroseg.iadecclouvor.util.Constantes;
+import net.eletroseg.iadecclouvor.util.InstanciaFirebase;
+import net.eletroseg.iadecclouvor.util.Progresso;
+import net.eletroseg.iadecclouvor.util.Teste;
+import net.eletroseg.iadecclouvor.util.Timestamp;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class LetraActivity extends AppCompatActivity {
-    private Button limpar, salvar;
-    private EditText letra;
-    int a = 0;
-    int b = 0;
+public class CadastroAvisoActivity extends AppCompatActivity {
+    private EditText titulo, corpo;
+    private Button salvar;
+    Avisos avisos;
+
     int posicao = 0;
     boolean abilitar = true;
     boolean ativar = false;
-    ArrayList<Selecao> negrito = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_letra);
-//        getSupportActionBar().hide();
-        recuperarComponentes();
-        //letra.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-        //letra.setText(Parametro.letra);
-        textoNegrito2(Parametro.letra, null, letra);
-        limpar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                letra.setText("");
-            }
-        });
+        setContentView(R.layout.activity_cadastro_aviso);
+        iniciarComponentes();
 
         salvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (letra.getText().toString().isEmpty()) {
-                    Toast.makeText(LetraActivity.this, "vazio", Toast.LENGTH_SHORT).show();
-                } else {
-                    Parametro.letra = letra.getText().toString();
-                    finish();
+                if (verificarEditText()) {
+
+
+                    salvarProduto();
+
+
                 }
             }
         });
 
-        letra.addTextChangedListener(new TextWatcher() {
+        corpo.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 if (abilitar) {
@@ -83,15 +84,15 @@ public class LetraActivity extends AppCompatActivity {
 
                 if (ativar) {
                     if (abilitar) {
-                        posicao = letra.getSelectionStart();
-                        textoNegrito2(letra.getText().toString(), null, letra);
+                        posicao = corpo.getSelectionStart();
+                        textoNegrito2(corpo.getText().toString(), null, corpo);
                     }
                 }
-                if (letra.getText().toString().length() > start) {
-                    if ("*".equals(String.valueOf(letra.getText().toString().charAt(start))) || "+".equals(String.valueOf(letra.getText().toString().charAt(start))) || "/".equals(String.valueOf(letra.getText().toString().charAt(start)))) {
+                if (corpo.getText().toString().length() > start) {
+                    if ("*".equals(String.valueOf(corpo.getText().toString().charAt(start))) || "+".equals(String.valueOf(corpo.getText().toString().charAt(start))) || "/".equals(String.valueOf(corpo.getText().toString().charAt(start)))) {
                         if (abilitar) {
-                            posicao = letra.getSelectionStart();
-                            textoNegrito2(letra.getText().toString(), null, letra);
+                            posicao = corpo.getSelectionStart();
+                            textoNegrito2(corpo.getText().toString(), null, corpo);
                         }
                     }
 
@@ -108,10 +109,70 @@ public class LetraActivity extends AppCompatActivity {
 
     }
 
-    private void recuperarComponentes() {
-        limpar = findViewById(R.id.btn_limpar);
-        salvar = findViewById(R.id.btn_salvar);
-        letra = findViewById(R.id.edit_letra);
+
+    private void iniciarComponentes() {
+        titulo = findViewById(R.id.cadastro_aviso_edit_titulo);
+        corpo = findViewById(R.id.cadastro_aviso_edit_corpo);
+        salvar = findViewById(R.id.btn_cadastro_aviso_salvar);
+    }
+
+
+    //---------------------------------------------------- SALVAR DADOS E IMAGEM -----------------------------------------------------------------
+
+    private void salvarProduto() {
+        avisos = new Avisos();
+        Progresso.progressoCircular(this);
+        avisos.titulo = titulo.getText().toString();
+        avisos.corpo = corpo.getText().toString();
+        avisos.data = String.valueOf(Timestamp.getUnixTimestamp());
+
+        FirebaseDatabase database = InstanciaFirebase.getDatabase();
+        final DatabaseReference databaseReference = database.getReference().child(Constantes.AVISOS);
+        avisos.id = databaseReference.push().getKey();
+
+
+        databaseReference.child(avisos.id).setValue(avisos).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Progresso.dialog.dismiss();
+                    Teste teste = new Teste();
+                    teste.enviarNotificacao("/topics/todos", avisos.titulo, avisos.corpo);
+                    finish();
+
+                } else {
+                    Progresso.dialog.dismiss();
+                    Toast.makeText(getApplicationContext(), "erro ao criar Aviso", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+
+    }
+
+
+    private boolean verificarEditText() {
+        boolean a = false;
+        ArrayList<EditText> arrayList = new ArrayList<>();
+        arrayList.add(titulo);
+        arrayList.add(corpo);
+
+
+        for (int i = 0; i < arrayList.size(); i++) {
+            if (arrayList.get(i).getText().toString().isEmpty()) {
+                arrayList.get(i).requestFocus();
+                arrayList.get(i).setError("o campo não pode ser vazio");
+                a = false;
+                break;
+            } else {
+                arrayList.get(i).setError(null);
+                a = true;
+            }
+        }
+
+
+        return a;
     }
 
     public void textoNegrito2(final String texto, final TextView textView, final EditText editText) {
@@ -190,11 +251,17 @@ public class LetraActivity extends AppCompatActivity {
                 } else {
                     textView.setText(text, EditText.BufferType.SPANNABLE);
                 }
-                letra.setSelection(posicao);
+                corpo.setSelection(posicao);
                 abilitar = true;
             }
         });
     }
 
 
+    private String data() {
+        long date = System.currentTimeMillis();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        String dateString = sdf.format(date);
+        return dateString;
+    }
 }

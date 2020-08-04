@@ -13,6 +13,7 @@ public class Constantes {
         public static final String BANCO = "banco_dados";
         public static final String CATEGORIAS = "categorias";
         public static final String USUARIOS = "usuarios";
+        public static final String AVISOS = "avisos";
 
     }
 

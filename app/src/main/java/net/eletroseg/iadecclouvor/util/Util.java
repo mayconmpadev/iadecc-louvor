@@ -46,7 +46,7 @@ public class Util {
 
     public static void textoNegrito(final String texto, final TextView textView, EditText editText) {
 
-        final SpannableString text = new SpannableString(texto.toString().replace("+", "").replace("*", "").replace("/", ""));
+        final SpannableString text = new SpannableString(texto.toString().replace("+", "").replace("/", "").replace("*", ""));
         int a = 0;
         int b = texto.length();
         int c = 0;
@@ -55,7 +55,7 @@ public class Util {
         int f = 0;
         for (int i = 0; i < texto.length(); i++) {
 
-            if ("+".equals(texto.substring(i, i + 1)) || "*".equals(texto.substring(i,i + 1)) || "/".equals(texto.substring(i,i + 1))) {
+            if ("+".equals(texto.substring(i, i + 1)) || "/".equals(texto.substring(i,i + 1)) || "*".equals(texto.substring(i,i + 1))) {
                 if (b == texto.length()) {
                     b = a;
                 } else {
@@ -63,10 +63,10 @@ public class Util {
                     if ("+".equals(texto.substring(i, i +1))){
                         text.setSpan(new UnderlineSpan(), b, c, 0);
                         text.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), b, c, 0);
-                    }else if("*".equals(texto.substring(i, i +1))){
+                    }else if("/".equals(texto.substring(i, i +1))){
                         text.setSpan(new ForegroundColorSpan(Color.RED), b, c, 0);
                         text.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), b, c, 0);
-                    }else if("/".equals(texto.substring(i, i +1))){
+                    }else if("*".equals(texto.substring(i, i +1))){
                         text.setSpan(new ForegroundColorSpan(Color.BLACK), b, c, 0);
                         text.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), b, c, 0);
                     }

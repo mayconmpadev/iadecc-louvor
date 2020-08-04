@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ViewPager view_pager;
     private TabLayout tab_layout;
     Toolbar toolbar;
-
+public static boolean visivel = false;
 
     SPM spm = new SPM(MainActivity.this);
     private String[] permissoesNecessarias = new String[]{
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(getApplicationContext(), ListaAvisosActivity.class);
+                Intent intent = new Intent(getApplicationContext(), CadastroEscalaActivity.class);
                 intent.putExtra("tipo", "ebd");
                 startActivity(intent);
                 finish();
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(getApplicationContext(), ListaAvisosActivity.class);
+                Intent intent = new Intent(getApplicationContext(), CadastroEscalaActivity.class);
                 intent.putExtra("tipo", "domingo");
                 startActivity(intent);
                 finish();
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(getApplicationContext(), ListaAvisosActivity.class);
+                Intent intent = new Intent(getApplicationContext(), CadastroEscalaActivity.class);
                 intent.putExtra("tipo", "quarta");
                 startActivity(intent);
                 finish();
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(getApplicationContext(), ListaAvisosActivity.class);
+                Intent intent = new Intent(getApplicationContext(), CadastroEscalaActivity.class);
                 intent.putExtra("tipo", "especial");
                 startActivity(intent);
                 finish();
@@ -252,7 +252,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         } else if (id == R.id.nav_configuracao) {
-            Toast.makeText(this, "Este menu está em construção", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(MainActivity.this, ListaAvisoActivity.class);
+            startActivity(intent);
+            finish();
 
         } else if (id == R.id.nav_avisos) {
             Toast.makeText(this, "Este menu está em construção", Toast.LENGTH_SHORT).show();
@@ -365,6 +367,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        visivel = true;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        visivel = false;
     }
 
 

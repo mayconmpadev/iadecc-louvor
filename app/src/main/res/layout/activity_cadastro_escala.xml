@@ -8,7 +8,7 @@
     android:paddingBottom="10dp"
     android:paddingLeft="25dp"
     android:paddingRight="25dp"
-    tools:context=".activity.ListaAvisosActivity">
+    tools:context=".activity.CadastroEscalaActivity">
 
     <Button
         android:layout_width="match_parent"

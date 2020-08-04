@@ -3,6 +3,7 @@ package net.eletroseg.iadecclouvor.activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
@@ -29,6 +31,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import net.eletroseg.iadecclouvor.R;
 
@@ -397,7 +401,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        Toast.makeText(LoginActivity.this, Base64Custom.decodificarBase64(spm.getPreferencia("USUARIO_LOGADO", "USUARIO", "erro")), Toast.LENGTH_SHORT).show();
+                        //recuperarToken();
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();
@@ -416,6 +420,24 @@ public class LoginActivity extends AppCompatActivity {
             });
 
         }
+    }
+
+    public void recuperarToken() {
+
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+
+                String token = instanceIdResult.getToken();
+                Log.i("getInstanceId", "token getInstanceId: " + token);
+
+                SPM spm = new SPM(getApplicationContext());
+                DatabaseReference databaseReference = InstanciaFirebase.getDatabase().getReference().child(Constantes.USUARIOS).child(spm.getPreferencia("USUARIO_LOGADO", "USUARIO","")).child("token");
+                databaseReference.setValue(token);
+
+            }
+        });
+
     }
 
 
@@ -439,6 +461,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 spm.setPreferencia("USUARIO_LOGADO", "MODERADOR", moderador);
+                recuperarToken();
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="net.eletroseg.iadecclouvor">
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -18,16 +19,25 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher_iadeccc"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_iadeccc"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".activity.SplashActivity"
+        android:theme="@style/AppTheme"
+        tools:replace="android:allowBackup">
+        <activity android:name=".activity.EscalaMesActivity"></activity>
+        <activity
+            android:name=".activity.CadastroAvisoActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".activity.ListaAvisoActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".activity.SplashActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,12 +47,15 @@
         <activity android:name=".TesteActivity" />
         <activity
             android:name=".activity.SelecaoHinoActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.SelecaoUsuarioActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ListaUsuarioActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.CifraActivity"
@@ -70,30 +83,39 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".activity.PlayActivity" />
+        <activity
+            android:name=".activity.PlayActivity"
+            android:launchMode="singleTop" />
         <activity
             android:name=".activity.LetraActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="fullSensor" />
         <activity
             android:name=".activity.ExibirLetraActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.CadastrarLetraActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.FotoActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.ListaAvisosActivity"
+            android:name=".activity.CadastroEscalaActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ConfiguracaoActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ListaCifrasActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ListaHinosActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity android:name=".activity.CadastroLoginActivity" />
         <activity
@@ -101,12 +123,12 @@
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
             android:name=".activity.LoginActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 

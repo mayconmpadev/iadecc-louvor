@@ -4,7 +4,6 @@ package net.eletroseg.iadecclouvor.activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -16,8 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.storage.FirebaseStorage;
 
 import net.eletroseg.iadecclouvor.R;
@@ -41,19 +38,19 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ListaAvisosActivity extends AppCompatActivity {
+public class CadastroEscalaActivity extends AppCompatActivity {
     private Button culto, ministrante, vocal, instrumental, musica, salvar;
     private EditText observacao;
     private DatePickerDialog fromDatePickerDialog;
     private SimpleDateFormat dateFormatter;
     String tipo = "";
-
+    Cronograma cronograma;
     private Retrofit retrofit;
     private String baseUrl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lista_avisos);
+        setContentView(R.layout.activity_cadastro_escala);
         recuperaIntent();
         iniciarComponentes();
         baseUrl = "https://fcm.googleapis.com/fcm/";
@@ -215,7 +212,7 @@ public class ListaAvisosActivity extends AppCompatActivity {
     private void salvarProduto() {
 
         Progresso.progressoCircular(this);
-        Cronograma cronograma = new Cronograma();
+         cronograma = new Cronograma();
         cronograma.vocal = new ArrayList<>();
         cronograma.instrumental = new ArrayList<>();
         cronograma.musicas = new ArrayList<>();
@@ -234,7 +231,7 @@ public class ListaAvisosActivity extends AppCompatActivity {
         databaseReference.child(cronograma.id).setValue(cronograma).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                enviarNotificacao();
+                recuperarTokensUsuarios();
                 Progresso.dialog.dismiss();
                 Parametro.staticArrayMinistrante.clear();
                 Parametro.staticArrayVocal.clear();
@@ -318,18 +315,14 @@ public class ListaAvisosActivity extends AppCompatActivity {
         finish();
     }
 
-    public void enviarNotificacao() {
-
-        String tokenAluno = "cvnzDymYyBU:APA91bHNpn9T1RfLK6oSg00onzQIMNh3iJ6BRN-Q9mlo62d1kDrJ-oFVEZecHB4I8oRGZxC9AgHqjuqJx5V0R7Jtq_W9sAj9C8W7ujxLQNV2IYGyvvlxs3usfE5YUst2-qHi14Vr3JMf";
-        String tokenJamilton = "fBwBVkoic1E:APA91bEUkRNc200w1Xx9Wwj1-ULjFa_WRyskcdlZJYbVuF8ThxYDFWNKKFfCFJkaaq-ydl3sS-6QmP4uNAIkITQjxqLZwmzghtXJAWmRxN_oaJNJFKmA53fgeXliHTEaaBxPWS_uu32m";
+    public void enviarNotificacao(String token) {
 
         String to = "";//Tópico ou token
-        // to = tokenJamilton;
-        //to = tokenAluno;
-        to = "/topics/todos";
+
+        to = token;
 
         //Monta objeto notificação
-        Notificacao notificacao = new Notificacao("Título da notificação!!", "Corpo da notificação");
+        Notificacao notificacao = new Notificacao("Escala "+ tipo, "Você esta escalado");
         NotificacaoDados notificacaoDados = new NotificacaoDados(to, notificacao);
 
         NotificacaoService service = retrofit.create(NotificacaoService.class);
@@ -342,33 +335,50 @@ public class ListaAvisosActivity extends AppCompatActivity {
 
                 if (response.isSuccessful()) {
 
-                    Toast.makeText(getApplicationContext(),
-                            "codigo: " + response.code(),
-                            Toast.LENGTH_LONG).show();
-
                 }
             }
 
             @Override
             public void onFailure(Call<NotificacaoDados> call, Throwable t) {
-
+                Toast.makeText(getApplicationContext(), "Falha ao enviar notificações", Toast.LENGTH_SHORT).show();
             }
         });
 
 
     }
+    private void recuperarTokensUsuarios(){
+        ArrayList<String> tokens = new ArrayList<>();
+        ArrayList<String> tokens2 = new ArrayList<>();
 
-    public void recuperarToken() {
+        tokens.add(Parametro.staticArrayMinistrante.get(0).token);
 
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
-            @Override
-            public void onSuccess(InstanceIdResult instanceIdResult) {
-
-                String token = instanceIdResult.getToken();
-                Log.i("getInstanceId", "token getInstanceId: " + token);
-
+        for (int i = 0; i < Parametro.staticArrayVocal.size(); i++) {
+            if (!tokens.contains(Parametro.staticArrayVocal.get(i))){
+                tokens.add(Parametro.staticArrayVocal.get(i).token);
             }
-        });
 
+
+        }
+
+        for (int i = 0; i < Parametro.staticArrayInstrumental.size(); i++) {
+            if (!tokens.contains(Parametro.staticArrayInstrumental.get(i))){
+                tokens.add(Parametro.staticArrayInstrumental.get(i).token);
+            }
+        }
+
+
+        for (int i = 0; i < tokens.size(); i++) {
+            if (!tokens2.contains(tokens.get(i))){
+                tokens2.add(tokens.get(i));
+            }
+
+        }
+
+        for (int i = 0; i < tokens2.size(); i++) {
+
+            enviarNotificacao(tokens2.get(i));
+
+        }
     }
+
 }

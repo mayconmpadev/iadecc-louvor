@@ -9,6 +9,7 @@
 
     <string-array name="categoria_hinos">
         <item>Novo</item>
+        <item>Repertório</item>
         <item>Congregacional</item>
         <item>Harpa</item>
 

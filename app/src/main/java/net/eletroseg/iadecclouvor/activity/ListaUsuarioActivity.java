@@ -81,19 +81,6 @@ public class ListaUsuarioActivity extends AppCompatActivity {
     Usuario obj;
 
 
-    int cont = 0;
-    ArrayList<String> arrayList = new ArrayList<>();
-    boolean bRepetir = false;
-    boolean bControles = true;
-
-    // Media Player
-
-    // Handler to update UI timer, progress bar etc,.
-    private Handler mHandler = new Handler();
-
-    //private SongsManager songManager;
-    private MusicUtils utils;
-
     @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,9 +94,7 @@ public class ListaUsuarioActivity extends AppCompatActivity {
 
             fab.hide();
         }
-        if (spm.getPreferencia("USUARIO_LOGADO", "MODERADOR", "não").equals("não")) {
-            fab.setVisibility(View.GONE);
-        }
+
         buscarClienteWeb();
         voltar.setOnClickListener(new View.OnClickListener() {
             @Override

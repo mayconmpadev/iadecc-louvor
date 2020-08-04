@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -18,10 +19,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import net.eletroseg.iadecclouvor.activity.MainActivity;
-import net.eletroseg.iadecclouvor.util.ConfiguracaoFiribase;
-import net.eletroseg.iadecclouvor.util.Constantes;
-import net.eletroseg.iadecclouvor.util.InstanciaFirebase;
-import net.eletroseg.iadecclouvor.util.SPM;
+
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
@@ -37,9 +35,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onNewToken(@NonNull String s) {
         super.onNewToken(s);
-        SPM spm = new SPM(this);
-        DatabaseReference databaseReference = InstanciaFirebase.getDatabase().getReference().child(Constantes.USUARIOS).child(spm.getPreferencia("USUARIO_LOGADO", "USUARIO","")).child("token");
-        databaseReference.setValue(s);
+      //  SPM spm = new SPM(this);
+      //  DatabaseReference databaseReference = InstanciaFirebase.getDatabase().getReference().child(Constantes.USUARIOS).child(spm.getPreferencia("USUARIO_LOGADO", "USUARIO","")).child("token");
+       // databaseReference.setValue(s);
     }
 
     private void enviarNotificacao(String titulo, String corpo){
@@ -47,6 +45,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         //Configuraçõe para notificação
         String canal = getString(R.string.default_notification_channel_id);
         Uri uriSom = RingtoneManager.getDefaultUri( RingtoneManager.TYPE_NOTIFICATION );
+if (MainActivity.visivel){
+
+}
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 

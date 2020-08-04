@@ -15,8 +15,8 @@
             android:title="Integrantes" />
         <item
             android:id="@+id/nav_configuracao"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:icon="@drawable/ic_avisos_black_24dp"
+            android:title="Avisos" />
     </group>
 
     <item android:title="Communicate">

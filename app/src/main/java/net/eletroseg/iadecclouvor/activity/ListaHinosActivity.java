@@ -90,6 +90,7 @@ public class ListaHinosActivity extends AppCompatActivity {
     File pdfFolder;
     DownloadManager dm;
     int cont = 0;
+    int cont2 = 0;
     ArrayList<String> arrayList = new ArrayList<>();
     boolean bRepetir = false;
     String tipo = "";
@@ -119,6 +120,11 @@ public class ListaHinosActivity extends AppCompatActivity {
 
         if (tipo.equals("lista")) {
             arrayListHino.addAll(arrayListPlayList);
+            if (spm.getPreferencia("USUARIO_LOGADO", "MODERADOR", "").equals("sim")) {
+                fab.show();
+            } else {
+                fab.hide();
+            }
         } else {
             buscarClienteWeb();
         }
@@ -294,7 +300,7 @@ public class ListaHinosActivity extends AppCompatActivity {
             @Override
             public void onItemClick(View view, Hino objeto, int pos) {
                 obj = objeto;
-                //cont = pos;
+                cont2 = pos;
                 Parametro.nome = obj.nome;
                 if (mAdapter.getSelectedItemCount() > 0) {
                     enableActionMode(pos);
@@ -567,7 +573,7 @@ public class ListaHinosActivity extends AppCompatActivity {
         ouvir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+cont = cont2;
                 ouvir();
                 dialog.dismiss();
             }
@@ -576,6 +582,9 @@ public class ListaHinosActivity extends AppCompatActivity {
         ouvirComLetra.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                cont = cont2;
+                mAdapter.hinoEmExecucao(cont);
+                mAdapter.notifyDataSetChanged();
                 if (mp.isPlaying()) {
                     mp.pause();
                 }
