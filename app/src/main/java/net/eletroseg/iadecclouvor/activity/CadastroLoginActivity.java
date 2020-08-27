@@ -367,7 +367,7 @@ public class CadastroLoginActivity extends AppCompatActivity {
                     usuarios.telefone = telefone.getText().toString();
                     usuarios.moderador = "nao";
                     usuarios.status = "ativo";
-                    usuarios.foto = "";
+                    usuarios.foto = "foto";
 
                     if (validarCampos()) {
                         cadastrarUsuario();

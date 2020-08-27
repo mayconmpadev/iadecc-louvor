@@ -232,7 +232,7 @@ public class FotoActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 nome.setText(usuario.nome);
                 telefone.setText(usuario.telefone);
-                if (!usuario.foto.equals("")) {
+                if (!usuario.foto.equals("foto")) {
                     Picasso.with(FotoActivity.this).load(usuario.foto).into(foto);
                 }
             }
