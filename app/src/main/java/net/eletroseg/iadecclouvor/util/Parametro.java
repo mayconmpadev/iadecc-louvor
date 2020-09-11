@@ -16,18 +16,12 @@ public  class Parametro {
     public static String letra = "";
     public static String cifra = "";
     public static boolean tipo = false;
+    public static String sTipo = "";
     public static ArrayList<Usuario> staticArrayVocal = new ArrayList<>();
     public static ArrayList<Usuario> staticArrayInstrumental = new ArrayList<>();
     public static ArrayList<Usuario> staticArrayMinistrante = new ArrayList<>();
     public static ArrayList<Hino> staticArrayMusica = new ArrayList<>();
-    public static ArrayList<Integer> posicaoVocal = new ArrayList<>();
-    public static ArrayList<Integer> posicaoInstrumental = new ArrayList<>();
-    public static ArrayList<Integer> posicaoMusica = new ArrayList<>();
 
-
-    public static boolean download = false;
-    public static boolean primeiroAcesso = false;
-    public static boolean cep = false;
 
 
 

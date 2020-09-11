@@ -60,7 +60,7 @@ public class CadastrarLetraActivity extends AppCompatActivity {
     PopupWindow popUp;
     Hino hino;
     Uri uri;
-   boolean bTom = true;
+    boolean bTom = true;
     boolean abilitar = true;
     boolean bEdit = false;
     ArrayList<Selecao> negrito = new ArrayList<>();
@@ -248,9 +248,9 @@ public class CadastrarLetraActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (bTom){
+                if (bTom) {
                     tomM.setText(button.getText().toString());
-                }else {
+                } else {
                     tomF.setText(button.getText().toString());
                 }
 
@@ -356,9 +356,7 @@ public class CadastrarLetraActivity extends AppCompatActivity {
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(CadastrarLetraActivity.this, ListaHinosActivity.class);
-                intent.putExtra("tipo", "");
-                startActivity(intent);
+
                 finish();
             }
         });
@@ -378,9 +376,6 @@ public class CadastrarLetraActivity extends AppCompatActivity {
         if (nome.getText().toString().isEmpty() & cantor.getText().toString().isEmpty() & tomM.getText().toString().isEmpty() & tomF.getText().toString().isEmpty() &
                 audio.getText().toString().isEmpty() & editLetra.getText().toString().isEmpty()) {
 
-            Intent intent = new Intent(CadastrarLetraActivity.this, ListaHinosActivity.class);
-            intent.putExtra("tipo","");
-            startActivity(intent);
             finish();
         } else {
             dialogSair("Deseja sair sem salvar?");
@@ -484,8 +479,6 @@ public class CadastrarLetraActivity extends AppCompatActivity {
     //---------------------------------------------------- SALVAR DADOS E IMAGEM -----------------------------------------------------------------
 
     private void salvarProduto() {
-
-        Progresso.progressoCircular(this);
         hino.nome = nome.getText().toString();
         hino.cantor = cantor.getText().toString();
         hino.tomM = tomM.getText().toString();
@@ -498,7 +491,7 @@ public class CadastrarLetraActivity extends AppCompatActivity {
 
         if (uri == null) {
             abilitar = false;
-        }else {
+        } else {
             abilitar = true;
         }
         if (!audio.getText().toString().equals(hino.nome + ".mp3")) {
@@ -512,76 +505,70 @@ public class CadastrarLetraActivity extends AppCompatActivity {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         final StorageReference storageReferencere = storage.getReference().child(Constantes.AUDIO).child(Base64Custom.codificarBase64(hino.nome));
 
-if (abilitar){
-    UploadTask uploadTask = storageReferencere.putFile(uri);
-    uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+        if (abilitar) {
+            UploadTask uploadTask = storageReferencere.putFile(uri);
+            uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
 
-        @Override
-        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
 
-            return storageReferencere.getDownloadUrl();
-        }
-
-
-    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-
-        @Override
-        public void onComplete(@NonNull Task<Uri> task) {
-
-            if (task.isSuccessful()) {
-                Uri uri = task.getResult();
-                hino.audioHino = uri.toString();
-                hino.id = Base64Custom.codificarBase64(hino.nome);
-                databaseReference.child(hino.id).setValue(hino).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
+                    return storageReferencere.getDownloadUrl();
+                }
 
 
-                            Intent intent = new Intent(CadastrarLetraActivity.this, ListaHinosActivity.class);
-                            intent.putExtra("tipo", "");
-                            startActivity(intent);
-                            finish();
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
 
-                        } else {
-                            Toast.makeText(getApplicationContext(), "erro ao criar orcamento", Toast.LENGTH_SHORT).show();
-                        }
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+
+                    if (task.isSuccessful()) {
+                        Uri uri = task.getResult();
+                        hino.audioHino = uri.toString();
+                        hino.id = Base64Custom.codificarBase64(hino.nome);
+                        databaseReference.child(hino.id).setValue(hino).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    finish();
+
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "erro ao criar orcamento", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
+                        Progresso.dialog.dismiss();
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "erro: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        Progresso.dialog.dismiss();
+
                     }
-                });
+                }
+            });
+        } else {
 
-                Progresso.dialog.dismiss();
+            hino.id = Base64Custom.codificarBase64(hino.nome);
+            databaseReference.child(hino.id).setValue(hino).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
 
-            } else {
-                Toast.makeText(getApplicationContext(), "erro: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                Progresso.dialog.dismiss();
 
-            }
+                        Intent intent = new Intent(CadastrarLetraActivity.this, ListaHinosActivity.class);
+                        intent.putExtra("tipo", "");
+                        startActivity(intent);
+                        finish();
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "erro ao criar orcamento", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+            Progresso.dialog.dismiss();
+
         }
-    });
-}else {
-
-    hino.id = Base64Custom.codificarBase64(hino.nome);
-    databaseReference.child(hino.id).setValue(hino).addOnCompleteListener(new OnCompleteListener<Void>() {
-        @Override
-        public void onComplete(@NonNull Task<Void> task) {
-            if (task.isSuccessful()) {
-
-
-                Intent intent = new Intent(CadastrarLetraActivity.this, ListaHinosActivity.class);
-                intent.putExtra("tipo", "");
-                startActivity(intent);
-                finish();
-
-            } else {
-                Toast.makeText(getApplicationContext(), "erro ao criar orcamento", Toast.LENGTH_SHORT).show();
-            }
-        }
-    });
-
-    Progresso.dialog.dismiss();
-
-}
-
 
 
     }

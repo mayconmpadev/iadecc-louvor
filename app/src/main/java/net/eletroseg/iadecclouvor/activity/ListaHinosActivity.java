@@ -93,14 +93,7 @@ public class ListaHinosActivity extends AppCompatActivity {
     int cont2 = 0;
     ArrayList<String> arrayList = new ArrayList<>();
     boolean bRepetir = false;
-    String tipo = "";
-
-    // Media Player
-
-    // Handler to update UI timer, progress bar etc,.
     private Handler mHandler = new Handler();
-
-    //private SongsManager songManager;
     private MusicUtils utils;
 
     @Override
@@ -118,7 +111,7 @@ public class ListaHinosActivity extends AppCompatActivity {
             fab.hide();
         }
 
-        if (tipo.equals("lista")) {
+        if (Parametro.sTipo.equals("lista")) {
             arrayListHino.addAll(arrayListPlayList);
             if (spm.getPreferencia("USUARIO_LOGADO", "MODERADOR", "").equals("sim")) {
                 fab.show();
@@ -171,7 +164,7 @@ public class ListaHinosActivity extends AppCompatActivity {
                 mp.stop();
                 Intent intent = new Intent(getApplicationContext(), CadastrarLetraActivity.class);
                 startActivity(intent);
-                finish();
+
             }
         });
 
@@ -344,9 +337,8 @@ public class ListaHinosActivity extends AppCompatActivity {
     }
 
     private void recuperaIntent() {
-
         Intent intent = getIntent();
-        tipo = intent.getStringExtra("tipo");
+        Parametro.sTipo = intent.getStringExtra("tipo");
         arrayListPlayList = (ArrayList<Hino>) getIntent().getSerializableExtra("playlist");
 
     }
@@ -859,7 +851,7 @@ cont = cont2;
 
             }
         });
-
+        editLetra.setText("");
         excluirHinoLocal(nome);
 
 
@@ -914,6 +906,7 @@ cont = cont2;
             }
             myFile = new File(pdfFolder + File.separator + nome + ".mp3");
             if (myFile.exists()) {
+
                 myFile.delete();
             }
         } catch (Exception e) {
@@ -937,4 +930,5 @@ cont = cont2;
         public int posicao;
 
     }
+
 }

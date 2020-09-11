@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +58,7 @@ public class CadastroLoginActivity extends AppCompatActivity {
     TextInputLayout inputLayoutEmail, inputLayoutSenha, inputLayoutConfirmar, inputLayoutNome, inputLayoutTelefone;
     EditText email, senha, confirmar, telefone, nome;
     Button salvar;
+    Spinner voz, instrumento;
     String nomeUsado = "vazio";
 
 
@@ -75,6 +77,8 @@ public class CadastroLoginActivity extends AppCompatActivity {
         telefone = findViewById(R.id.edit_cadastro_login_telefone);
         nome = findViewById(R.id.edit_cadastro_login_nome);
         salvar = findViewById(R.id.btn_cadastro_login_salvar);
+        voz = findViewById(R.id.spinner_voz);
+        instrumento = findViewById(R.id.spinner_instrumento);
         cadastro = findViewById(R.id.layout_cadastro);
 
         view = cadastro;
@@ -368,6 +372,8 @@ public class CadastroLoginActivity extends AppCompatActivity {
                     usuarios.moderador = "nao";
                     usuarios.status = "ativo";
                     usuarios.foto = "foto";
+                    usuarios.voz = voz.getSelectedItem().toString();
+                    usuarios.instrumento = instrumento.getSelectedItem().toString();
 
                     if (validarCampos()) {
                         cadastrarUsuario();

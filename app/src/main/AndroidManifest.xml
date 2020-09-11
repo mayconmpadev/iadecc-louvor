@@ -30,9 +30,11 @@
         <activity android:name=".activity.EscalaMesActivity"></activity>
         <activity
             android:name=".activity.CadastroAvisoActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTop" />
         <activity
             android:name=".activity.ListaAvisoActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTop" />
         <activity
             android:name=".activity.SplashActivity"
@@ -44,7 +46,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TesteActivity" />
         <activity
             android:name=".activity.SelecaoHinoActivity"
             android:launchMode="singleTop"
@@ -59,7 +60,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.CifraActivity"
-            android:screenOrientation="fullSensor" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait" />
 
         <receiver android:name=".util.BootCompletedIntentReceiver">
             <intent-filter>
@@ -85,11 +88,14 @@
 
         <activity
             android:name=".activity.PlayActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTop" />
         <activity
             android:name=".activity.LetraActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="fullSensor" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ExibirLetraActivity"
             android:screenOrientation="portrait" />

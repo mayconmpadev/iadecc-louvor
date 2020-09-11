@@ -27,6 +27,27 @@
         <item>Consagração</item>
     </string-array>
 
+    <string-array name="vozes">
+        <item>Nenhum</item>
+        <item>Soprano</item>
+        <item>Contralto</item>
+        <item>Tenor</item>
+        <item>Barítonos</item>
+        <item>Baixos</item>
+
+    </string-array>
+
+    <string-array name="instrumentos">
+        <item>Nenhum</item>
+        <item>Violão</item>
+        <item>Guitarra</item>
+        <item>Baixo</item>
+        <item>Teclado</item>
+        <item>Bateria</item>
+        <item>Sax</item>
+        <item>Violino</item>
+    </string-array>
+
     <string-array name="notas_musicais">
         <item> C </item>
         <item> D </item>

@@ -71,7 +71,7 @@ public class AdapterGradeUsuario extends RecyclerView.Adapter<AdapterGradeUsuari
 
         holder.nome.setText(usuario.nome.substring(0, 1).toUpperCase() + usuario.nome.substring(1));
 
-        Glide.with(ctx).load(usuario.foto).into(holder.imageView);
+        Glide.with(ctx).load(usuario.foto).placeholder(R.drawable.ic_action_foto_user).into(holder.imageView);
       //  Toast.makeText(ctx, "onBindViewHolder", Toast.LENGTH_SHORT).show();
 
 

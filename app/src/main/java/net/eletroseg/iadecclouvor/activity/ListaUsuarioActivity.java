@@ -7,7 +7,6 @@ import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.ActionMode;
@@ -46,7 +45,6 @@ import net.eletroseg.iadecclouvor.modelo.Usuario;
 import net.eletroseg.iadecclouvor.util.Base64Custom;
 import net.eletroseg.iadecclouvor.util.Constantes;
 import net.eletroseg.iadecclouvor.util.InstanciaFirebase;
-import net.eletroseg.iadecclouvor.util.MusicUtils;
 import net.eletroseg.iadecclouvor.util.Progresso;
 import net.eletroseg.iadecclouvor.util.SPM;
 import net.eletroseg.iadecclouvor.util.Util;
@@ -76,7 +74,7 @@ public class ListaUsuarioActivity extends AppCompatActivity {
     Usuario hino2;
 
 
-    ArrayList<Usuario> arrayListHino = new ArrayList<>();
+    ArrayList<Usuario> arrayListUsuario = new ArrayList<>();
     String sPesquisa = "";
     Usuario obj;
 
@@ -153,7 +151,7 @@ public class ListaUsuarioActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
 
         //set data and list adapter
-        mAdapter = new AdapterListaUsuario(this, arrayListHino);
+        mAdapter = new AdapterListaUsuario(this, arrayListUsuario);
         recyclerView.setAdapter(mAdapter);
         mAdapter.setOnClickListener(new AdapterListaUsuario.OnClickListener() {
             @Override
@@ -215,7 +213,7 @@ public class ListaUsuarioActivity extends AppCompatActivity {
 
     private void buscarClienteWeb() {
         Progresso.progressoCircular(this);
-        arrayListHino.clear();
+        arrayListUsuario.clear();
         FirebaseDatabase database = InstanciaFirebase.getDatabase();
         DatabaseReference reference = database.getReference().child(Constantes.USUARIOS);
         reference.keepSynced(true);
@@ -225,7 +223,7 @@ public class ListaUsuarioActivity extends AppCompatActivity {
 
                 final Usuario usuario = dataSnapshot.getValue(Usuario.class);
                 // if (!hino.id.equals("master")) {
-                arrayListHino.add(usuario);
+                arrayListUsuario.add(usuario);
                 //  }
                 mAdapter.notifyDataSetChanged();
                 Progresso.dialog.dismiss();
@@ -235,13 +233,13 @@ public class ListaUsuarioActivity extends AppCompatActivity {
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
                 Usuario usuario = dataSnapshot.getValue(Usuario.class);
-                for (int i = 0; i < arrayListHino.size(); i++) {
-                    if (arrayListHino.get(i).nome.equals(usuario.nome)) {
-                        arrayListHino.remove(i);
+                for (int i = 0; i < arrayListUsuario.size(); i++) {
+                    if (arrayListUsuario.get(i).nome.equals(usuario.nome)) {
+                        arrayListUsuario.remove(i);
                     }
                 }
-                arrayListHino.add(usuario);
-                ordenaPorNumero(arrayListHino);
+                arrayListUsuario.add(usuario);
+                ordenaPorNumero(arrayListUsuario);
                 mAdapter.notifyDataSetChanged();
                 Progresso.dialog.dismiss();
             }
@@ -250,9 +248,9 @@ public class ListaUsuarioActivity extends AppCompatActivity {
             public void onChildRemoved(DataSnapshot dataSnapshot) {
 
                 Usuario usuario = dataSnapshot.getValue(Usuario.class);
-                for (int i = 0; i < arrayListHino.size(); i++) {
-                    if (arrayListHino.get(i).nome.equals(usuario.nome)) {
-                        arrayListHino.remove(i);
+                for (int i = 0; i < arrayListUsuario.size(); i++) {
+                    if (arrayListUsuario.get(i).nome.equals(usuario.nome)) {
+                        arrayListUsuario.remove(i);
                     }
                 }
                 if (!sPesquisa.equals("")) {
@@ -260,7 +258,7 @@ public class ListaUsuarioActivity extends AppCompatActivity {
                     // mAdapter.getFilter().filter(sPesquisa);
 
                 }
-                ordenaPorNumero(arrayListHino);
+                ordenaPorNumero(arrayListUsuario);
 
                 mAdapter.notifyDataSetChanged();
                 Progresso.dialog.dismiss();
@@ -269,7 +267,7 @@ public class ListaUsuarioActivity extends AppCompatActivity {
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-                ordenaPorNumero(arrayListHino);
+                ordenaPorNumero(arrayListUsuario);
                 mAdapter.notifyDataSetChanged();
                 Progresso.dialog.dismiss();
             }
@@ -284,7 +282,7 @@ public class ListaUsuarioActivity extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ordenaPorNumero(arrayListHino);
+                ordenaPorNumero(arrayListUsuario);
                 mAdapter.notifyDataSetChanged();
                 Progresso.dialog.dismiss();
             }
@@ -327,43 +325,6 @@ public class ListaUsuarioActivity extends AppCompatActivity {
         }
     }
 
-
-    private void dialogOpcao() {
-        final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.layout_opcao_play);
-        final LinearLayout ouvir = dialog.findViewById(R.id.ll_enviar);
-        LinearLayout ouvirComLetra = dialog.findViewById(R.id.ll_status);
-        LinearLayout ouvirComCifra = dialog.findViewById(R.id.ll_pagamento);
-        LinearLayout adicionarPlayList = dialog.findViewById(R.id.ll_pdf);
-
-        ouvir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                dialog.dismiss();
-            }
-        });
-
-
-        ouvirComCifra.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                dialog.dismiss();
-            }
-        });
-
-        adicionarPlayList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-
-            }
-        });
-
-        dialog.show();
-    }
-
     private void dialogEditar(final Usuario usuario) {
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_config_usuario);
@@ -373,36 +334,36 @@ public class ListaUsuarioActivity extends AppCompatActivity {
         Button salvar = dialog.findViewById(R.id.dialog_config_usuari_btn_salvar);
 
         integrante.setText(usuario.nome.substring(0, 1).toUpperCase() + usuario.nome.substring(1));
-        if (usuario.moderador.equals("sim")){
+        if (usuario.moderador.equals("sim")) {
             moderador.setChecked(true);
-        }else {
+        } else {
 
             moderador.setChecked(false);
         }
 
-        if (usuario.status.equals("ativo")){
+        if (usuario.status.equals("ativo")) {
             status.setChecked(true);
-        }else {
+        } else {
 
             status.setChecked(false);
         }
-     moderador.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-         @Override
-         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-             if (b){
-                 moderador.setChecked(true);
-             }else {
-                 moderador.setChecked(false);
-             }
-         }
-     });
+        moderador.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    moderador.setChecked(true);
+                } else {
+                    moderador.setChecked(false);
+                }
+            }
+        });
 
         status.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b){
+                if (b) {
                     status.setChecked(true);
-                }else {
+                } else {
                     status.setChecked(false);
                 }
             }
@@ -412,15 +373,15 @@ public class ListaUsuarioActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Progresso.progressoCircular(ListaUsuarioActivity.this);
-                if (moderador.isChecked()){
+                if (moderador.isChecked()) {
                     usuario.moderador = "sim";
-                }else {
+                } else {
                     usuario.moderador = "nao";
                 }
 
-                if (status.isChecked()){
+                if (status.isChecked()) {
                     usuario.status = "ativo";
-                }else {
+                } else {
                     usuario.status = "desativado";
                 }
                 FirebaseDatabase database = InstanciaFirebase.getDatabase();
@@ -428,8 +389,8 @@ public class ListaUsuarioActivity extends AppCompatActivity {
                 reference.setValue(usuario).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                       Progresso.dialog.dismiss();
-                       dialog.dismiss();
+                        Progresso.dialog.dismiss();
+                        dialog.dismiss();
                     }
                 });
 
@@ -447,12 +408,35 @@ public class ListaUsuarioActivity extends AppCompatActivity {
         TextView nome = dialog.findViewById(R.id.text_perfil_nome);
         TextView email = dialog.findViewById(R.id.text_perfil_email);
         TextView telefone = dialog.findViewById(R.id.text_perfil_telefone);
+        TextView estaticoVoz = dialog.findViewById(R.id.text_statico_voz);
+        TextView estaticoInstrumento = dialog.findViewById(R.id.text_statico_instrumento);
         TextView voz = dialog.findViewById(R.id.text_perfil_voz);
+        TextView instrumento = dialog.findViewById(R.id.text_perfil_instrumento);
         AppCompatButton ligar = dialog.findViewById(R.id.btn_perfil_ligar);
         ImageButton fechar = dialog.findViewById(R.id.btn_perfil_fechar);
         nome.setText(usuario.nome);
         email.setText(usuario.email);
         telefone.setText(usuario.telefone);
+        if (usuario.voz != null){
+            if (usuario.voz.equals("Nenhum")) {
+                estaticoVoz.setText("");
+                voz.setText("");
+            } else {
+                voz.setText(usuario.voz);
+            }
+        }
+
+        if (usuario.instrumento != null){
+            if (usuario.instrumento.equals("Nenhum")) {
+                estaticoInstrumento.setText("");
+                instrumento.setText("");
+            } else {
+                instrumento.setText(usuario.instrumento);
+            }
+        }
+
+
+
         Glide.with(this).load(usuario.foto).into(foto);
         final Uri uri = Uri.parse("tel:" + "0" + usuario.telefone.replace("\\D", ""));
         fechar.setOnClickListener(new View.OnClickListener() {
@@ -461,14 +445,14 @@ public class ListaUsuarioActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
-ligar.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View view) {
+        ligar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-        Intent intent = new Intent(Intent.ACTION_DIAL, uri);
-        startActivity(intent);
-    }
-});
+                Intent intent = new Intent(Intent.ACTION_DIAL, uri);
+                startActivity(intent);
+            }
+        });
 
         dialog.show();
     }

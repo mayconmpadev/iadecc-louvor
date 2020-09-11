@@ -2,12 +2,15 @@ package net.eletroseg.iadecclouvor.activity;
 
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,6 +29,7 @@ import net.eletroseg.iadecclouvor.util.Constantes;
 import net.eletroseg.iadecclouvor.util.Parametro;
 import net.eletroseg.iadecclouvor.util.Progresso;
 import net.eletroseg.iadecclouvor.util.Tools;
+import net.eletroseg.iadecclouvor.util.Util;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -294,7 +298,7 @@ public class CadastroEscalaActivity extends AppCompatActivity {
 
 
         if (Parametro.staticArrayMusica.size() == 0) {
-            Toast.makeText(this, "Falta escolher os hinos ", Toast.LENGTH_SHORT).show();
+            dialogHino("ATENÇÃO!", "ainda falta escolher os *hinos*, deseja salvar assim mesmo?");
             a = false;
             return a;
         } else {
@@ -379,6 +383,44 @@ public class CadastroEscalaActivity extends AppCompatActivity {
             enviarNotificacao(tokens2.get(i));
 
         }
+    }
+
+    private void dialogHino(final String sTitulo, String menssagem) {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_padrao_ok_cancelar);
+        //instancia os objetos que estão no layout customdialog.xml
+        final TextView titulo = dialog.findViewById(R.id.dialog_padrao_text_titulo);
+        final TextView msg = dialog.findViewById(R.id.dialog_padrao_text_msg);
+        final Button cancelar = dialog.findViewById(R.id.dialog_padrao_btn_esquerda);
+        final Button ok = dialog.findViewById(R.id.dialog_padrao_btn_direita);
+        final LinearLayout layout = dialog.findViewById(R.id.root);
+        layout.setVisibility(View.VISIBLE);
+
+
+        Util.textoNegrito(menssagem, msg, null);
+        titulo.setText(sTitulo);
+
+
+        cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+            }
+        });
+
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                salvarProduto();
+                dialog.dismiss();
+
+            }
+        });
+
+        //exibe na tela o dialog
+        dialog.show();
+
     }
 
 }

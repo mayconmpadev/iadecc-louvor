@@ -17,6 +17,8 @@ public class Usuario implements Serializable {
     public String foto;
     public String telefone;
     public String moderador;
+    public String voz;
+    public String instrumento;
     public String status;
 
 

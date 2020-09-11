@@ -56,23 +56,22 @@ public class DomingoFragment extends Fragment {
     private ImageView fotoMinistrante;
     private RecyclerView vocal, instrumental, hino;
     private Button playList;
-    Dialog dialog;
-
-    public Uri resultUri;
-    ArrayList<Cronograma> arrayCronograma = new ArrayList<>();
     Cronograma cronograma;
 
     //---------------------------------------------------- RECYCLERVIEW VOCAL -----------------------------------------------------------------
     private AdapterGradeUsuario mAdapter;
     ArrayList<Usuario> arrayListVocal = new ArrayList<>();
+    ArrayList<String> sArrayListVocal = new ArrayList<>();
 
     //---------------------------------------------------- RECYCLERVIEW INSTRUMENTAL -----------------------------------------------------------------
     private AdapterGradeUsuario mAdapter2;
     ArrayList<Usuario> arrayListInstrumental = new ArrayList<>();
+    ArrayList<String> sArrayListInstrumental = new ArrayList<>();
 
     //---------------------------------------------------- RECYCLERVIEW HINO -----------------------------------------------------------------
     private AdapterSelecaoHino mAdapter3;
     ArrayList<Hino> arrayListHino = new ArrayList<>();
+    ArrayList<String> sArrayListHino = new ArrayList<>();
 
     public DomingoFragment() {
     }
@@ -99,7 +98,7 @@ public class DomingoFragment extends Fragment {
         hino.setHasFixedSize(true);
         mAdapter3 = new AdapterSelecaoHino(getContext(), arrayListHino);
         hino.setAdapter(mAdapter3);
-        buscarClienteWeb();
+        buscarIdsWeb();
         playList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -120,8 +119,7 @@ public class DomingoFragment extends Fragment {
 
     //---------------------------------------------------- BUSCA OS DADOS NO FIREBASE -----------------------------------------------------------------
 
-    private void buscarClienteWeb() {
-        cronograma = new Cronograma();
+    private void buscarIdsWeb() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference().child(Constantes.CRONOGRAMA).child("domingo");
         reference.keepSynced(true);
@@ -130,10 +128,7 @@ public class DomingoFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     cronograma = dataSnapshot.getValue(Cronograma.class);
-                    // if (!hino.id.equals("master")) {
-                    // arrayCronograma.add(cronograma);
-                    //arrayListIds.add(usuario.id);
-                    //  }
+
                 } else {
                     Progresso.dialog.dismiss();
                 }
@@ -149,46 +144,26 @@ public class DomingoFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    Progresso.dialog.dismiss();
-                    arrayListVocal.clear();
-                    arrayListHino.clear();
-                    arrayListInstrumental.clear();
-                    arrayListVocal.addAll(cronograma.vocal);
-                    arrayListInstrumental.addAll(cronograma.instrumental);
-                    arrayListHino.addAll(cronograma.musicas);
-                    ordenaPorNumero(arrayListVocal);
-                    ordenaPorNumero(arrayListInstrumental);
-                    int colVocal = arrayListVocal.size();
-                    if (colVocal >= 4 || colVocal == 0){
-                        colVocal = 4;
-                    }
-                    vocal.setLayoutManager(new GridLayoutManager(getContext(), colVocal));
-                    vocal.setHasFixedSize(true);
-                    mAdapter = new AdapterGradeUsuario(getContext(), arrayListVocal);
-                    vocal.setAdapter(mAdapter);
-                    int col = arrayListInstrumental.size();
-                    if (col >= 4 || col == 0){
-                        col = 4;
-                    }
-                    instrumental.setLayoutManager(new GridLayoutManager(getContext(), col));
-                    instrumental.setHasFixedSize(true);
-                    mAdapter2 = new AdapterGradeUsuario(getContext(), arrayListInstrumental);
-                    instrumental.setAdapter(mAdapter2);
-                    mAdapter.notifyDataSetChanged();
-                    mAdapter2.notifyDataSetChanged();
-                    mAdapter3.notifyDataSetChanged();
-                    titulo.setText(cronograma.diaDoCulto);
-                    observacao.setText(cronograma.observacao);
-                    nomeMinistrante.setText(cronograma.ministrante.nome.substring(0, 1).toUpperCase() + cronograma.ministrante.nome.substring(1));
-                    if (fragment1.getContext() != null){
-                        Glide.with(fragment1.getContext()).load(cronograma.ministrante.foto).into(fotoMinistrante);
+                    sArrayListVocal.clear();
+                    sArrayListHino.clear();
+                    sArrayListInstrumental.clear();
+
+                    for (int i = 0; i < cronograma.vocal.size(); i++) {
+                        sArrayListVocal.add(cronograma.vocal.get(i).id);
                     }
 
+                    if (cronograma.musicas != null) {
+                        for (int i = 0; i < cronograma.musicas.size(); i++) {
+                            sArrayListHino.add(cronograma.musicas.get(i).id);
+                        }
+                    }
 
-                } else {
-                    Progresso.dialog.dismiss();
+                    for (int i = 0; i < cronograma.instrumental.size(); i++) {
+                        sArrayListInstrumental.add(cronograma.instrumental.get(i).id);
+                    }
+
+                    buscarUsuarioWeb();
                 }
-
             }
 
             @Override
@@ -196,6 +171,156 @@ public class DomingoFragment extends Fragment {
 
             }
         });
+    }
+
+    private void buscarUsuarioWeb() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = null;
+        for (int i = 0; i < sArrayListVocal.size(); i++) {
+            reference = database.getReference().child(Constantes.USUARIOS).child(sArrayListVocal.get(i));
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()){
+                        Usuario usuario = snapshot.getValue(Usuario.class);
+                        for (int i = 0; i < arrayListVocal.size(); i++) {
+                            if (arrayListVocal.get(i).nome.equals(usuario.nome)) {
+                                arrayListVocal.remove(i);
+                            }
+                        }
+                        arrayListVocal.add(usuario);
+                        atualizar();
+                    }
+
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+
+
+        for (int i = 0; i < sArrayListInstrumental.size(); i++) {
+            reference = database.getReference().child(Constantes.USUARIOS).child(sArrayListInstrumental.get(i));
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()){
+                        Usuario usuario = snapshot.getValue(Usuario.class);
+                        for (int i = 0; i < arrayListInstrumental.size(); i++) {
+                            if (arrayListInstrumental.get(i).nome.equals(usuario.nome)) {
+                                arrayListInstrumental.remove(i);
+                            }
+                        }
+                        arrayListInstrumental.add(usuario);
+                        atualizar();
+                    }
+
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+
+
+        for (int i = 0; i < sArrayListHino.size(); i++) {
+            reference = database.getReference().child(Constantes.HINO).child(sArrayListHino.get(i));
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()){
+                        Hino hino = snapshot.getValue(Hino.class);
+                        for (int i = 0; i < arrayListHino.size(); i++) {
+                            if (arrayListHino.get(i).nome.equals(hino.nome)) {
+                                arrayListHino.remove(i);
+                            }
+                        }
+                        arrayListHino.add(hino);
+                        atualizar();
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                atualizar();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+
+
+        });
+
+    }
+
+    private void atualizar() {
+
+        ordenaPorNumero(arrayListVocal);
+        ordenaPorNumero(arrayListInstrumental);
+        int colVocal = arrayListVocal.size();
+        if (colVocal >= 4 || colVocal == 0) {
+            colVocal = 4;
+        }
+        vocal.setLayoutManager(new GridLayoutManager(getContext(), colVocal));
+        vocal.setHasFixedSize(true);
+        mAdapter = new AdapterGradeUsuario(getContext(), arrayListVocal);
+        vocal.setAdapter(mAdapter);
+        int col = arrayListInstrumental.size();
+        if (col >= 4 || col == 0) {
+            col = 4;
+        }
+        instrumental.setLayoutManager(new GridLayoutManager(getContext(), col));
+        instrumental.setHasFixedSize(true);
+        mAdapter2 = new AdapterGradeUsuario(getContext(), arrayListInstrumental);
+        instrumental.setAdapter(mAdapter2);
+        mAdapter.notifyDataSetChanged();
+        mAdapter2.notifyDataSetChanged();
+        mAdapter3.notifyDataSetChanged();
+        titulo.setText(cronograma.diaDoCulto);
+        observacao.setText(cronograma.observacao);
+        nomeMinistrante.setText(cronograma.ministrante.nome.substring(0, 1).toUpperCase() + cronograma.ministrante.nome.substring(1));
+        if (fragment1.getContext() != null) {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference reference = database.getReference().child(Constantes.USUARIOS).child(cronograma.ministrante.id);
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Usuario usuario = snapshot.getValue(Usuario.class);
+                    Glide.with(fragment1.getContext()).load(usuario.foto).placeholder(R.drawable.ic_action_foto_user).into(fotoMinistrante);
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+
+
+        } else {
+            Progresso.dialog.dismiss();
+        }
+
     }
 
     //---------------------------------------------------- ORDENA A LISTA EM ORDEM ALFABETICA ----------------------------------------------
