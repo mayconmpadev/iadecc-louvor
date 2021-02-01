@@ -65,6 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/ll_barra"
+            tools:listitem="@layout/item_lista_letra"
             android:layout_marginBottom="1dp"
             android:layout_weight="1">
 

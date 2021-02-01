@@ -372,7 +372,7 @@ public class ListaHinosActivity extends AppCompatActivity {
         arrayListHino.clear();
         FirebaseDatabase database = InstanciaFirebase.getDatabase();
         DatabaseReference reference = database.getReference().child(Constantes.HINO);
-        reference.keepSynced(true);
+        //reference.keepSynced(true);
         reference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -762,8 +762,8 @@ cont = cont2;
             }
         });
     }
-
     private void play() {
+
         try {
             FileDescriptor fd = null;
 

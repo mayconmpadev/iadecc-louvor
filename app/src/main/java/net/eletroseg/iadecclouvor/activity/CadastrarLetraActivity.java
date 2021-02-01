@@ -187,6 +187,7 @@ public class CadastrarLetraActivity extends AppCompatActivity {
         if (hino != null) {
             bEdit = true;
             nome.setText(hino.nome);
+            nome.setEnabled(false);
             cantor.setText(hino.cantor);
             tomM.setText(hino.tomM);
             tomF.setText(hino.tomF);

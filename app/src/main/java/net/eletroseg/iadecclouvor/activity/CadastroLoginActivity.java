@@ -365,7 +365,7 @@ public class CadastroLoginActivity extends AppCompatActivity {
                 if (b) {
                     inputLayoutNome.setErrorEnabled(false);
                     usuarios = new Usuario();
-                    usuarios.email = email.getText().toString();
+                    usuarios.email = email.getText().toString().toLowerCase();
                     usuarios.senha = senha.getText().toString();
                     usuarios.nome = nome.getText().toString().toLowerCase();
                     usuarios.telefone = telefone.getText().toString();

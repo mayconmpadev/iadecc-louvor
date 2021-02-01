@@ -126,7 +126,7 @@ public class QuartaFragment extends Fragment {
     private void buscarIdsWeb() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference().child(Constantes.CRONOGRAMA).child("quarta");
-        reference.keepSynced(true);
+       // reference.keepSynced(true);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

@@ -241,8 +241,11 @@ public class PlayActivity extends AppCompatActivity {
             mp.release();
         }
         play();
-
-
+        if (mp.isPlaying()) {
+            mp.pause();
+            // Changing button image to play button
+            bt_play.setImageResource(R.drawable.ic_play_arrow);
+        }
         utils = new MusicUtils();
         // Listeners
         seek_song_progressbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
