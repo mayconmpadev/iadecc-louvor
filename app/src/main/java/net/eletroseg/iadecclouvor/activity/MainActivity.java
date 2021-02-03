@@ -257,7 +257,9 @@ public static boolean visivel = false;
             finish();
 
         } else if (id == R.id.nav_avisos) {
-            Toast.makeText(this, "Este menu está em construção", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(MainActivity.this, CadastroEscalaMesActivity.class);
+            startActivity(intent);
+            finish();
 
         }
 

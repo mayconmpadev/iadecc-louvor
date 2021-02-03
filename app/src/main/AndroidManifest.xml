@@ -27,15 +27,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
-        <activity android:name=".activity.EscalaMesActivity"></activity>
+        <activity android:name=".activity.CadastroEscalaMesActivity"></activity>
+        <activity
+            android:name=".activity.EscalaMesActivity"
+            android:screenOrientation="landscape"></activity>
         <activity
             android:name=".activity.CadastroAvisoActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ListaAvisoActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.SplashActivity"
             android:launchMode="singleTop"
@@ -60,9 +63,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.CifraActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait" />
+            android:windowSoftInputMode="adjustResize" />
 
         <receiver android:name=".util.BootCompletedIntentReceiver">
             <intent-filter>
@@ -88,14 +91,14 @@
 
         <activity
             android:name=".activity.PlayActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.LetraActivity"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait" />
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activity.ExibirLetraActivity"
             android:screenOrientation="portrait" />

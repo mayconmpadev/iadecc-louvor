@@ -152,8 +152,7 @@ public class LetraActivity extends AppCompatActivity {
                             e = d;
                         } else {
                             f = d;
-                            text.setSpan(new ForegroundColorSpan(Color.RED), e, f, 0);
-                            text.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), e, f, 0);
+                            text.setSpan(new UnderlineSpan(), e, f, 0);
                             text.setSpan(new ForegroundColorSpan(Color.GRAY), e, e + 1, 0);
                             text.setSpan(new ForegroundColorSpan(Color.GRAY), f, f + 1, 0);
 

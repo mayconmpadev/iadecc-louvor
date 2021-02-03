@@ -64,8 +64,7 @@ public class Util {
                         text.setSpan(new UnderlineSpan(), b, c, 0);
                         text.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), b, c, 0);
                     }else if("/".equals(texto.substring(i, i +1))){
-                        text.setSpan(new ForegroundColorSpan(Color.RED), b, c, 0);
-                        text.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), b, c, 0);
+                        text.setSpan(new UnderlineSpan(), b, c, 0);
                     }else if("*".equals(texto.substring(i, i +1))){
                         text.setSpan(new ForegroundColorSpan(Color.BLACK), b, c, 0);
                         text.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), b, c, 0);
