@@ -7,11 +7,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.Toast;
 
 import net.eletroseg.iadecclouvor.R;
 import net.eletroseg.iadecclouvor.util.Tools;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -19,6 +21,10 @@ public class CadastroEscalaMesActivity extends AppCompatActivity {
     private Button novaEscala, escala;
     private DatePickerDialog fromDatePickerDialog;
     private SimpleDateFormat dateFormatter;
+    private int qtdDias = 0;
+    private int mes = 0;
+    private int ano = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +37,14 @@ public class CadastroEscalaMesActivity extends AppCompatActivity {
             public void onClick(View view) {
                 setDateTimeField();
                 fromDatePickerDialog.show();
+            }
+        });
+
+        escala.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setDateTimeField();
+               qtdLinhas();
             }
         });
     }
@@ -49,25 +63,47 @@ public class CadastroEscalaMesActivity extends AppCompatActivity {
 
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 
-                // Calendar newDate = Calendar.getInstance();
-                //newDate.set(year, monthOfYear, dayOfMonth);
-                // culto.setText(dateFormatter.format(newDate.getTime()));
-
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(Calendar.YEAR, year);
                 calendar.set(Calendar.MONTH, monthOfYear);
                 calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                 view.init(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), null);
                 long date_ship_millis = calendar.getTimeInMillis();
-                novaEscala.setText(Tools.getFormattedDateSimple(date_ship_millis));
+                qtdDias = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+                int day = calendar.get(Calendar.DAY_OF_WEEK);
+                if (day == Calendar.SUNDAY) {
+                    Toast.makeText(CadastroEscalaMesActivity.this, "é domingo" + dayOfMonth, Toast.LENGTH_SHORT).show();
+                }
+                novaEscala.setText(Tools.getFormattedDateSimple2(date_ship_millis));
                 corBotaoVerde(novaEscala);
-
+                mes = monthOfYear;
+                ano = year;
 
             }
 
         }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
 
     }
+
+    private void qtdLinhas() {
+        ArrayList<Integer> domingos = new ArrayList<>();
+        ArrayList<Integer> quartas = new ArrayList<>();
+
+        for (int i = 1; i <= qtdDias; i++) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.YEAR, ano);
+            calendar.set(Calendar.MONTH, mes);
+            calendar.set(Calendar.DAY_OF_MONTH, i);
+            int day = calendar.get(Calendar.DAY_OF_WEEK);
+            if (day == Calendar.SUNDAY) {
+                domingos.add(i);
+            }else if(day == Calendar.WEDNESDAY){
+                quartas.add(i);
+            }
+        }
+
+    }
+
     private void corBotaoRoxo(final Button button) {
 
         button.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
