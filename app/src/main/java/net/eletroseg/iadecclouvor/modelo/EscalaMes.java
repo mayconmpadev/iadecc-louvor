@@ -2,6 +2,7 @@ package net.eletroseg.iadecclouvor.modelo;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,9 +13,9 @@ public class EscalaMes implements Serializable {
 
     public String id;
     public String diaDoCulto;
-    public Usuario ministrante;
+    public String ministrante;
     public List<Usuario> vocal;
-    public List<Usuario> instrumental;
+    public ArrayList<Usuario> instrumental;
 
 
 

@@ -3,6 +3,7 @@ package net.eletroseg.iadecclouvor.activity;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -18,13 +19,14 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class CadastroEscalaMesActivity extends AppCompatActivity {
-    private Button novaEscala, escala;
+    private Button mesEcala, integrantes, salvar;
     private DatePickerDialog fromDatePickerDialog;
     private SimpleDateFormat dateFormatter;
     private int qtdDias = 0;
     private int mes = 0;
     private int ano = 0;
-
+    ArrayList<Integer> domingos = new ArrayList<>();
+    ArrayList<Integer> quartas = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,26 +34,37 @@ public class CadastroEscalaMesActivity extends AppCompatActivity {
         iniciarComponentes();
         dateFormatter = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
 
-        novaEscala.setOnClickListener(new View.OnClickListener() {
+        mesEcala.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setDateTimeField();
                 fromDatePickerDialog.show();
+
             }
         });
 
-        escala.setOnClickListener(new View.OnClickListener() {
+        integrantes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setDateTimeField();
-               qtdLinhas();
+                Intent intent = new Intent(getApplicationContext(), EscalaMesActivity.class);
+                intent.putExtra("domingo", domingos);
+                intent.putExtra("quarta", quartas);
+                startActivity(intent);
+            }
+        });
+
+        salvar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
     }
 
     private void iniciarComponentes() {
-        novaEscala = findViewById(R.id.btn_nova_escala_mes);
-        escala = findViewById(R.id.btn_escala);
+        mesEcala = findViewById(R.id.btn_nova_escala_mes);
+        integrantes = findViewById(R.id.btn_escala);
+        salvar = findViewById(R.id.btn_escala_mes_salvar);
 
 
     }
@@ -74,10 +87,12 @@ public class CadastroEscalaMesActivity extends AppCompatActivity {
                 if (day == Calendar.SUNDAY) {
                     Toast.makeText(CadastroEscalaMesActivity.this, "é domingo" + dayOfMonth, Toast.LENGTH_SHORT).show();
                 }
-                novaEscala.setText(Tools.getFormattedDateSimple2(date_ship_millis));
-                corBotaoVerde(novaEscala);
+                mesEcala.setText(Tools.getFormattedDateSimple2(date_ship_millis));
+
+                corBotaoVerde(mesEcala);
                 mes = monthOfYear;
                 ano = year;
+                qtdLinhas();
 
             }
 
@@ -86,8 +101,7 @@ public class CadastroEscalaMesActivity extends AppCompatActivity {
     }
 
     private void qtdLinhas() {
-        ArrayList<Integer> domingos = new ArrayList<>();
-        ArrayList<Integer> quartas = new ArrayList<>();
+
 
         for (int i = 1; i <= qtdDias; i++) {
             Calendar calendar = Calendar.getInstance();
@@ -101,7 +115,7 @@ public class CadastroEscalaMesActivity extends AppCompatActivity {
                 quartas.add(i);
             }
         }
-
+        Toast.makeText(this, String.valueOf(quartas.size()), Toast.LENGTH_SHORT).show();
     }
 
     private void corBotaoRoxo(final Button button) {

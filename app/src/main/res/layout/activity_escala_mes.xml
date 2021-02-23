@@ -21,6 +21,7 @@
 <androidx.recyclerview.widget.RecyclerView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/recycler_escala_ebd"
     tools:itemCount="5"
     tools:listitem="@layout/item_escala_mes">
 
@@ -41,6 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:itemCount="5"
+        android:id="@+id/recycler_escala_domingo"
         tools:listitem="@layout/item_escala_mes">
 
     </androidx.recyclerview.widget.RecyclerView>
@@ -60,6 +62,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:itemCount="5"
+        android:id="@+id/recycler_escala_quarta"
         tools:listitem="@layout/item_escala_mes">
 
     </androidx.recyclerview.widget.RecyclerView>
