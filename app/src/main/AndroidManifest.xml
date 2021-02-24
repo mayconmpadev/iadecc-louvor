@@ -27,10 +27,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
-        <activity android:name=".activity.CadastroEscalaMesActivity"></activity>
+        <activity android:name=".activity.HarpaActivity"></activity>
+        <activity android:name=".activity.CadastroEscalaMesActivity" />
         <activity
             android:name=".activity.EscalaMesActivity"
-            android:screenOrientation="landscape"></activity>
+            android:screenOrientation="landscape" />
         <activity
             android:name=".activity.CadastroAvisoActivity"
             android:launchMode="singleTop"

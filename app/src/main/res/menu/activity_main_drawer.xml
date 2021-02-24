@@ -10,6 +10,11 @@
             android:title="Hinos" />
 
         <item
+            android:id="@+id/nav_harpa"
+            android:icon="@drawable/ic_audiotrack_black_24dp"
+            android:title="Harpa" />
+
+        <item
             android:id="@+id/nav_usuario"
             android:icon="@drawable/ic_account_circle_black_24dp"
             android:title="Integrantes" />

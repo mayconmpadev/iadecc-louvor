@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ViewPager view_pager;
     private TabLayout tab_layout;
     Toolbar toolbar;
-public static boolean visivel = false;
+    public static boolean visivel = false;
 
     SPM spm = new SPM(MainActivity.this);
     private String[] permissoesNecessarias = new String[]{
@@ -244,6 +244,11 @@ public static boolean visivel = false;
             intent.putExtra("tipo", "web");
             startActivity(intent);
             finish();
+        } else if (id == R.id.nav_harpa) {
+            Intent intent = new Intent(MainActivity.this, ListaUsuarioActivity.class);
+            startActivity(intent);
+            finish();
+
 
         } else if (id == R.id.nav_usuario) {
             Intent intent = new Intent(MainActivity.this, ListaUsuarioActivity.class);
