@@ -1,39 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
+
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/spacing_medium"
         android:layout_marginLeft="@dimen/spacing_middle"
-        android:layout_marginRight="@dimen/spacing_middle"
         android:layout_marginTop="@dimen/spacing_medium"
+        android:layout_marginRight="@dimen/spacing_middle"
+        android:layout_marginBottom="@dimen/spacing_medium"
 
         android:visibility="visible"
         app:cardCornerRadius="2dp"
         app:cardElevation="2dp">
+
         <LinearLayout
             android:id="@+id/linear_root_item_lista_aviso"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:orientation="vertical">
+            android:paddingRight="10dp">
 
             <TextView
                 android:id="@+id/text_titulo_item_lista_aviso"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Tema"
-                android:textStyle="bold"
-                android:textSize="18dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:textColor="@color/preto">
+                android:gravity="center"
+                android:text="Tema"
+                android:textColor="@color/preto"
+                android:textSize="18dp"
+                android:textStyle="bold">
 
             </TextView>
 
@@ -41,9 +43,9 @@
                 android:id="@+id/text_corpo_item_lista_aviso"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
-                android:text="Tema do aviso da iadecc louvor apptetxdj"
                 android:layout_marginBottom="10dp"
+                android:autoLink="web"
+                android:text="Tema do aviso da iadecc louvor apptetxdj"
                 android:textColor="@color/preto">
 
             </TextView>
@@ -52,11 +54,11 @@
                 android:id="@+id/text_data_item_lista_aviso"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="right"
-                android:textSize="12sp"
-                android:text="30/07/2020"
                 android:layout_marginBottom="10dp"
-                android:textColor="@color/cinza">
+                android:gravity="right"
+                android:text="30/07/2020"
+                android:textColor="@color/cinza"
+                android:textSize="12sp">
 
             </TextView>
         </LinearLayout>

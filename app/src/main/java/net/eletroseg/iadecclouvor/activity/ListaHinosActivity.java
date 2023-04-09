@@ -137,6 +137,7 @@ public class ListaHinosActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 editLetra.setText("");
+                apagar.setImageResource(R.drawable.ic_action_pesquisa_branco);
             }
         });
 
@@ -149,6 +150,7 @@ public class ListaHinosActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mAdapter.getFilter().filter(s.toString());
+                apagar.setImageResource(R.drawable.ic_action_close);
 
             }
 
@@ -378,9 +380,9 @@ public class ListaHinosActivity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
                 final Hino hino = dataSnapshot.getValue(Hino.class);
-                // if (!hino.id.equals("master")) {
+                 if (!hino.categoria.equals("Harpa")) {
                 arrayListHino.add(hino);
-                //  }
+                  }
                 mAdapter.notifyDataSetChanged();
                 Progresso.dialog.dismiss();
             }

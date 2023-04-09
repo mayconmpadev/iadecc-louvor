@@ -120,16 +120,14 @@ public class ExibirLetraActivity extends AppCompatActivity {
                     ativar = false;
                     e = true;
                 }
+
             }
         });
 
         compartilhar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("text/plain");
-                intent.putExtra(intent.EXTRA_TEXT, letraDoHino.getText().toString());
-                startActivity(Intent.createChooser(intent, "Compartilhe"));
+                Toast.makeText(getApplicationContext(), "oi", Toast.LENGTH_SHORT).show();
             }
         });
 

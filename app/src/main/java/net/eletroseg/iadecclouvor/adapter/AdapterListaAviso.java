@@ -79,7 +79,7 @@ public class AdapterListaAviso extends RecyclerView.Adapter<AdapterListaAviso.Vi
         // displaying text view data
 
         holder.titulo.setText(avisos.titulo);
-       Util.textoNegrito(avisos.corpo,holder.corpo, null);
+       holder.corpo.setText(avisos.corpo);
         holder.data.setText(Timestamp.getFormatedDateTime(Long.parseLong(avisos.data), "dd/MM/yyyy"));
 
 

@@ -120,6 +120,7 @@ public class DomingoFragment extends Fragment {
     //---------------------------------------------------- BUSCA OS DADOS NO FIREBASE -----------------------------------------------------------------
 
     private void buscarIdsWeb() {
+
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference().child(Constantes.CRONOGRAMA).child("domingo");
        // reference.keepSynced(true);
@@ -130,7 +131,7 @@ public class DomingoFragment extends Fragment {
                     cronograma = dataSnapshot.getValue(Cronograma.class);
 
                 } else {
-                    Progresso.dialog.dismiss();
+
                 }
             }
 

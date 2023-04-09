@@ -18,7 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
+
 
 import net.eletroseg.iadecclouvor.R;
 import net.eletroseg.iadecclouvor.api.NotificacaoService;
@@ -48,9 +48,12 @@ public class CadastroEscalaActivity extends AppCompatActivity {
     private DatePickerDialog fromDatePickerDialog;
     private SimpleDateFormat dateFormatter;
     String tipo = "";
+    String id = "";
+    Cronograma obj;
     Cronograma cronograma;
     private Retrofit retrofit;
     private String baseUrl;
+    long timestap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,9 +116,9 @@ public class CadastroEscalaActivity extends AppCompatActivity {
         salvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               if (validarCampos()){
-                   salvarProduto();
-               }
+                if (validarCampos()){
+                    salvarProduto();
+                }
 
             }
         });
@@ -124,7 +127,9 @@ public class CadastroEscalaActivity extends AppCompatActivity {
     private void recuperaIntent() {
 
         Intent intent = getIntent();
+        obj = (Cronograma) intent.getSerializableExtra("cronograma");
         tipo = intent.getStringExtra("tipo");
+        id = intent.getStringExtra("id");
 
     }
     private void iniciarComponentes() {
@@ -135,7 +140,18 @@ public class CadastroEscalaActivity extends AppCompatActivity {
         musica = findViewById(R.id.btn_aviso_musicas);
         observacao = findViewById(R.id.edit_aviso_observacao);
         salvar = findViewById(R.id.btn_aviso_salvar);
+        if (id != null){
+            culto.setText(Tools.getFormattedDateSimple(Long.parseLong(id)* 1000));
+            culto.setEnabled(false);
+            Parametro.staticArrayMinistrante.add(obj.ministrante);
+            Parametro.staticArrayVocal = new ArrayList<>(obj.vocal);
+            Parametro.staticArrayInstrumental = new ArrayList<>(obj.instrumental);
+            if (obj.musicas != null){
+                Parametro.staticArrayMusica = new ArrayList<>(obj.musicas);
+            }
 
+            observacao.setText(obj.observacao);
+        }
     }
 
     private void corBotaoRoxo(final Button button) {
@@ -203,6 +219,10 @@ public class CadastroEscalaActivity extends AppCompatActivity {
                 calendar.set(Calendar.MONTH, monthOfYear);
                 calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                 long date_ship_millis = calendar.getTimeInMillis();
+                if (id != null){
+                    date_ship_millis = Long.parseLong(id) * 1000;
+                }
+                timestap = date_ship_millis /1000;
                 culto.setText(Tools.getFormattedDateSimple(date_ship_millis));
                 corBotaoVerde(culto);
 
@@ -216,7 +236,7 @@ public class CadastroEscalaActivity extends AppCompatActivity {
     private void salvarProduto() {
 
         Progresso.progressoCircular(this);
-         cronograma = new Cronograma();
+        cronograma = new Cronograma();
         cronograma.vocal = new ArrayList<>();
         cronograma.instrumental = new ArrayList<>();
         cronograma.musicas = new ArrayList<>();
@@ -230,9 +250,13 @@ public class CadastroEscalaActivity extends AppCompatActivity {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference databaseReference = database.getReference().child(Constantes.CRONOGRAMA);
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        cronograma.id = tipo;
-        databaseReference.child(cronograma.id).setValue(cronograma).addOnSuccessListener(new OnSuccessListener<Void>() {
+        if (id != null){
+            cronograma.id = id;
+        }else {
+            cronograma.id = String.valueOf(timestap);
+        }
+
+        databaseReference.child(tipo).setValue(cronograma).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 recuperarTokensUsuarios();
@@ -241,13 +265,29 @@ public class CadastroEscalaActivity extends AppCompatActivity {
                 Parametro.staticArrayVocal.clear();
                 Parametro.staticArrayInstrumental.clear();
                 Parametro.staticArrayMusica.clear();
+                salvarDados();
+            }
+        });
+
+
+    }
+    private void salvarDados(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference databaseReference = database.getReference().child("estatistica");
+        if (id != null){
+            cronograma.id = id;
+        }else {
+            cronograma.id = String.valueOf(timestap);
+        }
+        databaseReference.child(tipo).child(cronograma.id).setValue(cronograma).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
                 Intent intent =  new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 finish();
             }
         });
-
-
     }
 
     private boolean validarCampos() {

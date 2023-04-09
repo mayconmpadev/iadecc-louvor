@@ -15,7 +15,9 @@ public  class Parametro {
     public static String flag = "normal";
     public static String letra = "";
     public static String cifra = "";
+    public static String img = "";
     public static boolean tipo = false;
+
     public static String sTipo = "";
     public static ArrayList<Usuario> staticArrayVocal = new ArrayList<>();
     public static ArrayList<Usuario> staticArrayInstrumental = new ArrayList<>();

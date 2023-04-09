@@ -24,6 +24,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import net.eletroseg.iadecclouvor.R;
@@ -51,7 +52,7 @@ public class SelecaoUsuarioActivity extends AppCompatActivity {
     private AdapterSelecaoUsuario mAdapter;
     private ActionMode actionMode;
     private String tipo;
-
+    Query query;
 
     ArrayList<Usuario> arrayListHino = new ArrayList<>();
     public static ArrayList<String> arrayListIds = new ArrayList<>();
@@ -192,9 +193,9 @@ public class SelecaoUsuarioActivity extends AppCompatActivity {
         Progresso.progressoCircular(this);
         arrayListHino.clear();
         FirebaseDatabase database = InstanciaFirebase.getDatabase();
-        DatabaseReference reference = database.getReference().child(Constantes.USUARIOS);
-        reference.keepSynced(true);
-        reference.addChildEventListener(new ChildEventListener() {
+        query  = database.getReference().child(Constantes.USUARIOS).orderByChild("status").equalTo("ativo");
+      //  reference.keepSynced(true);
+        query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
@@ -257,7 +258,7 @@ public class SelecaoUsuarioActivity extends AppCompatActivity {
             }
         });
 
-        reference.addValueEventListener(new ValueEventListener() {
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 ordenaPorNumero(arrayListHino);

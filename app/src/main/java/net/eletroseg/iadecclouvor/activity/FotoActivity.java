@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
+
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -37,10 +37,12 @@ import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+
 import net.eletroseg.iadecclouvor.R;
 import net.eletroseg.iadecclouvor.modelo.Usuario;
 import net.eletroseg.iadecclouvor.util.ConfiguracaoFiribase;
 import net.eletroseg.iadecclouvor.util.InstanciaFirebase;
+import net.eletroseg.iadecclouvor.util.Progresso;
 import net.eletroseg.iadecclouvor.util.SPM;
 
 import java.io.ByteArrayOutputStream;
@@ -56,7 +58,6 @@ public class FotoActivity extends AppCompatActivity {
     private static final int GALLERY_INTENT = 2;
     public Uri uri;
     Usuario usuario;
-    Dialog dialog;
     boolean b = true;
     FirebaseStorage firebaseStorage;
     StorageReference storageReference;
@@ -128,7 +129,7 @@ public class FotoActivity extends AppCompatActivity {
     }
 
     private void salvarFoto() {
-        exibeProgresso();
+        Progresso.progressoCircular(this);
         if (uri != null) {
             firebaseStorage = FirebaseStorage.getInstance();
             firebaseStorage = FirebaseStorage.getInstance();
@@ -146,6 +147,7 @@ public class FotoActivity extends AppCompatActivity {
                             imagem = downloadUrl.toString();
                             fotoGaleria = imagem;
                             usuario.foto = fotoGaleria;
+
                             salvar();
                         }
                     });
@@ -153,7 +155,7 @@ public class FotoActivity extends AppCompatActivity {
                     filepath.getDownloadUrl().addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            dialog.dismiss();
+                            Progresso.dialog.dismiss();
                             Toast.makeText(FotoActivity.this, "falha", Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -192,7 +194,7 @@ public class FotoActivity extends AppCompatActivity {
     }
 
     private void salvar() {
-        exibeProgresso();
+        //Progresso.progressoCircular(this);
         usuario.nome = nome.getText().toString();
         usuario.telefone = telefone.getText().toString();
         firebaseAuth = ConfiguracaoFiribase.getFirebaseAutenticacao();
@@ -201,9 +203,9 @@ public class FotoActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Void aVoid) {
 
-                dialog.dismiss();
+                Progresso.dialog.dismiss();
                 Toast.makeText(getApplicationContext(), "Salvo com sucesso", Toast.LENGTH_SHORT).show();
-                finish();
+                //finish();
             }
         });
         reference.keepSynced(true);
@@ -316,21 +318,5 @@ public class FotoActivity extends AppCompatActivity {
 
     }
 
-    public void exibeProgresso() {
 
-
-        dialog = new Dialog(this);
-
-
-        dialog.setContentView(R.layout.progresso_circular);
-
-        //define o título do Dialog
-        dialog.setTitle("Editar:");
-
-        //instancia os objetos que estão no layout customdialog.xml
-        final ProgressBar nao = dialog.findViewById(R.id.progresso_circulo);
-
-        dialog.show();
-
-    }
 }

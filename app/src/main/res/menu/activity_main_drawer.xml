@@ -22,6 +22,11 @@
             android:id="@+id/nav_configuracao"
             android:icon="@drawable/ic_avisos_black_24dp"
             android:title="Avisos" />
+
+        <item
+            android:id="@+id/nav_relatorio"
+            android:icon="@drawable/ic_action_relatorio"
+            android:title="Relatórios" />
     </group>
 
     <item android:title="Communicate">

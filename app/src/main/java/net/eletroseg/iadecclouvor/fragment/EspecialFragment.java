@@ -135,7 +135,7 @@ public class EspecialFragment extends Fragment {
                     cronograma = dataSnapshot.getValue(Cronograma.class);
 
                 } else {
-                    Progresso.dialog.dismiss();
+
                 }
             }
 

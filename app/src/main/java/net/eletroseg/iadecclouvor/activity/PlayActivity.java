@@ -595,11 +595,11 @@ public class PlayActivity extends AppCompatActivity {
         if (item.getItemId() == android.R.id.home) {
             finish();
         } else if (item.getItemId() == R.id.item_menu_compartilhar) {
-            //letra_hino.setTextSize(15f);
+            String letra = obj.letra.replace("*","").replace("+","").replace("/","");
 
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");
-            intent.putExtra(intent.EXTRA_TEXT, obj.letra);
+            intent.putExtra(intent.EXTRA_TEXT, letra);
             startActivity(Intent.createChooser(intent, "Compartilhe"));
 
         } else if (item.getItemId() == R.id.item_menu_menu) {

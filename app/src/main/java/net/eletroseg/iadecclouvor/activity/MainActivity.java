@@ -2,13 +2,16 @@ package net.eletroseg.iadecclouvor.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +34,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.picasso.Picasso;
@@ -40,14 +44,16 @@ import net.eletroseg.iadecclouvor.fragment.DomingoFragment;
 import net.eletroseg.iadecclouvor.fragment.EBDFragment;
 import net.eletroseg.iadecclouvor.fragment.EspecialFragment;
 import net.eletroseg.iadecclouvor.fragment.QuartaFragment;
+import net.eletroseg.iadecclouvor.modelo.Cronograma;
 import net.eletroseg.iadecclouvor.modelo.Usuario;
 import net.eletroseg.iadecclouvor.util.Base64Custom;
 import net.eletroseg.iadecclouvor.util.ConfiguracaoFiribase;
+import net.eletroseg.iadecclouvor.util.Constantes;
 import net.eletroseg.iadecclouvor.util.InstanciaFirebase;
 import net.eletroseg.iadecclouvor.util.Permissao;
 import net.eletroseg.iadecclouvor.util.SPM;
-
 import net.eletroseg.iadecclouvor.util.Tools;
+import net.eletroseg.iadecclouvor.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,10 +63,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ImageView foto;
     private FloatingActionButton ebd, domingo, quarta, especial;
     private FloatingActionMenu fabMenu;
+    private Cronograma cronograma;
     boolean sair = false;
     private ViewPager view_pager;
     private TabLayout tab_layout;
     Toolbar toolbar;
+    Menu menu;
     public static boolean visivel = false;
 
     SPM spm = new SPM(MainActivity.this);
@@ -91,11 +99,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ebd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                tipoCronograma("ebd");
 
-                Intent intent = new Intent(getApplicationContext(), CadastroEscalaActivity.class);
-                intent.putExtra("tipo", "ebd");
-                startActivity(intent);
-                finish();
             }
         });
 
@@ -103,10 +108,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(getApplicationContext(), CadastroEscalaActivity.class);
-                intent.putExtra("tipo", "domingo");
-                startActivity(intent);
-                finish();
+                tipoCronograma("domingo");
             }
         });
 
@@ -114,10 +116,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(getApplicationContext(), CadastroEscalaActivity.class);
-                intent.putExtra("tipo", "quarta");
-                startActivity(intent);
-                finish();
+                tipoCronograma("quarta");
             }
         });
 
@@ -125,10 +124,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(getApplicationContext(), CadastroEscalaActivity.class);
-                intent.putExtra("tipo", "especial");
-                startActivity(intent);
-                finish();
+                tipoCronograma("especial");
             }
         });
 
@@ -141,6 +137,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        menu = navigationView.getMenu();
+        MenuItem visivel = menu.findItem(R.id.nav_relatorio);
+        if (spm.getPreferencia("USUARIO_LOGADO", "MODERADOR", "").equals("sim")) {
+            visivel.setVisible(true);
+        } else {
+            visivel.setVisible(false);
+        }
 
         View headerView = navigationView.getHeaderView(0);
         usuario = (TextView) headerView.findViewById(R.id.text_nome_usuario_logado);
@@ -159,6 +162,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Permissao.validaPermissoes(1, this, permissoesNecessarias);
 
         verificarConexao();
+    }
+
+    private void tipoCronograma(final String caminho) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference databaseReference = database.getReference().child(Constantes.CRONOGRAMA).child(caminho);
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    cronograma = snapshot.getValue(Cronograma.class);
+                    String id = (String) snapshot.child("id").getValue();
+                    dialogCancelarEstatistica("Alterar Cronograma", "Deseja alterar o último *Cronograma* *" + caminho + "*?" , caminho, id, cronograma);
+                } else {
+                    Intent intent = new Intent(getApplicationContext(), CadastroEscalaActivity.class);
+                    intent.putExtra("tipo", caminho);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void initToolbar() {
@@ -245,7 +274,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
             finish();
         } else if (id == R.id.nav_harpa) {
-            Intent intent = new Intent(MainActivity.this, ListaUsuarioActivity.class);
+            Intent intent = new Intent(MainActivity.this, HarpaActivity.class);
+            intent.putExtra("tipo", "web");
             startActivity(intent);
             finish();
 
@@ -262,7 +292,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             finish();
 
         } else if (id == R.id.nav_avisos) {
-            Intent intent = new Intent(MainActivity.this, CadastroEscalaMesActivity.class);
+            Intent intent = new Intent(MainActivity.this, EscalaMesActivity.class);
+            startActivity(intent);
+            finish();
+
+        } else if (id == R.id.nav_relatorio) {
+            Intent intent = new Intent(MainActivity.this, EstatisticaActivity.class);
+            startActivity(intent);
+            finish();
+
+        }else if (id == R.id.nav_send) {
+            Intent intent = new Intent(MainActivity.this, TesteActivity.class);
             startActivity(intent);
             finish();
 
@@ -342,6 +382,55 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         viewPager.setAdapter(adapter);
+
+    }
+
+    private void dialogCancelarEstatistica(final String sTitulo, String menssagem, final String caminho, final String id, final Cronograma cronograma1) {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_padrao_ok_cancelar);
+        //instancia os objetos que estão no layout customdialog.xml
+        final TextView titulo = dialog.findViewById(R.id.dialog_padrao_text_titulo);
+        final TextView msg = dialog.findViewById(R.id.dialog_padrao_text_msg);
+        final Button cancelar = dialog.findViewById(R.id.dialog_padrao_btn_esquerda);
+        final Button ok = dialog.findViewById(R.id.dialog_padrao_btn_direita);
+        final LinearLayout layout = dialog.findViewById(R.id.root);
+        ok.setText("Alterar");
+        cancelar.setText("não");
+        layout.setVisibility(View.VISIBLE);
+
+
+        Util.textoNegrito(menssagem, msg, null);
+        titulo.setText(sTitulo);
+
+
+        cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                Intent intent = new Intent(getApplicationContext(), CadastroEscalaActivity.class);
+                intent.putExtra("tipo", caminho);
+                //intent.putExtra("id", id);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                Intent intent = new Intent(getApplicationContext(), CadastroEscalaActivity.class);
+                intent.putExtra("tipo", caminho);
+                intent.putExtra("id", id);
+                intent.putExtra("cronograma", cronograma1);
+                startActivity(intent);
+                finish();
+
+            }
+        });
+
+        //exibe na tela o dialog
+        dialog.show();
 
     }
     //---------------------------------------------------- BUSCA OS DADOS NO FIREBASE -----------------------------------------------------------------

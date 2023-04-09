@@ -27,11 +27,30 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
-        <activity android:name=".activity.HarpaActivity"></activity>
-        <activity android:name=".activity.CadastroEscalaMesActivity" />
         <activity
-            android:name=".activity.EscalaMesActivity"
-            android:screenOrientation="landscape" />
+            android:name=".activity.TesteActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.AdicionarImagemEscalaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.HinoEstatisticaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.InstrumentalEstatisticaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.VocalEstatisticaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.MinistranteEstatisticaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.EstatisticaActivity"
+            android:exported="false" />
+        <activity android:name=".activity.HarpaActivity" />
+        <activity android:name=".activity.CadastroEscalaMesActivity" />
+        <activity android:name=".activity.EscalaMesActivity" />
         <activity
             android:name=".activity.CadastroAvisoActivity"
             android:launchMode="singleTop"
@@ -43,7 +62,8 @@
         <activity
             android:name=".activity.SplashActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -68,7 +88,8 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
 
-        <receiver android:name=".util.BootCompletedIntentReceiver">
+        <receiver android:name=".util.BootCompletedIntentReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

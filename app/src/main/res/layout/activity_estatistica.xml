@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp"
+    tools:context=".activity.EstatisticaActivity">
+
+    <LinearLayout
+        android:id="@+id/linear_ministrante_estatistica"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/borda_roxa"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Ministrantes"
+            android:textColor="@color/preto"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_vocal_estatisca"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/borda_roxa"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Vocal"
+            android:textColor="@color/preto"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_instrumental_estatistica"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/borda_roxa"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Instrumental"
+            android:textColor="@color/preto"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_hinos_estatistica"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/borda_roxa"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Hinos"
+            android:textColor="@color/preto"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+
+</LinearLayout>

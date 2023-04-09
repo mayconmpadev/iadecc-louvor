@@ -37,10 +37,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:hint="pesquisar hinos"
+                android:hint="clique aqui!"
                 android:textColor="@color/branco"
                 android:textColorHint="@color/branco"
-                android:textCursorDrawable="@drawable/cursor"
+                android:textCursorDrawable="@drawable/cursor_branco"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:theme="@style/MyEditTextTheme">

@@ -117,6 +117,7 @@ public class EBDFragment extends Fragment {
     //---------------------------------------------------- BUSCA OS DADOS NO FIREBASE -----------------------------------------------------------------
 
     private void buscarIdsWeb() {
+
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference().child(Constantes.CRONOGRAMA).child("ebd");
        // reference.keepSynced(true);
@@ -127,7 +128,7 @@ public class EBDFragment extends Fragment {
                     cronograma = dataSnapshot.getValue(Cronograma.class);
 
                 } else {
-                    Progresso.dialog.dismiss();
+
                 }
             }
 

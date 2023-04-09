@@ -124,6 +124,7 @@ public class QuartaFragment extends Fragment {
     //---------------------------------------------------- BUSCA OS DADOS NO FIREBASE -----------------------------------------------------------------
 
     private void buscarIdsWeb() {
+
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference().child(Constantes.CRONOGRAMA).child("quarta");
        // reference.keepSynced(true);
@@ -134,7 +135,7 @@ public class QuartaFragment extends Fragment {
                     cronograma = dataSnapshot.getValue(Cronograma.class);
 
                 } else {
-                    Progresso.dialog.dismiss();
+
                 }
             }
 
